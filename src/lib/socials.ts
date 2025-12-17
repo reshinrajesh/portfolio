@@ -9,9 +9,9 @@ export const socials = [
     },
     {
         name: "Phone",
-        link: "tel:+918304884311",
+        link: "tel:+918137063118",
         icon: Phone,
-        display: "+91 83048 84311",
+        display: "+91 81370 63118",
     },
     {
         name: "LinkedIn",
