@@ -3,24 +3,7 @@
 import { motion } from "framer-motion";
 import ProjectCard from "./ProjectCard";
 
-const projects = [
-    {
-        title: "Night Guard - Womens Safety Robot",
-        description: "A surveillance robot designed for women's safety in public places. Detects obstacles and unknown incidents, sending location and video footage to a nearby police station. Built with Arduino IDE.",
-        tags: ["Arduino", "IoT", "C++", "Sensors"],
-        image: "/robot-project.png",
-        demoLink: "",
-        repoLink: "",
-    },
-    {
-        title: "Exam Conducting Application",
-        description: "A comprehensive web application for conducting exams. Features user management for trainees/instructors and database creation. Built with Django and PostgreSQL.",
-        tags: ["Django", "PostgreSQL", "Python", "HTML/CSS"],
-        image: "/exam-project.png",
-        demoLink: "",
-        repoLink: "",
-    },
-];
+import { projects } from "@/lib/projects";
 
 export default function Projects() {
     return (
