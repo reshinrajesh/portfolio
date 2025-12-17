@@ -43,7 +43,7 @@ export default function BioPage() {
                     )
                 })}
                 <Link
-                    href="/"
+                    href="https://reshinrajesh.in"
                     className="flex items-center justify-center p-4 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity mt-4"
                 >
                     Visit Portfolio Website
