@@ -31,7 +31,6 @@ export default async function AdminDashboard() {
                         <tr>
                             <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Title</th>
                             <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Status</th>
-                            <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase tracking-wider whitespace-nowrap">Last Edited</th>
                             <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase pending tracking-wider">Editor</th>
                             <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase tracking-wider text-right">Actions</th>
                         </tr>
@@ -44,18 +43,6 @@ export default async function AdminDashboard() {
                                     <span className={`px-2 py-1 rounded-full text-xs font-semibold tracking-wide border ${post.status === "Published" ? "bg-green-500/10 text-green-500 border-green-500/20" : "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"}`}>
                                         {post.status}
                                     </span>
-                                </td>
-                                <td className="px-4 py-3 text-muted-foreground text-sm whitespace-nowrap">
-                                    {new Date(post.updated_at).toLocaleDateString(undefined, {
-                                        month: 'short',
-                                        day: 'numeric',
-                                        year: 'numeric'
-                                    })}
-                                    <span className="mx-2 opacity-50">•</span>
-                                    {new Date(post.updated_at).toLocaleTimeString(undefined, {
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    })}
                                 </td>
                                 <td className="px-4 py-3 whitespace-nowrap">
                                     <div className="flex items-center gap-2">
