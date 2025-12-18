@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { estimateReadingTime } from "@/lib/utils";
 import ScrollProgress from "@/components/ScrollProgress";
+import ShareButtons from "@/components/ShareButtons";
 
 export const revalidate = 0;
 
@@ -46,6 +47,7 @@ export default async function BlogPostPage({ params }: Props) {
     return (
         <article className="min-h-screen py-20 px-6 max-w-4xl mx-auto">
             <ScrollProgress />
+            <ShareButtons title={post.title} />
             <Link
                 href="/blogs"
                 className="inline-flex items-center text-muted-foreground hover:text-primary mb-12 transition-colors group"
