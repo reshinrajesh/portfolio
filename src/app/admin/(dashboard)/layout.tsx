@@ -53,7 +53,7 @@ export default async function AdminLayout({
                         <span>Media Gallery</span>
                     </Link>
                     <Link
-                        href="/admin/profile"
+                        href="/profile"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1"
                     >
                         <UserCircle size={20} />
