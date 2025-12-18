@@ -517,6 +517,19 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
                         </span>
                     )}
                     <button
+                        onClick={async () => {
+                            await handleSave('Draft', true);
+                            if (initialPost?.id) {
+                                window.open(`https://blogs.reshinrajesh.in/${initialPost.id}`, '_blank');
+                            } else {
+                                alert("Please save the post at least once before previewing.");
+                            }
+                        }}
+                        className="px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                    >
+                        Preview
+                    </button>
+                    <button
                         onClick={() => handleSave('Draft')}
                         disabled={isSaving}
                         className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground disabled:opacity-50"

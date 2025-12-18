@@ -1,11 +1,13 @@
 import { supabase } from "@/lib/supabase-server";
-import { notFound } from "next/navigation";
-import { Calendar, Clock, User, ArrowLeft, BookOpen } from "lucide-react";
+import { notFound, redirect } from "next/navigation";
+import { Calendar, User, ArrowLeft, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
 import { estimateReadingTime } from "@/lib/utils";
 import ScrollProgress from "@/components/ScrollProgress";
 import ShareButtons from "@/components/ShareButtons";
+import ViewCounter from "@/components/blog/ViewCounter";
+import { getServerSession } from "next-auth";
 
 import { headers } from "next/headers";
 
@@ -19,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
     const { data: post } = await supabase
         .from("posts")
-        .select("title")
+        .select("title, seo_title, seo_description")
         .eq("id", id)
         .single();
 
@@ -30,12 +32,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return {
-        title: `${post.title} | Reshin Rajesh`,
+        title: post.seo_title || `${post.title} | Reshin Rajesh`,
+        description: post.seo_description || `Read ${post.title} by Reshin Rajesh.`,
     };
 }
 
 export default async function BlogPostPage({ params }: Props) {
     const { id } = await params;
+    const session = await getServerSession();
     const headersList = await headers();
     const domain = headersList.get('host') || '';
     const isSubdomain = domain.startsWith('blogs.');
@@ -47,6 +51,11 @@ export default async function BlogPostPage({ params }: Props) {
         .single();
 
     if (!post) {
+        notFound();
+    }
+
+    // Security Check: If draft, only allow if session exists (admin)
+    if (post.status === 'Draft' && !session) {
         notFound();
     }
 
@@ -80,13 +89,16 @@ export default async function BlogPostPage({ params }: Props) {
                             })}
                         </span>
                     </div>
-                    {/* Removed redundant time display, reading time is more useful here */}
+
                     <div className="flex items-center gap-2 bg-secondary/30 px-3 py-1.5 rounded-full border border-border/50">
                         <BookOpen size={14} />
                         <span>
                             {estimateReadingTime(post.content || '')}
                         </span>
                     </div>
+                    {/* View Counter & Logic */}
+                    <ViewCounter id={post.id} count={post.view_count || 0} />
+
                     <div className="flex items-center gap-2 bg-secondary/30 px-3 py-1.5 rounded-full border border-border/50">
                         <User size={14} />
                         <span>Reshin</span>
@@ -103,7 +115,7 @@ export default async function BlogPostPage({ params }: Props) {
 
             <div className="mt-16 pt-8 border-t border-border flex justify-between items-center text-muted-foreground">
                 <p>Thanks for reading!</p>
-                <Link href="/blogs" className="text-primary hover:underline underline-offset-4">
+                <Link href={isSubdomain ? "/" : "/blogs"} className="text-primary hover:underline underline-offset-4">
                     Read more posts
                 </Link>
             </div>

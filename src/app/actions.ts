@@ -126,3 +126,16 @@ export async function updateBio(content: string) {
     revalidatePath("/bio");
     return { success: true };
 }
+
+export async function incrementViewCount(id: string) {
+    // We use rpc in a real scenario to avoid race conditions, but simple update works for low traffic.
+    // Or better: fetch current, increment, update. 
+    // Even better: Supabase doesn't support 'increment' in simple JS client easily without RPC.
+    // Let's assume standard fetch-update for now or raw SQL if possible.
+    // Since we are server-side, we can just do:
+    const { data } = await supabase.from('posts').select('view_count').eq('id', id).single();
+    const current = data?.view_count || 0;
+
+    await supabase.from('posts').update({ view_count: current + 1 }).eq('id', id);
+    // No revalidate needed for the UI immediately usually
+}
