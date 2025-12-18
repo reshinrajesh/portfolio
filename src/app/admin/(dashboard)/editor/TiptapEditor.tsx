@@ -17,8 +17,15 @@ import {
     List, ListOrdered, Quote, Code,
     AlignLeft, AlignCenter, AlignRight,
     Link as LinkIcon, Image as ImageIcon, Undo, Redo,
-    Youtube as YoutubeIcon
+    Youtube as YoutubeIcon, MapPin, Globe
 } from 'lucide-react';
+
+import dynamic from 'next/dynamic';
+
+const LocationPicker = dynamic(() => import('@/components/admin/LocationPicker'), {
+    ssr: false,
+    loading: () => null
+});
 
 interface Post {
     id: string;
@@ -29,8 +36,21 @@ interface Post {
 
 const Toolbar = ({ editor }: { editor: Editor | null }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [showLocationMenu, setShowLocationMenu] = useState(false);
+    const [showMapPicker, setShowMapPicker] = useState(false);
 
     if (!editor) return null;
+
+    const handleLocationSelect = ({ name, lat, lng }: { name: string; lat: number; lng: number }) => {
+        const locationText = `📍 ${name}`;
+        const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+        editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a> `).run();
+    };
+
+    const openMapPicker = () => {
+        setShowLocationMenu(false);
+        setShowMapPicker(true);
+    }
 
     const addYoutube = () => {
         const url = window.prompt('Enter YouTube URL')
@@ -39,6 +59,45 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
             editor.commands.setYoutubeVideo({
                 src: url,
             })
+        }
+    }
+
+    const addCurrentLocation = () => {
+        setShowLocationMenu(false);
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser');
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                const data = await response.json();
+
+                const city = data.address.city || data.address.town || data.address.village || 'Unknown Location';
+                const country = data.address.country || '';
+                const locationText = `📍 ${city}, ${country}`;
+                const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+                editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a > `).run();
+            } catch (error) {
+                console.error('Error fetching location:', error);
+                alert('Failed to fetch location name');
+            }
+        }, () => {
+            alert('Unable to retrieve your location');
+        });
+    }
+
+    const addManualLocation = () => {
+        setShowLocationMenu(false);
+        const locationName = window.prompt("Enter Location (e.g. Kochi, India)");
+
+        if (locationName) {
+            const locationText = `📍 ${locationName} `;
+            const googleMapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(locationName)}`;
+            editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a> `).run();
         }
     }
 
@@ -92,162 +151,194 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
     }
 
     return (
-        <div className="border-b border-border p-4 flex flex-wrap gap-2 sticky top-0 bg-card z-10">
-            <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                className="hidden"
-                accept="image/*"
+        <>
+            <LocationPicker
+                isOpen={showMapPicker}
+                onClose={() => setShowMapPicker(false)}
+                onSelect={handleLocationSelect}
             />
+            <div className="border-b border-border p-4 flex flex-wrap gap-2 sticky top-0 bg-card z-10">
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    accept="image/*"
+                />
 
-            <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                <button
-                    onClick={() => editor.chain().focus().toggleBold().run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('bold') ? 'bg-secondary text-primary' : ''}`}
-                    title="Bold"
-                >
-                    <Bold size={18} />
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('italic') ? 'bg-secondary text-primary' : ''}`}
-                    title="Italic"
-                >
-                    <Italic size={18} />
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleUnderline().run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('underline') ? 'bg-secondary text-primary' : ''}`}
-                    title="Underline"
-                >
-                    <UnderlineIcon size={18} />
-                </button>
-            </div>
+                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                    <button
+                        onClick={() => editor.chain().focus().toggleBold().run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('bold') ? 'bg-secondary text-primary' : ''}`}
+                        title="Bold"
+                    >
+                        <Bold size={18} />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleItalic().run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('italic') ? 'bg-secondary text-primary' : ''}`}
+                        title="Italic"
+                    >
+                        <Italic size={18} />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleUnderline().run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('underline') ? 'bg-secondary text-primary' : ''}`}
+                        title="Underline"
+                    >
+                        <UnderlineIcon size={18} />
+                    </button>
+                </div>
 
-            <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                <button
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('heading', { level: 1 }) ? 'bg-secondary text-primary' : ''}`}
-                    title="H1"
-                >
-                    <Heading1 size={18} />
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('heading', { level: 2 }) ? 'bg-secondary text-primary' : ''}`}
-                    title="H2"
-                >
-                    <Heading2 size={18} />
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('heading', { level: 3 }) ? 'bg-secondary text-primary' : ''}`}
-                    title="H3"
-                >
-                    <Heading3 size={18} />
-                </button>
-            </div>
+                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                    <button
+                        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('heading', { level: 1 }) ? 'bg-secondary text-primary' : ''}`}
+                        title="H1"
+                    >
+                        <Heading1 size={18} />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('heading', { level: 2 }) ? 'bg-secondary text-primary' : ''}`}
+                        title="H2"
+                    >
+                        <Heading2 size={18} />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('heading', { level: 3 }) ? 'bg-secondary text-primary' : ''}`}
+                        title="H3"
+                    >
+                        <Heading3 size={18} />
+                    </button>
+                </div>
 
-            <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                <button
-                    onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive({ textAlign: 'left' }) ? 'bg-secondary text-primary' : ''}`}
-                    title="Align Left"
-                >
-                    <AlignLeft size={18} />
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive({ textAlign: 'center' }) ? 'bg-secondary text-primary' : ''}`}
-                    title="Align Center"
-                >
-                    <AlignCenter size={18} />
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive({ textAlign: 'right' }) ? 'bg-secondary text-primary' : ''}`}
-                    title="Align Right"
-                >
-                    <AlignRight size={18} />
-                </button>
-            </div>
+                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                    <button
+                        onClick={() => editor.chain().focus().setTextAlign('left').run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive({ textAlign: 'left' }) ? 'bg-secondary text-primary' : ''}`}
+                        title="Align Left"
+                    >
+                        <AlignLeft size={18} />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().setTextAlign('center').run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive({ textAlign: 'center' }) ? 'bg-secondary text-primary' : ''}`}
+                        title="Align Center"
+                    >
+                        <AlignCenter size={18} />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().setTextAlign('right').run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive({ textAlign: 'right' }) ? 'bg-secondary text-primary' : ''}`}
+                        title="Align Right"
+                    >
+                        <AlignRight size={18} />
+                    </button>
+                </div>
 
-            <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                <button
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('bulletList') ? 'bg-secondary text-primary' : ''}`}
-                    title="Bullet List"
-                >
-                    <List size={18} />
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('orderedList') ? 'bg-secondary text-primary' : ''}`}
-                    title="Ordered List"
-                >
-                    <ListOrdered size={18} />
-                </button>
-            </div>
+                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                    <button
+                        onClick={() => editor.chain().focus().toggleBulletList().run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('bulletList') ? 'bg-secondary text-primary' : ''}`}
+                        title="Bullet List"
+                    >
+                        <List size={18} />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('orderedList') ? 'bg-secondary text-primary' : ''}`}
+                        title="Ordered List"
+                    >
+                        <ListOrdered size={18} />
+                    </button>
+                </div>
 
-            <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                <button
-                    onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('blockquote') ? 'bg-secondary text-primary' : ''}`}
-                    title="Blockquote"
-                >
-                    <Quote size={18} />
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('codeBlock') ? 'bg-secondary text-primary' : ''}`}
-                    title="Code Block"
-                >
-                    <Code size={18} />
-                </button>
-            </div>
+                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                    <button
+                        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('blockquote') ? 'bg-secondary text-primary' : ''}`}
+                        title="Blockquote"
+                    >
+                        <Quote size={18} />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('codeBlock') ? 'bg-secondary text-primary' : ''}`}
+                        title="Code Block"
+                    >
+                        <Code size={18} />
+                    </button>
+                </div>
 
-            <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                <button
-                    onClick={setLink}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('link') ? 'bg-secondary text-primary' : ''}`}
-                    title="Link"
-                >
-                    <LinkIcon size={18} />
-                </button>
-                <button
-                    onClick={triggerImageUpload}
-                    className="p-2 rounded hover:bg-secondary/50"
-                    title="Upload Image"
-                >
-                    <ImageIcon size={18} />
-                </button>
-                <button
-                    onClick={addYoutube}
-                    className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('youtube') ? 'bg-secondary text-primary' : ''}`}
-                    title="Add YouTube Video"
-                >
-                    <YoutubeIcon size={18} />
-                </button>
-            </div>
+                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                    <button
+                        onClick={setLink}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('link') ? 'bg-secondary text-primary' : ''}`}
+                        title="Link"
+                    >
+                        <LinkIcon size={18} />
+                    </button>
+                    <button
+                        onClick={triggerImageUpload}
+                        className="p-2 rounded hover:bg-secondary/50"
+                        title="Upload Image"
+                    >
+                        <ImageIcon size={18} />
+                    </button>
+                    <button
+                        onClick={addYoutube}
+                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('youtube') ? 'bg-secondary text-primary' : ''}`}
+                        title="Add YouTube Video"
+                    >
+                        <YoutubeIcon size={18} />
+                    </button>
+                    <button
+                        onClick={() => setShowLocationMenu(!showLocationMenu)}
+                        className={`p-2 rounded hover:bg-secondary/50 relative ${showLocationMenu ? 'bg-secondary' : ''}`}
+                        title="Add Location"
+                    >
+                        <MapPin size={18} />
+                        {showLocationMenu && (
+                            <div className="absolute top-full right-0 mt-1 bg-popover border border-border shadow-md rounded-lg overflow-hidden min-w-[200px] flex flex-col z-50">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); addCurrentLocation(); }}
+                                    className="flex items-center gap-2 p-3 text-sm text-left hover:bg-muted/50 transition-colors text-popover-foreground"
+                                >
+                                    <MapPin size={16} />
+                                    Use Current Location
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); openMapPicker(); }}
+                                    className="flex items-center gap-2 p-3 text-sm text-left hover:bg-muted/50 transition-colors text-popover-foreground"
+                                >
+                                    <Globe size={16} />
+                                    Select on Map
+                                </button>
+                            </div>
+                        )}
+                    </button>
+                </div>
 
-            <div className="flex gap-1">
-                <button
-                    onClick={() => editor.chain().focus().undo().run()}
-                    className="p-2 rounded hover:bg-secondary/50"
-                    title="Undo"
-                >
-                    <Undo size={18} />
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().redo().run()}
-                    className="p-2 rounded hover:bg-secondary/50"
-                    title="Redo"
-                >
-                    <Redo size={18} />
-                </button>
+                <div className="flex gap-1">
+                    <button
+                        onClick={() => editor.chain().focus().undo().run()}
+                        className="p-2 rounded hover:bg-secondary/50"
+                        title="Undo"
+                    >
+                        <Undo size={18} />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().redo().run()}
+                        className="p-2 rounded hover:bg-secondary/50"
+                        title="Redo"
+                    >
+                        <Redo size={18} />
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 
