@@ -1,0 +1,42 @@
+-- Create the posts table
+create table public.posts (
+  id uuid not null default gen_random_uuid (),
+  title text not null,
+  content text null, -- Stores the HTML content
+  status text not null default 'Draft'::text, -- 'Draft' or 'Published'
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint posts_pkey primary key (id)
+);
+
+-- Enable Row Level Security (RLS)
+alter table public.posts enable row level security;
+
+-- Create a policy that allows EVERYONE to READ published posts
+create policy "Public can read published posts" on public.posts
+  for select
+  using (status = 'Published');
+
+-- Create a policy that allows ONLY YOU (via service_role or authenticated admin) to ALL
+create policy "Service role bypass" on public.posts
+  for all
+  using (true);
+
+-- Create site_content table for generic text (CMS)
+create table public.site_content (
+  key text not null,
+  value text null,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint site_content_pkey primary key (key)
+);
+
+alter table public.site_content enable row level security;
+
+create policy "Public can read site content" on public.site_content
+  for select
+  using (true);
+
+create policy "Admin can manage site content" on public.site_content
+  for all
+  using (true);

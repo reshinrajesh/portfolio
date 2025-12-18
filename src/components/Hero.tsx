@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 export default function Hero() {
@@ -33,9 +33,9 @@ export default function Hero() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
-                        className="text-xl text-muted-foreground mb-8 max-w-xl leading-relaxed"
+                        className="text-xl text-muted-foreground mb-8 text-black dark:text-gray-300"
                     >
-                        A passionate Full Stack Web Developer and Computer Science graduate dedicated to building seamless digital experiences.
+                        A Full Stack Web Developer and Computer Science Graduate passionate about building digital experiences that matter.
                     </motion.p>
 
                     <motion.div
@@ -46,25 +46,29 @@ export default function Hero() {
                     >
                         <Link
                             href="#projects"
-                            className="px-8 py-3 bg-foreground text-background rounded-full font-medium hover:bg-foreground/90 transition-colors flex items-center gap-2 group"
+                            className="bg-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
                         >
-                            View Work
-                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                            View Projects <ArrowRight size={18} />
                         </Link>
-
+                        <Link
+                            href="https://blogs.reshinrajesh.in"
+                            target="_blank"
+                            className="bg-secondary text-secondary-foreground border border-border px-8 py-3 rounded-full font-medium hover:bg-secondary/80 transition-colors flex items-center gap-2"
+                        >
+                            Visit My Blog <ExternalLink size={18} />
+                        </Link>
                     </motion.div>
                 </div>
             </div>
 
-            {/* Scroll indicator */}
+            {/* Scroll Indicator */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground"
+                className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
             >
-                <span className="text-xs uppercase tracking-widest">Scroll</span>
-                <div className="w-[1px] h-12 bg-gradient-to-b from-primary to-transparent" />
+                <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-primary to-transparent" />
             </motion.div>
         </section>
     );
