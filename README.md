@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Personal Portfolio 🌱
 
-## Getting Started
+Welcome to my personal portfolio repository.
 
-First, run the development server:
+This project represents my space on the web — a place where I showcase my work, share my journey, and experiment with ideas as I continue learning and growing in tech.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ About This Project
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This portfolio is more than just a collection of projects. It’s a reflection of:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* My learning journey
+* The challenges I’ve faced and lessons I’ve learned
+* My interest in building clean, meaningful web experiences
 
-## Learn More
+The goal is simplicity, clarity, and authenticity.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* **Next.js** – React framework for production
+* **TypeScript** – Type-safe development
+* **Tailwind CSS** – Utility-first styling
+* **Vercel** – Deployment and hosting
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* Responsive personal portfolio
+* About & journey section
+* Projects showcase
+* Blog (work in progress)
+* Clean UI with modern design
+
+---
+
+## 🌍 Live Website
+
+🔗 [https://portfolio-black-seven-43.vercel.app](https://portfolio-black-seven-43.vercel.app)
+
+---
+
+## 📌 Purpose
+
+This repository exists to:
+
+* Document my progress
+* Act as a digital identity
+* Serve as a foundation for future ideas and experiments
+
+It will continue evolving as I do.
+
+---
+
+## 📬 Feedback
+
+If you have suggestions, ideas, or feedback, feel free to open an issue or reach out. Constructive feedback is always welcome.
+
+---
+
+Thanks for stopping by ✨
+More updates coming soon.
