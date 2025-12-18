@@ -29,40 +29,35 @@ export default async function AdminDashboard() {
                 <table className="w-full text-left">
                     <thead className="bg-secondary/30">
                         <tr>
-                            <th className="p-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Title</th>
-                            <th className="p-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Status</th>
-                            <th className="p-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Last Edited</th>
-                            <th className="p-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Editor</th>
-                            <th className="p-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider text-right">Actions</th>
+                            <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Title</th>
+                            <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Status</th>
+                            <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase tracking-wider whitespace-nowrap">Last Edited</th>
+                            <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase pending tracking-wider">Editor</th>
+                            <th className="px-4 py-3 font-semibold text-muted-foreground text-sm uppercase tracking-wider text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-border/50">
                         {posts?.map((post) => (
                             <tr key={post.id} className="hover:bg-secondary/20 transition-colors group">
-                                <td className="p-6 font-medium text-lg">{post.title}</td>
-                                <td className="p-6">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold tracking-wide ${post.status === "Published" ? "bg-green-500/10 text-green-500 border border-green-500/20" : "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20"}`}>
+                                <td className="px-4 py-3 font-medium text-lg">{post.title}</td>
+                                <td className="px-4 py-3 whitespace-nowrap">
+                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold tracking-wide border ${post.status === "Published" ? "bg-green-500/10 text-green-500 border-green-500/20" : "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"}`}>
                                         {post.status}
                                     </span>
                                 </td>
-                                <td className="p-6 text-muted-foreground text-sm">
-                                    <div className="flex flex-col">
-                                        <span className="font-medium text-foreground">
-                                            {new Date(post.updated_at).toLocaleDateString(undefined, {
-                                                month: 'short',
-                                                day: 'numeric',
-                                                year: 'numeric'
-                                            })}
-                                        </span>
-                                        <span className="text-xs opacity-70">
-                                            {new Date(post.updated_at).toLocaleTimeString(undefined, {
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })}
-                                        </span>
-                                    </div>
+                                <td className="px-4 py-3 text-muted-foreground text-sm whitespace-nowrap">
+                                    {new Date(post.updated_at).toLocaleDateString(undefined, {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                    })}
+                                    <span className="mx-2 opacity-50">•</span>
+                                    {new Date(post.updated_at).toLocaleTimeString(undefined, {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    })}
                                 </td>
-                                <td className="p-6">
+                                <td className="px-4 py-3 whitespace-nowrap">
                                     <div className="flex items-center gap-2">
                                         <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
                                             R
@@ -70,8 +65,8 @@ export default async function AdminDashboard() {
                                         <span className="text-sm font-medium">Reshin</span>
                                     </div>
                                 </td>
-                                <td className="p-6">
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                <td className="px-4 py-3 text-right whitespace-nowrap">
+                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity inline-block">
                                         <PostActions id={post.id} />
                                     </div>
                                 </td>
