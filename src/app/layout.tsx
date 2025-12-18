@@ -11,6 +11,7 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Res.",
   description: "Portfolio of Reshin Rajesh, a Full Stack Web Developer and Computer Science Graduate.",
+  metadataBase: new URL("https://reshinrajesh.in"),
 };
 
 export default function RootLayout({
