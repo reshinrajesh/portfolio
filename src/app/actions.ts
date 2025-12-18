@@ -102,3 +102,27 @@ export async function deleteMediaFile(filename: string) {
     revalidatePath("/admin/media");
     return { success: true };
 }
+
+export async function getBio() {
+    const { data } = await supabase
+        .from('site_content')
+        .select('value')
+        .eq('key', 'bio')
+        .single();
+
+    return data?.value || '';
+}
+
+export async function updateBio(content: string) {
+    const { error } = await supabase
+        .from('site_content')
+        .upsert({ key: 'bio', value: content, updated_at: new Date().toISOString() });
+
+    if (error) {
+        console.error("Error updating bio:", error);
+        throw new Error("Failed to update bio");
+    }
+
+    revalidatePath("/bio");
+    return { success: true };
+}

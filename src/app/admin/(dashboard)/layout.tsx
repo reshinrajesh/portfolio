@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, FileText, ExternalLink, PlusCircle, Image as ImageIcon } from "lucide-react";
+import { LayoutDashboard, FileText, ExternalLink, PlusCircle, Image as ImageIcon, UserCircle } from "lucide-react";
 import SignOutButton from "./SignOutButton";
 import Logo from "@/components/Logo";
 
@@ -51,6 +51,13 @@ export default async function AdminLayout({
                     >
                         <ImageIcon size={20} />
                         <span>Media Gallery</span>
+                    </Link>
+                    <Link
+                        href="/admin/profile"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1"
+                    >
+                        <UserCircle size={20} />
+                        <span>Profile</span>
                     </Link>
                     <Link
                         href="https://blogs.reshinrajesh.in"
