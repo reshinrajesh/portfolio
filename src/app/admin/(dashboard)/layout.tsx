@@ -46,7 +46,7 @@ export default async function AdminLayout({
                         <span>Create New</span>
                     </Link>
                     <Link
-                        href="/admin/media"
+                        href="/media"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1"
                     >
                         <ImageIcon size={20} />
