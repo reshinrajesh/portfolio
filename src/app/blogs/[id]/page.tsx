@@ -7,6 +7,8 @@ import { estimateReadingTime } from "@/lib/utils";
 import ScrollProgress from "@/components/ScrollProgress";
 import ShareButtons from "@/components/ShareButtons";
 
+import { headers } from "next/headers";
+
 export const revalidate = 0;
 
 interface Props {
@@ -34,6 +36,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
     const { id } = await params;
+    const headersList = await headers();
+    const domain = headersList.get('host') || '';
+    const isSubdomain = domain.startsWith('blogs.');
+
     const { data: post } = await supabase
         .from("posts")
         .select("*")
@@ -49,7 +55,7 @@ export default async function BlogPostPage({ params }: Props) {
             <ScrollProgress />
             <ShareButtons title={post.title} />
             <Link
-                href="/blogs"
+                href={isSubdomain ? "/" : "/blogs"}
                 className="inline-flex items-center text-muted-foreground hover:text-primary mb-12 transition-colors group"
             >
                 <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />

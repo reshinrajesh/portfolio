@@ -3,9 +3,15 @@ import { supabase } from "@/lib/supabase-server";
 import { ArrowRight, Calendar, Clock, User, BookOpen } from "lucide-react";
 import { estimateReadingTime } from "@/lib/utils";
 
+import { headers } from "next/headers";
+
 export const revalidate = 0;
 
 export default async function BlogPage() {
+    const headersList = await headers();
+    const domain = headersList.get('host') || '';
+    const isSubdomain = domain.startsWith('blogs.');
+
     const { data: posts } = await supabase
         .from('posts')
         .select('*')
@@ -59,7 +65,7 @@ export default async function BlogPage() {
                             </div>
                         </div>
                         <div className="prose prose-invert max-w-none mb-6 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.content || '' }} />
-                        <Link href={`/blogs/${post.id}`} className="flex items-center text-primary font-medium group-hover:translate-x-1 transition-transform w-fit">
+                        <Link href={isSubdomain ? `/${post.id}` : `/blogs/${post.id}`} className="flex items-center text-primary font-medium group-hover:translate-x-1 transition-transform w-fit">
                             Read more <ArrowRight size={16} className="ml-1" />
                         </Link>
                     </div>
