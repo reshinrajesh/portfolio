@@ -55,7 +55,7 @@ export default function Hero() {
                             target="_blank"
                             className="bg-secondary text-secondary-foreground border border-border px-8 py-3 rounded-full font-medium hover:bg-secondary/80 transition-colors flex items-center gap-2"
                         >
-                            Visit My Blog <ExternalLink size={18} />
+                            Visit My Blogs <ExternalLink size={18} />
                         </Link>
                     </motion.div>
                 </div>
