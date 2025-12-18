@@ -56,3 +56,49 @@ export async function deletePost(id: string) {
     revalidatePath("/blogs");
     return { success: true };
 }
+
+export async function getMediaFiles() {
+    const { data, error } = await supabase
+        .storage
+        .from('blog-images')
+        .list('', {
+            limit: 100,
+            offset: 0,
+            sortBy: { column: 'created_at', order: 'desc' },
+        });
+
+    if (error) {
+        console.error("Error fetching media:", error);
+        return [];
+    }
+
+    // Get public URLs for each file
+    const filesWithUrls = data.map((file) => {
+        const { data: { publicUrl } } = supabase
+            .storage
+            .from('blog-images')
+            .getPublicUrl(file.name);
+
+        return {
+            ...file,
+            publicUrl
+        };
+    });
+
+    return filesWithUrls;
+}
+
+export async function deleteMediaFile(filename: string) {
+    const { error } = await supabase
+        .storage
+        .from('blog-images')
+        .remove([filename]);
+
+    if (error) {
+        console.error("Error deleting file:", error);
+        throw new Error("Failed to delete file");
+    }
+
+    revalidatePath("/admin/media");
+    return { success: true };
+}
