@@ -11,15 +11,15 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPost, updatePost } from '@/app/actions';
 import { supabase } from '@/lib/supabase-client';
+import { VideoExtension } from '@/components/admin/VideoExtension';
 import {
     Bold, Italic, Underline as UnderlineIcon,
     Heading1, Heading2, Heading3,
     List, ListOrdered, Quote, Code,
     AlignLeft, AlignCenter, AlignRight,
     Link as LinkIcon, Image as ImageIcon, Undo, Redo,
-    Youtube as YoutubeIcon, MapPin, Globe
+    Youtube as YoutubeIcon, MapPin, Globe, Video as VideoIcon
 } from 'lucide-react';
-
 import dynamic from 'next/dynamic';
 
 const LocationPicker = dynamic(() => import('@/components/admin/LocationPicker'), {
@@ -36,6 +36,7 @@ interface Post {
 
 const Toolbar = ({ editor }: { editor: Editor | null }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const videoInputRef = useRef<HTMLInputElement>(null);
     const [showLocationMenu, setShowLocationMenu] = useState(false);
     const [showMapPicker, setShowMapPicker] = useState(false);
 
@@ -133,8 +134,50 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
         }
     };
 
+    const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // 1. Upload to Supabase
+        const filename = `${Date.now()}-${file.name}`;
+        const { data, error } = await supabase
+            .storage
+            .from('blog-images') // Using existing bucket for now
+            .upload(filename, file);
+
+        if (error) {
+            console.error('Upload error:', error);
+            alert('Failed to upload video. Ensure "blog-images" bucket allows video types.');
+            return;
+        }
+
+        // 2. Get Public URL
+        const { data: { publicUrl } } = supabase
+            .storage
+            .from('blog-images')
+            .getPublicUrl(filename);
+
+        // 3. Insert into Editor
+        editor.chain().focus().insertContent({
+            type: 'video',
+            attrs: {
+                src: publicUrl,
+                class: 'rounded-lg max-w-full my-4 border border-border w-full aspect-video'
+            }
+        }).run();
+
+        // Reset input
+        if (videoInputRef.current) {
+            videoInputRef.current.value = '';
+        }
+    };
+
     const triggerImageUpload = () => {
         fileInputRef.current?.click();
+    };
+
+    const triggerVideoUpload = () => {
+        videoInputRef.current?.click();
     };
 
     const setLink = () => {
@@ -164,6 +207,13 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                     onChange={handleImageUpload}
                     className="hidden"
                     accept="image/*"
+                />
+                <input
+                    type="file"
+                    ref={videoInputRef}
+                    onChange={handleVideoUpload}
+                    className="hidden"
+                    accept="video/*"
                 />
 
                 <div className="flex gap-1 border-r border-border pr-2 mr-2">
@@ -288,6 +338,13 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                         <ImageIcon size={18} />
                     </button>
                     <button
+                        onClick={triggerVideoUpload}
+                        className="p-2 rounded hover:bg-secondary/50"
+                        title="Upload Video"
+                    >
+                        <VideoIcon size={18} />
+                    </button>
+                    <button
                         onClick={addYoutube}
                         className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('youtube') ? 'bg-secondary text-primary' : ''}`}
                         title="Add YouTube Video"
@@ -368,6 +425,11 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
                 HTMLAttributes: {
                     class: 'rounded-lg overflow-hidden my-4 border border-border w-full aspect-video',
                 },
+            }),
+            VideoExtension.configure({
+                HTMLAttributes: {
+                    class: 'rounded-lg max-w-full my-4 border border-border w-full aspect-video',
+                }
             }),
             TextAlign.configure({
                 types: ['heading', 'paragraph'],
