@@ -7,7 +7,7 @@ export default function Footer() {
                 <div className="flex flex-col items-center gap-4 mb-4">
                     <Logo />
                 </div>
-                <p>&copy; {new Date().getFullYear()} Reshin K Rajesh. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} Reshin Rajesh. All rights reserved.</p>
                 <p className="mt-2 flex items-center justify-center gap-4">
                     {/* Add social links here if needed */}
                 </p>

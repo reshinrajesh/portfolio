@@ -10,7 +10,7 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: "Res.",
-  description: "Portfolio of Reshin K Rajesh, a Full Stack Web Developer and Computer Science Graduate.",
+  description: "Portfolio of Reshin Rajesh, a Full Stack Web Developer and Computer Science Graduate.",
 };
 
 export default function RootLayout({

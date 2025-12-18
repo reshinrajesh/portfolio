@@ -25,7 +25,7 @@ export default function Hero() {
                     >
                         Hi, I'm <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">
-                            Reshin K Rajesh.
+                            Reshin Rajesh.
                         </span>
                     </motion.h1>
 

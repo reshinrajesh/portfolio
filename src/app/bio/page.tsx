@@ -18,7 +18,7 @@ export default function BioPage() {
                 <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-purple-600 mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-primary/20">
                     R
                 </div>
-                <h1 className="text-2xl font-bold mb-2">Reshin K Rajesh</h1>
+                <h1 className="text-2xl font-bold mb-2">Reshin Rajesh</h1>
                 <p className="text-muted-foreground text-sm">Full Stack Developer | CS Graduate</p>
             </div>
 
