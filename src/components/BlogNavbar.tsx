@@ -26,12 +26,12 @@ export default function BlogNavbar() {
             )}
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
-                <Link href="/" className="text-2xl font-bold tracking-tighter hover:text-primary transition-colors">
+                <Link href="https://reshinrajesh.in" className="text-2xl font-bold tracking-tighter hover:text-primary transition-colors">
                     Reshin<span className="text-primary">.</span>
                 </Link>
 
                 <Link
-                    href="/"
+                    href="https://reshinrajesh.in"
                     className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hover:scale-105 transform duration-200"
                 >
                     <ArrowLeft size={16} />
