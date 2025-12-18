@@ -30,7 +30,7 @@ const handler = NextAuth({
         })
     ],
     pages: {
-        signIn: '/admin/login',
+        signIn: '/login',
     },
     session: {
         strategy: "jwt",

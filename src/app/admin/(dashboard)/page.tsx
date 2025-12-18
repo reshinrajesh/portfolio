@@ -17,8 +17,8 @@ export default async function AdminDashboard() {
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-3xl font-bold">Blog Posts</h1>
                 <Link
-                    href="/admin/editor"
-                    className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                    href="/editor"
+                    className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity w-full sm:w-auto justify-center"
                 >
                     <PlusCircle size={20} />
                     Create New
@@ -83,7 +83,7 @@ export default async function AdminDashboard() {
                     <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
                         <p className="mb-4 text-lg">No posts found.</p>
                         <Link
-                            href="/admin/editor"
+                            href="/editor"
                             className="text-primary hover:underline underline-offset-4"
                         >
                             Create your first post
