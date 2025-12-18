@@ -6,6 +6,10 @@ import { LayoutDashboard, FileText, ExternalLink } from "lucide-react";
 import SignOutButton from "./SignOutButton";
 import Logo from "@/components/Logo";
 
+export const metadata = {
+    title: "Dashboard | Res.",
+};
+
 export default async function AdminLayout({
     children,
 }: {

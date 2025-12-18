@@ -3,7 +3,7 @@ import BlogNavbar from "@/components/BlogNavbar";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-    title: "Reshin K Rajesh | Blog",
+    title: "Blog | Res.",
     description: "Read my latest thoughts and articles.",
 };
 

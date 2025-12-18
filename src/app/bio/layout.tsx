@@ -1,5 +1,5 @@
 export const metadata = {
-    title: "Reshin K Rajesh | Links",
+    title: "Links | Res.",
     description: "Connect with me on social media and check out my work.",
 };
 

@@ -9,7 +9,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Reshin K Rajesh | Portfolio",
+  title: "Res.",
   description: "Portfolio of Reshin K Rajesh, a Full Stack Web Developer and Computer Science Graduate.",
 };
 
