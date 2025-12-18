@@ -19,8 +19,8 @@ import {
     Link as LinkIcon, Image as ImageIcon, Undo, Redo,
     Youtube as YoutubeIcon, MapPin, Globe
 } from 'lucide-react';
-
 import dynamic from 'next/dynamic';
+import { Iframe } from '@/components/admin/IframeExtension';
 
 const LocationPicker = dynamic(() => import('@/components/admin/LocationPicker'), {
     ssr: false,
@@ -42,9 +42,10 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
     if (!editor) return null;
 
     const handleLocationSelect = ({ name, lat, lng }: { name: string; lat: number; lng: number }) => {
-        const locationText = `📍 ${name}`;
-        const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
-        editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a> `).run();
+        const embedUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+        editor.chain().focus().setIframe({ src: embedUrl }).run();
+        // Optionally add a text caption
+        editor.chain().focus().insertContent(`<p class="text-center text-sm text-muted-foreground mt-2">📍 ${name}</p>`).run();
     };
 
     const openMapPicker = () => {
@@ -77,10 +78,12 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
 
                 const city = data.address.city || data.address.town || data.address.village || 'Unknown Location';
                 const country = data.address.country || '';
-                const locationText = `📍 ${city}, ${country}`;
-                const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                const locationName = `${city}, ${country}`;
 
-                editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a > `).run();
+                const embedUrl = `https://maps.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`;
+                editor.chain().focus().setIframe({ src: embedUrl }).run();
+                editor.chain().focus().insertContent(`<p class="text-center text-sm text-muted-foreground mt-2">📍 ${locationName}</p>`).run();
+
             } catch (error) {
                 console.error('Error fetching location:', error);
                 alert('Failed to fetch location name');
@@ -95,9 +98,9 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
         const locationName = window.prompt("Enter Location (e.g. Kochi, India)");
 
         if (locationName) {
-            const locationText = `📍 ${locationName} `;
-            const googleMapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(locationName)}`;
-            editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a> `).run();
+            const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(locationName)}&z=15&output=embed`;
+            editor.chain().focus().setIframe({ src: embedUrl }).run();
+            editor.chain().focus().insertContent(`<p class="text-center text-sm text-muted-foreground mt-2">📍 ${locationName}</p>`).run();
         }
     }
 
@@ -351,6 +354,7 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
         extensions: [
             StarterKit,
             Underline,
+            Iframe,
             Link.configure({
                 openOnClick: false,
                 HTMLAttributes: {
