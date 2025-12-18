@@ -48,6 +48,12 @@ export default function BioPage() {
                 >
                     Visit Portfolio Website
                 </Link>
+                <Link
+                    href="https://blog.reshinrajesh.in"
+                    className="flex items-center justify-center p-4 rounded-xl bg-card border border-border hover:border-purple-500/50 hover:text-purple-500 font-medium transition-all group"
+                >
+                    Read my Thoughts
+                </Link>
             </div>
 
             <footer className="text-xs text-muted-foreground mt-8">
