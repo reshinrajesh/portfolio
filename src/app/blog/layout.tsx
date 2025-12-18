@@ -1,5 +1,6 @@
 
 import BlogNavbar from "@/components/BlogNavbar";
+import Footer from "@/components/Footer";
 
 export const metadata = {
     title: "Reshin K Rajesh | Blog",
@@ -17,6 +18,7 @@ export default function BlogLayout({
             <main className="min-h-screen bg-background">
                 {children}
             </main>
+            <Footer />
         </>
     );
 }
