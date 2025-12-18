@@ -19,25 +19,40 @@ export default function Contact() {
                         Have a project in mind or just want to chat? I'd love to hear from you.
                     </p>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+                    <motion.div
+                        className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-left"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={{
+                            visible: { transition: { staggerChildren: 0.1 } }
+                        }}
+                    >
                         {socials.map((social) => {
                             const Icon = social.icon;
                             return (
-                                <Link
+                                <motion.div
                                     key={social.name}
-                                    href={social.link}
-                                    target="_blank"
-                                    className="bg-card p-6 rounded-2xl border border-border hover:border-primary/50 transition-colors group"
+                                    variants={{
+                                        hidden: { opacity: 0, y: 20 },
+                                        visible: { opacity: 1, y: 0 }
+                                    }}
                                 >
-                                    <div className="p-3 bg-background rounded-lg text-primary w-fit mb-4 group-hover:bg-primary group-hover:text-background transition-colors">
-                                        <Icon size={24} />
-                                    </div>
-                                    <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">{social.name}</h3>
-                                    <p className="text-muted-foreground text-sm break-all">{social.display}</p>
-                                </Link>
+                                    <Link
+                                        href={social.link}
+                                        target="_blank"
+                                        className="bg-card p-6 rounded-2xl border border-border hover:border-primary/50 transition-colors group block h-full"
+                                    >
+                                        <div className="p-3 bg-background rounded-lg text-primary w-fit mb-4 group-hover:bg-primary group-hover:text-background transition-colors">
+                                            <Icon size={24} />
+                                        </div>
+                                        <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">{social.name}</h3>
+                                        <p className="text-muted-foreground text-sm break-all">{social.display}</p>
+                                    </Link>
+                                </motion.div>
                             )
                         })}
-                    </div>
+                    </motion.div>
                 </motion.div>
             </div>
         </section>

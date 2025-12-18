@@ -9,8 +9,8 @@ export default function About() {
             <div className="container mx-auto px-6">
                 <div className="max-w-4xl mx-auto">
                     <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
@@ -21,8 +21,16 @@ export default function About() {
                             I am a Computer Science graduate (`B.Tech`) from <strong>Srinivas University</strong> with a Diploma in Cloud Computing. My journey includes hands-on experience as a Full Stack Web Developer Intern, where I honed my skills in responsive design and database integration.
                         </p>
 
-                        <div className="space-y-8 mb-8">
-                            <div>
+                        <motion.div
+                            className="space-y-8 mb-8"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={{
+                                visible: { transition: { staggerChildren: 0.2 } }
+                            }}
+                        >
+                            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
                                 <h3 className="text-xl font-semibold mb-4 text-foreground flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-primary" /> Experience
                                 </h3>
@@ -52,9 +60,9 @@ export default function About() {
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
 
-                            <div>
+                            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
                                 <h3 className="text-xl font-semibold mb-4 text-foreground flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-primary" /> Education
                                 </h3>
@@ -70,9 +78,9 @@ export default function About() {
                                         <p className="text-sm text-muted-foreground">Nettur Technical Training Foundation | 2018 - 2021</p>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
 
-                            <div>
+                            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
                                 <h3 className="text-xl font-semibold mb-4 text-foreground flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-primary" /> Certifications
                                 </h3>
@@ -88,8 +96,8 @@ export default function About() {
                                         </div>
                                     ))}
                                 </div>
-                            </div>
-                        </div>
+                            </motion.div>
+                        </motion.div>
                     </motion.div>
 
                 </div>

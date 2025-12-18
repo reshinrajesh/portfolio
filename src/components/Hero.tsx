@@ -9,8 +9,31 @@ export default function Hero() {
         <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
             {/* Background Elements */}
             <div className="absolute inset-0 z-0">
-                <div className="absolute top-20 right-10 w-96 h-96 bg-primary/20 rounded-full blur-[128px]" />
-                <div className="absolute bottom-20 left-10 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px]" />
+                <motion.div
+                    animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.3, 0.5, 0.3],
+                    }}
+                    transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
+                    className="absolute top-20 right-10 w-96 h-96 bg-primary/20 rounded-full blur-[128px]"
+                />
+                <motion.div
+                    animate={{
+                        scale: [1, 1.1, 1],
+                        opacity: [0.3, 0.5, 0.3],
+                    }}
+                    transition={{
+                        duration: 6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1
+                    }}
+                    className="absolute bottom-20 left-10 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px]"
+                />
             </div>
 
             <div className="container mx-auto px-6 relative z-10">
