@@ -31,7 +31,7 @@ export default function LoginPage() {
             } else {
                 // Redirect to admin dashboard
                 const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
-                router.push(callbackUrl || "/admin");
+                router.push(callbackUrl || "/");
             }
         } catch (error) {
             console.error("Login failed", error);

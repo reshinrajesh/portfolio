@@ -20,7 +20,7 @@ export default async function AdminLayout({
     if (!session) {
         // Basic protection: redirect to login if not authenticated
         // In a real app, you'd use middleware or a robust check
-        redirect("/api/auth/signin?callbackUrl=/admin");
+        redirect("/api/auth/signin?callbackUrl=/");
     }
 
     return (
