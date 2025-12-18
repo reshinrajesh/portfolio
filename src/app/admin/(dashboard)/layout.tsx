@@ -32,14 +32,14 @@ export default async function AdminLayout({
 
                 <nav className="flex flex-col gap-2">
                     <Link
-                        href="https://admin.reshinrajesh.in"
+                        href="/admin"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1"
                     >
                         <LayoutDashboard size={20} />
                         <span>All Posts</span>
                     </Link>
                     <Link
-                        href="https://admin.reshinrajesh.in/editor"
+                        href="/admin/editor"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1"
                     >
                         <FileText size={20} />

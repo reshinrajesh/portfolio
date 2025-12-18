@@ -19,8 +19,8 @@ import {
     Link as LinkIcon, Image as ImageIcon, Undo, Redo,
     Youtube as YoutubeIcon, MapPin, Globe
 } from 'lucide-react';
+
 import dynamic from 'next/dynamic';
-import { Iframe } from '@/components/admin/IframeExtension';
 
 const LocationPicker = dynamic(() => import('@/components/admin/LocationPicker'), {
     ssr: false,
@@ -42,10 +42,9 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
     if (!editor) return null;
 
     const handleLocationSelect = ({ name, lat, lng }: { name: string; lat: number; lng: number }) => {
-        const embedUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
-        editor.chain().focus().setIframe({ src: embedUrl }).run();
-        // Optionally add a text caption
-        editor.chain().focus().insertContent(`<p class="text-center text-sm text-muted-foreground mt-2">📍 ${name}</p>`).run();
+        const locationText = `📍 ${name}`;
+        const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+        editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a> `).run();
     };
 
     const openMapPicker = () => {
@@ -78,12 +77,10 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
 
                 const city = data.address.city || data.address.town || data.address.village || 'Unknown Location';
                 const country = data.address.country || '';
-                const locationName = `${city}, ${country}`;
+                const locationText = `📍 ${city}, ${country}`;
+                const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-                const embedUrl = `https://maps.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`;
-                editor.chain().focus().setIframe({ src: embedUrl }).run();
-                editor.chain().focus().insertContent(`<p class="text-center text-sm text-muted-foreground mt-2">📍 ${locationName}</p>`).run();
-
+                editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a > `).run();
             } catch (error) {
                 console.error('Error fetching location:', error);
                 alert('Failed to fetch location name');
@@ -98,9 +95,9 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
         const locationName = window.prompt("Enter Location (e.g. Kochi, India)");
 
         if (locationName) {
-            const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(locationName)}&z=15&output=embed`;
-            editor.chain().focus().setIframe({ src: embedUrl }).run();
-            editor.chain().focus().insertContent(`<p class="text-center text-sm text-muted-foreground mt-2">📍 ${locationName}</p>`).run();
+            const locationText = `📍 ${locationName} `;
+            const googleMapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(locationName)}`;
+            editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a> `).run();
         }
     }
 
@@ -354,7 +351,6 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
         extensions: [
             StarterKit,
             Underline,
-            Iframe,
             Link.configure({
                 openOnClick: false,
                 HTMLAttributes: {
@@ -420,9 +416,9 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
 
     return (
         <div className="max-w-4xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 sm:gap-0">
+            <div className="flex items-center justify-between mb-8">
                 <h1 className="text-3xl font-bold">New Post</h1>
-                <div className="flex gap-4 w-full sm:w-auto justify-end">
+                <div className="flex gap-4">
                     <button
                         onClick={() => handleSave('Draft')}
                         disabled={isSaving}
@@ -446,7 +442,7 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
                     placeholder="Post Title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full text-2xl md:text-4xl font-bold bg-transparent border-none focus:outline-none placeholder:text-muted-foreground/50"
+                    className="w-full text-4xl font-bold bg-transparent border-none focus:outline-none placeholder:text-muted-foreground/50"
                 />
 
                 <div className="bg-card border border-border rounded-xl  min-h-[500px] overflow-hidden">

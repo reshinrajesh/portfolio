@@ -1,4 +1,6 @@
 import Logo from "./Logo";
+import Link from "next/link";
+import { Lock } from "lucide-react";
 
 export default function Footer() {
     return (
@@ -8,6 +10,11 @@ export default function Footer() {
                     <Logo />
                 </div>
                 <p>&copy; {new Date().getFullYear()} Reshin Rajesh. All rights reserved.</p>
+                <div className="mt-4 flex items-center justify-center gap-4">
+                    <Link href="/admin/login" className="opacity-50 hover:opacity-100 transition-opacity" aria-label="Admin Login">
+                        <Lock size={14} />
+                    </Link>
+                </div>
             </div>
         </footer>
     );
