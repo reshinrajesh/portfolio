@@ -7,7 +7,7 @@ import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
 import TextAlign from '@tiptap/extension-text-align'
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPost, updatePost } from '@/app/actions';
 import { supabase } from '@/lib/supabase-client';
@@ -18,7 +18,8 @@ import {
     List, ListOrdered, Quote, Code,
     AlignLeft, AlignCenter, AlignRight,
     Link as LinkIcon, Image as ImageIcon, Undo, Redo,
-    Youtube as YoutubeIcon, MapPin, Globe, Video as VideoIcon
+    Youtube as YoutubeIcon, MapPin, Globe, Video as VideoIcon,
+    Settings, Save
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -32,9 +33,12 @@ interface Post {
     title: string;
     content: string;
     status: 'Draft' | 'Published';
+    tags?: string[];
+    seo_title?: string;
+    seo_description?: string;
 }
 
-const Toolbar = ({ editor }: { editor: Editor | null }) => {
+const Toolbar = ({ editor, onOpenSettings }: { editor: Editor | null, onOpenSettings: () => void }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const videoInputRef = useRef<HTMLInputElement>(null);
     const [showLocationMenu, setShowLocationMenu] = useState(false);
@@ -91,24 +95,12 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
         });
     }
 
-    const addManualLocation = () => {
-        setShowLocationMenu(false);
-        const locationName = window.prompt("Enter Location (e.g. Kochi, India)");
-
-        if (locationName) {
-            const locationText = `📍 ${locationName} `;
-            const googleMapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(locationName)}`;
-            editor.chain().focus().insertContent(`<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${locationText}</a> `).run();
-        }
-    }
-
     const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // 1. Upload to Supabase
         const filename = `${Date.now()}-${file.name}`;
-        const { data, error } = await supabase
+        const { error } = await supabase
             .storage
             .from('blog-images')
             .upload(filename, file);
@@ -119,16 +111,13 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
             return;
         }
 
-        // 2. Get Public URL
         const { data: { publicUrl } } = supabase
             .storage
             .from('blog-images')
             .getPublicUrl(filename);
 
-        // 3. Insert into Editor
         editor.chain().focus().setImage({ src: publicUrl }).run();
 
-        // Reset input
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
@@ -138,26 +127,23 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // 1. Upload to Supabase
         const filename = `${Date.now()}-${file.name}`;
-        const { data, error } = await supabase
+        const { error } = await supabase
             .storage
-            .from('blog-images') // Using existing bucket for now
+            .from('blog-images')
             .upload(filename, file);
 
         if (error) {
             console.error('Upload error:', error);
-            alert('Failed to upload video. Ensure "blog-images" bucket allows video types.');
+            alert('Failed to upload video.');
             return;
         }
 
-        // 2. Get Public URL
         const { data: { publicUrl } } = supabase
             .storage
             .from('blog-images')
             .getPublicUrl(filename);
 
-        // 3. Insert into Editor
         editor.chain().focus().insertContent({
             type: 'video',
             attrs: {
@@ -166,18 +152,9 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
             }
         }).run();
 
-        // Reset input
         if (videoInputRef.current) {
             videoInputRef.current.value = '';
         }
-    };
-
-    const triggerImageUpload = () => {
-        fileInputRef.current?.click();
-    };
-
-    const triggerVideoUpload = () => {
-        videoInputRef.current?.click();
     };
 
     const setLink = () => {
@@ -200,7 +177,7 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                 onClose={() => setShowMapPicker(false)}
                 onSelect={handleLocationSelect}
             />
-            <div className="border-b border-border p-4 flex flex-wrap gap-2 sticky top-0 bg-card z-10">
+            <div className="border-b border-border p-4 flex flex-wrap gap-2 sticky top-0 bg-card z-10 w-full overflow-x-auto items-center">
                 <input
                     type="file"
                     ref={fileInputRef}
@@ -255,37 +232,6 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                     >
                         <Heading2 size={18} />
                     </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('heading', { level: 3 }) ? 'bg-secondary text-primary' : ''}`}
-                        title="H3"
-                    >
-                        <Heading3 size={18} />
-                    </button>
-                </div>
-
-                <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                    <button
-                        onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive({ textAlign: 'left' }) ? 'bg-secondary text-primary' : ''}`}
-                        title="Align Left"
-                    >
-                        <AlignLeft size={18} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive({ textAlign: 'center' }) ? 'bg-secondary text-primary' : ''}`}
-                        title="Align Center"
-                    >
-                        <AlignCenter size={18} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive({ textAlign: 'right' }) ? 'bg-secondary text-primary' : ''}`}
-                        title="Align Right"
-                    >
-                        <AlignRight size={18} />
-                    </button>
                 </div>
 
                 <div className="flex gap-1 border-r border-border pr-2 mr-2">
@@ -331,14 +277,14 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                         <LinkIcon size={18} />
                     </button>
                     <button
-                        onClick={triggerImageUpload}
+                        onClick={() => fileInputRef.current?.click()}
                         className="p-2 rounded hover:bg-secondary/50"
                         title="Upload Image"
                     >
                         <ImageIcon size={18} />
                     </button>
                     <button
-                        onClick={triggerVideoUpload}
+                        onClick={() => videoInputRef.current?.click()}
                         className="p-2 rounded hover:bg-secondary/50"
                         title="Upload Video"
                     >
@@ -351,47 +297,16 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                     >
                         <YoutubeIcon size={18} />
                     </button>
-                    <button
-                        onClick={() => setShowLocationMenu(!showLocationMenu)}
-                        className={`p-2 rounded hover:bg-secondary/50 relative ${showLocationMenu ? 'bg-secondary' : ''}`}
-                        title="Add Location"
-                    >
-                        <MapPin size={18} />
-                        {showLocationMenu && (
-                            <div className="absolute top-full right-0 mt-1 bg-popover border border-border shadow-md rounded-lg overflow-hidden min-w-[200px] flex flex-col z-50">
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); addCurrentLocation(); }}
-                                    className="flex items-center gap-2 p-3 text-sm text-left hover:bg-muted/50 transition-colors text-popover-foreground"
-                                >
-                                    <MapPin size={16} />
-                                    Use Current Location
-                                </button>
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); openMapPicker(); }}
-                                    className="flex items-center gap-2 p-3 text-sm text-left hover:bg-muted/50 transition-colors text-popover-foreground"
-                                >
-                                    <Globe size={16} />
-                                    Select on Map
-                                </button>
-                            </div>
-                        )}
-                    </button>
                 </div>
 
-                <div className="flex gap-1">
+                <div className="flex gap-1 ml-auto">
                     <button
-                        onClick={() => editor.chain().focus().undo().run()}
-                        className="p-2 rounded hover:bg-secondary/50"
-                        title="Undo"
+                        onClick={onOpenSettings}
+                        className="p-2 rounded hover:bg-secondary/50 flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                        title="Post Settings"
                     >
-                        <Undo size={18} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().redo().run()}
-                        className="p-2 rounded hover:bg-secondary/50"
-                        title="Redo"
-                    >
-                        <Redo size={18} />
+                        <Settings size={18} />
+                        <span className="text-xs hidden sm:inline">Settings</span>
                     </button>
                 </div>
             </div>
@@ -399,88 +314,208 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
     )
 }
 
+const SettingsModal = ({
+    isOpen,
+    onClose,
+    tags,
+    setTags,
+    seoTitle,
+    setSeoTitle,
+    seoDesc,
+    setSeoDesc
+}: {
+    isOpen: boolean,
+    onClose: () => void,
+    tags: string[],
+    setTags: (tags: string[]) => void,
+    seoTitle: string,
+    setSeoTitle: (val: string) => void,
+    seoDesc: string,
+    setSeoDesc: (val: string) => void
+}) => {
+    const [tagInput, setTagInput] = useState("");
+
+    if (!isOpen) return null;
+
+    const addTag = () => {
+        if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+            setTags([...tags, tagInput.trim()]);
+            setTagInput("");
+        }
+    };
+
+    const removeTag = (tagToRemove: string) => {
+        setTags(tags.filter(tag => tag !== tagToRemove));
+    };
+
+    return (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-card border border-border rounded-xl shadow-lg w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                <div className="p-4 border-b border-border flex justify-between items-center bg-secondary/30">
+                    <h3 className="font-semibold">Post Settings</h3>
+                    <button onClick={onClose} className="text-muted-foreground hover:text-foreground">✕</button>
+                </div>
+                <div className="p-6 space-y-6">
+                    {/* Tags */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Tags</label>
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                value={tagInput}
+                                onChange={(e) => setTagInput(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && addTag()}
+                                className="flex-1 bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                placeholder="Add a tag..."
+                            />
+                            <button onClick={addTag} className="bg-primary/10 text-primary px-4 py-2 rounded-lg text-sm hover:bg-primary/20">Add</button>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                            {tags.map(tag => (
+                                <span key={tag} className="bg-secondary text-xs px-2 py-1 rounded-full flex items-center gap-1 group cursor-default">
+                                    {tag}
+                                    <button onClick={() => removeTag(tag)} className="hover:text-red-500 opacity-50 group-hover:opacity-100">×</button>
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* SEO Title */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">SEO Title</label>
+                        <input
+                            type="text"
+                            value={seoTitle}
+                            onChange={(e) => setSeoTitle(e.target.value)}
+                            className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                            placeholder="Meta title for search engines"
+                        />
+                        <p className="text-xs text-muted-foreground">{seoTitle.length}/60 characters</p>
+                    </div>
+
+                    {/* SEO Description */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">SEO Description</label>
+                        <textarea
+                            value={seoDesc}
+                            onChange={(e) => setSeoDesc(e.target.value)}
+                            className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary min-h-[100px]"
+                            placeholder="Brief description for search results..."
+                        />
+                        <p className="text-xs text-muted-foreground">{seoDesc.length}/160 characters</p>
+                    </div>
+                </div>
+                <div className="p-4 border-t border-border bg-secondary/10 flex justify-end">
+                    <button onClick={onClose} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm hover:opacity-90">Done</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
     const [title, setTitle] = useState(initialPost?.title || '');
     const [isSaving, setIsSaving] = useState(false);
+    const [lastSaved, setLastSaved] = useState<Date | null>(null);
+    const [showSettings, setShowSettings] = useState(false);
+
+    // New Fields
+    const [tags, setTags] = useState<string[]>(initialPost?.tags || []);
+    const [seoTitle, setSeoTitle] = useState(initialPost?.seo_title || '');
+    const [seoDesc, setSeoDesc] = useState(initialPost?.seo_description || '');
+
     const router = useRouter();
 
     const editor = useEditor({
         extensions: [
             StarterKit,
             Underline,
-            Link.configure({
-                openOnClick: false,
-                HTMLAttributes: {
-                    class: 'text-primary underline cursor-pointer',
-                },
-            }),
-            Image.configure({
-                HTMLAttributes: {
-                    class: 'rounded-lg max-w-full my-4 border border-border',
-                },
-            }),
-            Youtube.configure({
-                controls: false,
-                nocookie: true,
-                HTMLAttributes: {
-                    class: 'rounded-lg overflow-hidden my-4 border border-border w-full aspect-video',
-                },
-            }),
-            VideoExtension.configure({
-                HTMLAttributes: {
-                    class: 'rounded-lg max-w-full my-4 border border-border w-full aspect-video',
-                }
-            }),
-            TextAlign.configure({
-                types: ['heading', 'paragraph'],
-            }),
+            Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-primary underline cursor-pointer' } }),
+            Image.configure({ HTMLAttributes: { class: 'rounded-lg max-w-full my-4 border border-border' } }),
+            Youtube.configure({ controls: false, nocookie: true, HTMLAttributes: { class: 'rounded-lg overflow-hidden my-4 border border-border w-full aspect-video' } }),
+            VideoExtension.configure({ HTMLAttributes: { class: 'rounded-lg max-w-full my-4 border border-border w-full aspect-video' } }),
+            TextAlign.configure({ types: ['heading', 'paragraph'] }),
         ],
         content: initialPost?.content || '<p>Start writing your story...</p>',
-        editorProps: {
-            attributes: {
-                class: 'prose prose-invert max-w-none focus:outline-none min-h-[400px] p-6',
-            },
-        },
+        editorProps: { attributes: { class: 'prose prose-invert max-w-none focus:outline-none min-h-[400px] p-6' } },
         immediatelyRender: false,
-    })
+    });
 
-    const handleSave = async (status: 'Draft' | 'Published') => {
-        if (!editor || !title) {
-            alert("Please add a title.");
-            return;
-        }
+    const handleSave = async (status: 'Draft' | 'Published', silent = false) => {
+        if (!editor || !title) return;
 
-        setIsSaving(true);
+        if (!silent) setIsSaving(true);
         const html = editor.getHTML();
+        const postData = {
+            title,
+            content: html,
+            status,
+            tags,
+            seo_title: seoTitle,
+            seo_description: seoDesc
+        };
 
         try {
             if (initialPost?.id) {
-                await updatePost(initialPost.id, {
-                    title,
-                    content: html,
-                    status
-                });
+                await updatePost(initialPost.id, postData);
             } else {
-                await createPost({
-                    title,
-                    content: html,
-                    status
-                });
+                // For auto-save on new post, we might want to create it first?
+                // Simplifying: Only auto-save updates, or create if manually triggered.
+                // Actually, if it's a new post and we auto-save, we need to create it and then switch to update mode.
+                // For now, let's keep auto-save simple: only if we have an ID (edit mode) or if user explicitly saves.
+                if (status === 'Draft' && silent && !initialPost?.id) {
+                    // specific case: preventing ghost drafts effectively
+                    return;
+                }
+
+                if (!initialPost?.id) {
+                    await createPost(postData);
+                    // Ideally we would get the new ID back and update URL, but server action returns void/success
+                    // For this iteration, basic save is fine. Redirect handles the rest.
+                }
             }
-            alert("Post saved!");
-            router.push('https://admin.reshinrajesh.in');
+
+            setLastSaved(new Date());
+            if (!silent) {
+                alert("Post saved!");
+                router.push('https://admin.reshinrajesh.in');
+            }
         } catch (error) {
             console.error(error);
-            alert("Error saving post.");
+            if (!silent) alert("Error saving post.");
         }
-        setIsSaving(false);
+        if (!silent) setIsSaving(false);
     };
 
+    // Auto-Save Logic
+    useEffect(() => {
+        if (!initialPost?.id) return; // Only auto-save existing posts for now
+
+        const interval = setInterval(() => {
+            handleSave('Draft', true);
+        }, 30000); // 30 seconds
+
+        return () => clearInterval(interval);
+    }, [editor, title, tags, seoTitle, seoDesc, initialPost?.id]);
+
     return (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto relative">
+            <SettingsModal
+                isOpen={showSettings}
+                onClose={() => setShowSettings(false)}
+                tags={tags} setTags={setTags}
+                seoTitle={seoTitle} setSeoTitle={setSeoTitle}
+                seoDesc={seoDesc} setSeoDesc={setSeoDesc}
+            />
+
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-3xl font-bold">New Post</h1>
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-center">
+                    {lastSaved && (
+                        <span className="text-xs text-muted-foreground mr-2">
+                            Saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                    )}
                     <button
                         onClick={() => handleSave('Draft')}
                         disabled={isSaving}
@@ -491,7 +526,7 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
                     <button
                         onClick={() => handleSave('Published')}
                         disabled={isSaving}
-                        className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:opacity-90 font-medium disabled:opacity-50"
+                        className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:opacity-90 font-medium disabled:opacity-50 flex items-center gap-2"
                     >
                         {isSaving ? 'Publishing...' : 'Publish'}
                     </button>
@@ -507,8 +542,8 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
                     className="w-full text-4xl font-bold bg-transparent border-none focus:outline-none placeholder:text-muted-foreground/50"
                 />
 
-                <div className="bg-card border border-border rounded-xl  min-h-[500px] overflow-hidden">
-                    <Toolbar editor={editor} />
+                <div className="bg-card border border-border rounded-xl min-h-[500px] overflow-hidden">
+                    <Toolbar editor={editor} onOpenSettings={() => setShowSettings(true)} />
                     <EditorContent editor={editor} />
                 </div>
             </div>

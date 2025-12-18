@@ -40,3 +40,9 @@ create policy "Public can read site content" on public.site_content
 create policy "Admin can manage site content" on public.site_content
   for all
   using (true);
+
+-- New columns for Schema Update (Run these in Supabase SQL Editor if you haven't)
+alter table public.posts add column if not exists tags text[] default '{}';
+alter table public.posts add column if not exists seo_title text;
+alter table public.posts add column if not exists seo_description text;
+alter table public.posts add column if not exists view_count integer default 0;

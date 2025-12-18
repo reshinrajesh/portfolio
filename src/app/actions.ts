@@ -6,7 +6,16 @@ import { revalidatePath } from "next/cache";
 
 
 
-export async function createPost(post: { title: string; content: string; status: 'Draft' | 'Published' }) {
+interface PostData {
+    title: string;
+    content: string;
+    status: 'Draft' | 'Published';
+    tags?: string[];
+    seo_title?: string;
+    seo_description?: string;
+}
+
+export async function createPost(post: PostData) {
     const { error } = await supabase.from('posts').insert(post);
 
     if (error) {
@@ -19,7 +28,7 @@ export async function createPost(post: { title: string; content: string; status:
     return { success: true };
 }
 
-export async function updatePost(id: string, post: { title: string; content: string; status: 'Draft' | 'Published' }) {
+export async function updatePost(id: string, post: PostData) {
     const { error } = await supabase.from('posts').update({
         ...post,
         updated_at: new Date().toISOString()
