@@ -5,6 +5,7 @@ import { MoveRight, Mail, Lock, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Logo from "@/components/Logo";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -44,10 +45,8 @@ export default function LoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-background px-4">
             <div className="w-full max-w-[400px] space-y-8">
                 <div className="text-center space-y-2">
-                    <div className="inline-block mb-8">
-                        <h1 className="text-3xl font-bold tracking-tighter hover:text-primary transition-colors cursor-default">
-                            Reshin<span className="text-primary">.</span>
-                        </h1>
+                    <div className="mb-8">
+                        <Logo asLink={false} className="text-3xl cursor-default" />
                     </div>
                     <h2 className="text-2xl font-bold tracking-tight">Admin Login</h2>
                     <p className="text-muted-foreground">Enter your credentials to continue</p>

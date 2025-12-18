@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { LayoutDashboard, FileText, ExternalLink } from "lucide-react";
 import SignOutButton from "./SignOutButton";
+import Logo from "@/components/Logo";
 
 export default async function AdminLayout({
     children,
@@ -22,10 +23,8 @@ export default async function AdminLayout({
         <div className="flex min-h-screen bg-background text-foreground">
             {/* Sidebar */}
             <aside className="w-64 border-r border-border p-6 flex flex-col bg-card/50 backdrop-blur-sm">
-                <Link href="/" className="text-2xl font-bold tracking-tighter hover:text-primary transition-colors mb-10">
-                    Reshin<span className="text-primary">.</span>
-                    <span className="text-xs font-normal text-muted-foreground block mt-1 tracking-normal">Admin Panel</span>
-                </Link>
+                <Logo />
+                <span className="text-xs font-normal text-muted-foreground block mt-1 tracking-normal">Admin Panel</span>
 
                 <nav className="flex flex-col gap-2">
                     <Link

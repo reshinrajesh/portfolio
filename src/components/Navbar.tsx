@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import Logo from "./Logo";
 
 
 const navLinks = [
@@ -38,9 +39,7 @@ export default function Navbar() {
             )}
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
-                <Link href="/" className="text-2xl font-bold tracking-tighter hover:text-primary transition-colors">
-                    Reshin<span className="text-primary">.</span>
-                </Link>
+                <Logo />
 
 
 
