@@ -49,13 +49,18 @@ export default function Navbar() {
                 {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => (
-                        <Link
+                        <motion.div
                             key={link.name}
-                            href={link.href}
-                            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hover:scale-105 transform duration-200"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
-                            {link.name}
-                        </Link>
+                            <Link
+                                href={link.href}
+                                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                {link.name}
+                            </Link>
+                        </motion.div>
                     ))}
 
                 </div>
@@ -79,14 +84,18 @@ export default function Navbar() {
                         className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-white/10 p-6 md:hidden flex flex-col gap-4 shadow-2xl"
                     >
                         {navLinks.map((link) => (
-                            <Link
+                            <motion.div
                                 key={link.name}
-                                href={link.href}
-                                onClick={() => setIsOpen(false)}
-                                className="text-lg font-medium text-muted-foreground hover:text-foreground hover:pl-2 transition-all"
+                                whileTap={{ scale: 0.95 }}
                             >
-                                {link.name}
-                            </Link>
+                                <Link
+                                    href={link.href}
+                                    onClick={() => setIsOpen(false)}
+                                    className="text-lg font-medium text-muted-foreground hover:text-foreground hover:pl-2 transition-all block"
+                                >
+                                    {link.name}
+                                </Link>
+                            </motion.div>
                         ))}
 
                     </motion.div>
