@@ -23,7 +23,7 @@ export default function PostActions({ id }: { id: string }) {
     return (
         <div className="flex gap-2 justify-end">
             <Link
-                href={`https://admin.reshinrajesh.in/editor?id=${id}`}
+                href={`/editor?id=${id}`}
                 className="p-2 hover:text-primary transition-colors"
                 title="Edit Post"
             >
