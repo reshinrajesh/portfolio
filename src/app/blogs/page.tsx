@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { supabase } from "@/lib/supabase-server";
-import { ArrowRight, Calendar, Clock, User } from "lucide-react";
+import { ArrowRight, Calendar, Clock, User, BookOpen } from "lucide-react";
+import { estimateReadingTime } from "@/lib/utils";
 
 export const revalidate = 0;
 
@@ -51,6 +52,10 @@ export default async function BlogPage() {
                             <div className="flex items-center gap-1">
                                 <User size={14} />
                                 <span>Reshin</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <BookOpen size={14} />
+                                <span>{estimateReadingTime(post.content || '')}</span>
                             </div>
                         </div>
                         <div className="prose prose-invert max-w-none mb-6 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.content || '' }} />

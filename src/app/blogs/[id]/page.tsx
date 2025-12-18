@@ -1,8 +1,10 @@
 import { supabase } from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
-import { Calendar, Clock, User, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, User, ArrowLeft, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
+import { estimateReadingTime } from "@/lib/utils";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export const revalidate = 0;
 
@@ -43,6 +45,7 @@ export default async function BlogPostPage({ params }: Props) {
 
     return (
         <article className="min-h-screen py-20 px-6 max-w-4xl mx-auto">
+            <ScrollProgress />
             <Link
                 href="/blogs"
                 className="inline-flex items-center text-muted-foreground hover:text-primary mb-12 transition-colors group"
@@ -69,13 +72,11 @@ export default async function BlogPostPage({ params }: Props) {
                             })}
                         </span>
                     </div>
+                    {/* Removed redundant time display, reading time is more useful here */}
                     <div className="flex items-center gap-2 bg-secondary/30 px-3 py-1.5 rounded-full border border-border/50">
-                        <Clock size={14} />
+                        <BookOpen size={14} />
                         <span>
-                            {new Date(post.updated_at).toLocaleTimeString(undefined, {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                            })}
+                            {estimateReadingTime(post.content || '')}
                         </span>
                     </div>
                     <div className="flex items-center gap-2 bg-secondary/30 px-3 py-1.5 rounded-full border border-border/50">
