@@ -299,6 +299,23 @@ const Toolbar = ({ editor, onOpenSettings }: { editor: Editor | null, onOpenSett
                     </button>
                 </div>
 
+                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                    <button
+                        onClick={openMapPicker}
+                        className={`p-2 rounded hover:bg-secondary/50 ${showMapPicker ? 'bg-secondary text-primary' : ''}`}
+                        title="Pick Location"
+                    >
+                        <MapPin size={18} />
+                    </button>
+                    <button
+                        onClick={addCurrentLocation}
+                        className="p-2 rounded hover:bg-secondary/50"
+                        title="Add Current Location"
+                    >
+                        <Globe size={18} />
+                    </button>
+                </div>
+
                 <div className="flex gap-1 ml-auto">
                     <button
                         onClick={onOpenSettings}
