@@ -18,15 +18,18 @@ interface BlogPost {
 interface BlogCardProps {
     post: BlogPost;
     index: number;
+    isSubdomain?: boolean;
 }
 
-export default function BlogCard({ post, index }: BlogCardProps) {
+export default function BlogCard({ post, index, isSubdomain = false }: BlogCardProps) {
     const readingTime = estimateReadingTime(post.content || '');
 
     // Extract a short excerpt (simple text extraction)
     const excerpt = post.content
         ? post.content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "..."
         : "No content available.";
+
+    const href = isSubdomain ? `/${post.id}` : `/blogs/${post.id}`;
 
     return (
         <motion.div
@@ -36,7 +39,7 @@ export default function BlogCard({ post, index }: BlogCardProps) {
             transition={{ delay: index * 0.1 }}
             className="group relative flex flex-col h-full bg-card/50 border border-border/50 rounded-2xl overflow-hidden hover:border-primary/50 hover:bg-card transition-all duration-300 shadow-sm hover:shadow-md"
         >
-            <Link href={`/blogs/${post.id}`} className="flex flex-col h-full p-6">
+            <Link href={href} className="flex flex-col h-full p-6">
                 <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
                     <div className="flex items-center gap-1">
                         <Calendar size={12} />

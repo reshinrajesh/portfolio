@@ -3,6 +3,7 @@ import BlogNavbar from "@/components/BlogNavbar";
 import BlogCard from "@/components/blog/BlogCard";
 import ScrollProgress from "@/components/ScrollProgress";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 
 export const revalidate = 60;
 
@@ -17,6 +18,10 @@ export default async function BlogsPage() {
         .select("*")
         .eq("status", "Published") // Only show published posts
         .order("created_at", { ascending: false });
+
+    const headersList = await headers();
+    const domain = headersList.get('host') || '';
+    const isSubdomain = domain.startsWith('blogs.');
 
     return (
         <main className="min-h-screen relative">
@@ -36,7 +41,7 @@ export default async function BlogsPage() {
                 {posts && posts.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                         {posts.map((post, index) => (
-                            <BlogCard key={post.id} post={post} index={index} />
+                            <BlogCard key={post.id} post={post} index={index} isSubdomain={isSubdomain} />
                         ))}
                     </div>
                 ) : (
