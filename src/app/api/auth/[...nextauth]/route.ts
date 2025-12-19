@@ -35,6 +35,18 @@ const handler = NextAuth({
     session: {
         strategy: "jwt",
     },
+    cookies: process.env.NODE_ENV === 'production' ? {
+        sessionToken: {
+            name: `__Secure-next-auth.session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+                secure: true,
+                domain: '.reshinrajesh.in'
+            }
+        }
+    } : undefined,
     secret: process.env.NEXTAUTH_SECRET,
 });
 
