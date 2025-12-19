@@ -1,10 +1,10 @@
-
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { LayoutDashboard, FileText, ExternalLink, PlusCircle, Image as ImageIcon, UserCircle } from "lucide-react";
 import SignOutButton from "./SignOutButton";
 import Logo from "@/components/Logo";
+import { authOptions } from "@/lib/auth";
 
 export const metadata = {
     title: "Dashboard | Res.",
@@ -15,7 +15,7 @@ export default async function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
 
     if (!session) {
         // Basic protection: redirect to login if not authenticated
