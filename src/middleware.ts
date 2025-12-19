@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-export default function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
     const url = request.nextUrl;
     const hostname = request.headers.get('host') || '';
 
@@ -12,6 +13,25 @@ export default function middleware(request: NextRequest) {
 
     // 1. Handle Admin Subdomain
     if (hostname.startsWith('admin.')) {
+        // Allow access to login page
+        if (url.pathname === '/login') {
+            url.pathname = `/admin/login`;
+            return NextResponse.rewrite(url);
+        }
+
+        // Check for session
+        const token = await getToken({
+            req: request,
+            secret: process.env.NEXTAUTH_SECRET,
+            cookieName: '__Secure-reshin-admin-session'
+        });
+
+        if (!token) {
+            // Redirect to login if not authenticated
+            const loginUrl = new URL('/login', request.url);
+            return NextResponse.redirect(loginUrl);
+        }
+
         url.pathname = `/admin${url.pathname}`;
         return NextResponse.rewrite(url);
     }

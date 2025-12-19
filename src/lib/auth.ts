@@ -34,9 +34,9 @@ export const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt",
     },
-    cookies: process.env.NODE_ENV === 'production' ? {
+    cookies: {
         sessionToken: {
-            name: `__Secure-next-auth.session-token`,
+            name: `__Secure-reshin-admin-session`,
             options: {
                 httpOnly: true,
                 sameSite: 'lax',
@@ -45,6 +45,6 @@ export const authOptions: NextAuthOptions = {
                 domain: '.reshinrajesh.in'
             }
         }
-    } : undefined,
+    },
     secret: process.env.NEXTAUTH_SECRET,
 };
