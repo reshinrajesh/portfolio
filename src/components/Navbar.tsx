@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Logo from "./Logo";
+import { ThemeToggle } from "./ThemeToggle";
 
 
 const navLinks = [
@@ -63,6 +64,10 @@ export default function Navbar() {
                         </motion.div>
                     ))}
 
+                    {/* Theme Toggle */}
+                    <div className="ml-4">
+                        <ThemeToggle />
+                    </div>
                 </div>
 
                 {/* Mobile Toggle */}
@@ -98,6 +103,10 @@ export default function Navbar() {
                             </motion.div>
                         ))}
 
+                        <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
+                            <span className="text-muted-foreground">Theme</span>
+                            <ThemeToggle />
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
