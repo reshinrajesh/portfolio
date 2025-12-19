@@ -61,6 +61,8 @@ export default async function AdminLayout({
                     </Link>
                     <Link
                         href="https://blogs.reshinrajesh.in"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary hover:text-foreground transition-all text-muted-foreground"
                     >
                         <ExternalLink size={20} />
