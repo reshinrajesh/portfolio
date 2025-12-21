@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { Providers } from "./Providers";
+import ChatWidget from "@/components/ChatWidget";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -27,6 +28,7 @@ export default function RootLayout({
       >
         <Providers>
           {children}
+          <ChatWidget />
           <Analytics />
         </Providers>
       </body>
