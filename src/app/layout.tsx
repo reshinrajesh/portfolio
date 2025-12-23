@@ -4,7 +4,6 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { Providers } from "./Providers";
 import ChatWidget from "@/components/ChatWidget";
-import { EasterEggWrapper } from "@/components/EasterEggWrapper";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -29,7 +28,6 @@ export default function RootLayout({
       >
         <Providers>
           {children}
-          <EasterEggWrapper />
           <ChatWidget />
           <Analytics />
         </Providers>
