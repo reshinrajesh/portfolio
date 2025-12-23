@@ -58,7 +58,9 @@ export default function Hero() {
                         transition={{ duration: 0.5, delay: 0.2 }}
                         className="text-xl text-muted-foreground mb-8 text-black dark:text-gray-300"
                     >
-                        A Full Stack Web Developer and Computer Science Graduate passionate about building digital experiences that matter.
+                        Crafting code during the day, chasing concerts and sunsets by night.
+                        <br className="hidden md:block" />
+                        A Full Stack Developer living life 50% in the terminal and 50% on the road.
                     </motion.p>
 
                     <motion.div
@@ -93,6 +95,6 @@ export default function Hero() {
             >
                 <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-primary to-transparent" />
             </motion.div>
-        </section>
+        </section >
     );
 }
