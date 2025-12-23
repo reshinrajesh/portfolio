@@ -57,6 +57,16 @@ export default function Skills() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    {loading && (
+                        <div className="col-span-full text-center py-10 text-muted-foreground">
+                            Loading skills...
+                        </div>
+                    )}
+                    {!loading && skills.length === 0 && (
+                        <div className="col-span-full text-center py-10 text-muted-foreground">
+                            No skills found in database.
+                        </div>
+                    )}
                     {skills.map((skill, index) => {
                         // Dynamically get the icon component
                         const IconComponent = (LucideIcons as any)[skill.icon] || LucideIcons.Code2;
