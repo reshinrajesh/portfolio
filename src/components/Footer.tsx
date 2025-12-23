@@ -1,7 +1,7 @@
 import Logo from "./Logo";
 import Link from "next/link";
 import { } from "lucide-react";
-import SpotifyWidget from "./SpotifyWidget";
+import LastFmWidget from "./LastFmWidget";
 
 export default function Footer() {
     return (
@@ -12,7 +12,7 @@ export default function Footer() {
                         &copy; {new Date().getFullYear()} Reshin Rajesh. All rights reserved.
                     </p>
                     <div className="flex items-center gap-4">
-                        <SpotifyWidget />
+                        <LastFmWidget />
                     </div>
                 </div>
             </div>
