@@ -1,4 +1,3 @@
-```
 "use client";
 
 import { motion } from "framer-motion";
@@ -64,13 +63,12 @@ export default function Events() {
                         >
                             <div className="absolute top-4 right-4">
                                 <span
-                                    className={`text - xs px - 2 py - 1 rounded - full border ${
-    event.status === "confirmed"
-        ? "border-green-500/30 text-green-400 bg-green-500/10"
-        : event.status === "planning"
-            ? "border-yellow-500/30 text-yellow-400 bg-yellow-500/10"
-            : "border-blue-500/30 text-blue-400 bg-blue-500/10"
-} `}
+                                    className={`text-xs px-2 py-1 rounded-full border ${event.status === "confirmed"
+                                        ? "border-green-500/30 text-green-400 bg-green-500/10"
+                                        : event.status === "planning"
+                                            ? "border-yellow-500/30 text-yellow-400 bg-yellow-500/10"
+                                            : "border-blue-500/30 text-blue-400 bg-blue-500/10"
+                                        }`}
                                 >
                                     {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
                                 </span>
