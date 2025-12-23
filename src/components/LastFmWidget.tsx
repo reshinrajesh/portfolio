@@ -32,12 +32,7 @@ export default function LastFmWidget() {
     }, []);
 
     if (!data?.isPlaying) {
-        return (
-            <div className="flex items-center gap-2 text-muted-foreground text-xs font-medium">
-                <Music size={14} className="text-pink-500" />
-                <span>Not Listening</span>
-            </div>
-        );
+        return null;
     }
 
     return (
