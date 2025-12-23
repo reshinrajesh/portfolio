@@ -102,6 +102,71 @@
   --ring: #3b82f6;
 }
 
+[data-theme="cyberpunk"] {
+  --background: #000000;
+  --foreground: #fff0f5;
+
+  --card: #09090b;
+  --card-foreground: #fff0f5;
+
+  --popover: #000000;
+  --popover-foreground: #fff0f5;
+
+  --primary: #ff00ff;
+  /* Neon Pink */
+  --primary-foreground: #000000;
+
+  --secondary: #00ffff;
+  /* Cyan */
+  --secondary-foreground: #000000;
+
+  --muted: #1a1a1a;
+  --muted-foreground: #a3a3a3;
+
+  --accent: #1a1a1a;
+  --accent-foreground: #fff0f5;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --border: #333333;
+  --input: #333333;
+  --ring: #ff00ff;
+}
+
+[data-theme="coffee"] {
+  --background: #2c241b;
+  /* Dark Espresso */
+  --foreground: #e6dace;
+  /* Foam */
+
+  --card: #3a3026;
+  --card-foreground: #e6dace;
+
+  --popover: #2c241b;
+  --popover-foreground: #e6dace;
+
+  --primary: #d4a373;
+  /* Latte Art */
+  --primary-foreground: #2c241b;
+
+  --secondary: #4a3e32;
+  --secondary-foreground: #e6dace;
+
+  --muted: #4a3e32;
+  --muted-foreground: #a89f91;
+
+  --accent: #4a3e32;
+  --accent-foreground: #e6dace;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --border: #5c4d3e;
+  --input: #5c4d3e;
+  --ring: #d4a373;
+}
+
 html {
   scroll-behavior: smooth;
 }
