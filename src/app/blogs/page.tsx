@@ -48,10 +48,16 @@ export default async function BlogsPage() {
                         ))}
                     </div>
                 ) : (
-                    <div className="text-center py-20 bg-secondary/10 rounded-3xl border border-dashed border-border">
-                        <h3 className="text-xl font-medium mb-2">No posts found</h3>
+                    <div className="text-center py-20 bg-gradient-to-br from-purple-500/5 to-pink-500/5 rounded-3xl border border-dashed border-purple-500/20">
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/10 flex items-center justify-center">
+                            <span className="text-2xl">✍️</span>
+                        </div>
+                        <h3 className="text-2xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+                            Coming Soon
+                        </h3>
                         <p className="text-muted-foreground max-w-sm mx-auto">
-                            I haven't published any blogs yet. Check back soon!
+                            I'm currently crafting some deep dives and tutorials.
+                            Stay tuned for the first drop!
                         </p>
                     </div>
                 )}
