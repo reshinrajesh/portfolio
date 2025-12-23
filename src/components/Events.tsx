@@ -29,6 +29,14 @@ const EVENTS: Event[] = [
         location: "Bengaluru, India",
         status: "confirmed",
     },
+    {
+        id: "3",
+        name: "Hanumankind Home Run",
+        type: "concert",
+        date: "1st February 2026",
+        location: "Bengaluru, India",
+        status: "confirmed",
+    },
 ];
 
 export default function Events() {
