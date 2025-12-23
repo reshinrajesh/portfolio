@@ -29,7 +29,7 @@ export default async function BlogsPage() {
             <BlogNavbar />
             <ScrollProgress />
 
-            <Events />
+
 
             <div className="container mx-auto px-6 py-32">
                 <header className="mb-16 text-center max-w-2xl mx-auto">
@@ -62,6 +62,8 @@ export default async function BlogsPage() {
                     </div>
                 )}
             </div>
+
+            <Events />
         </main>
     );
 }
