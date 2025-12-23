@@ -25,7 +25,7 @@ const EVENTS: Event[] = [
         id: "2",
         name: "Samay Raina - Still Alive and Unfiltered",
         type: "show",
-        date: "17th January 2025",
+        date: "17th January 2026",
         location: "Bengaluru, India",
         status: "confirmed",
     },
