@@ -21,14 +21,7 @@ const TIMELINE_DATA: TimelineItem[] = [
         period: "May 2024 - Present",
         description: "Specializing in IT infrastructure management, storage administration, and cloud solutions. Providing professional support to help businesses scale efficiently with secure tech solutions."
     },
-    {
-        id: "1.5",
-        type: "travel",
-        title: "Backpacking Trip",
-        organization: "Himachal Pradesh",
-        period: "Dec 2024",
-        description: "Explored the mountains, disconnected from tech, and recharged in nature."
-    },
+
     {
         id: "2",
         type: "experience",
@@ -117,8 +110,8 @@ export default function Timeline() {
                         {/* Content Card */}
                         <div className="w-[calc(100%-60px)] md:w-5/12 pl-4 md:pl-0 ml-12 md:ml-0">
                             <div className={`relative p-6 border rounded-2xl backdrop-blur-sm transition-colors group ${item.type === 'travel' || item.type === 'concert'
-                                    ? 'bg-orange-500/5 border-orange-500/10 hover:border-orange-500/30'
-                                    : 'bg-secondary/10 border-secondary/20 hover:border-primary/30'
+                                ? 'bg-orange-500/5 border-orange-500/10 hover:border-orange-500/30'
+                                : 'bg-secondary/10 border-secondary/20 hover:border-primary/30'
                                 }`}>
                                 {/* Icon Badge */}
                                 <div className={`absolute -top-4 ${isEven ? "md:-right-4 left-4 md:left-auto" : "md:-left-4 left-4"} w-8 h-8 rounded-lg ${colorClass} flex items-center justify-center border border-white/5`}>

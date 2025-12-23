@@ -16,24 +16,10 @@ interface Trip {
 const TRIPS: Trip[] = [
     {
         id: "1",
-        place: "Manali, Himachal Pradesh",
-        date: "Dec 2024",
-        description: "Snow-capped mountains, Old Manali vibes, and the best hot chocolate.",
-        tags: ["Mountains", "Snow", "Trekking"],
-    },
-    {
-        id: "2",
-        place: "Kochi, Kerala",
-        date: "Aug 2024",
-        description: "Exploring the Fort Kochi streets and the Biennale art scene.",
-        tags: ["Culture", "Art", "Beach"],
-    },
-    {
-        id: "3",
-        place: "Gokarna, Karnataka",
-        date: "Feb 2024",
-        description: "Beach trekking and sunset chasing at Kudle Beach.",
-        tags: ["Beach", "Trek", "Relax"],
+        place: "Mumbai, Maharashtra",
+        date: "2024",
+        description: "The city of dreams. Explored the vibrant streets, Marine Drive, and the fast-paced life of Mumbai.",
+        tags: ["City", "Culture", "Food"],
     },
 ];
 
