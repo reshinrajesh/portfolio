@@ -33,7 +33,7 @@ export default async function BlogsPage() {
 
             <div className="container mx-auto px-6 py-32">
                 <header className="mb-16 text-center max-w-2xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 pb-2">
                         Latest Writings
                     </h1>
                     <p className="text-lg text-muted-foreground">
