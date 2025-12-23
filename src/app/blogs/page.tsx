@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase-server";
 import BlogNavbar from "@/components/BlogNavbar";
 import BlogCard from "@/components/blog/BlogCard";
 import ScrollProgress from "@/components/ScrollProgress";
+import Events from "@/components/Events";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 
@@ -27,6 +28,8 @@ export default async function BlogsPage() {
         <main className="min-h-screen relative">
             <BlogNavbar />
             <ScrollProgress />
+
+            <Events />
 
             <div className="container mx-auto px-6 py-32">
                 <header className="mb-16 text-center max-w-2xl mx-auto">
