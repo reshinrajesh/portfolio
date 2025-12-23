@@ -8,6 +8,7 @@ interface Event {
     name: string;
     type: "travel" | "concert" | "show" | "other";
     date: string;
+    isoDate: string; // YYYY-MM-DD for comparison
     location: string;
     status: "confirmed" | "planning" | "dreaming";
 }
@@ -18,6 +19,7 @@ const EVENTS: Event[] = [
         name: "Sunburn Arena NYE - Argy",
         type: "concert",
         date: "31st December 2025",
+        isoDate: "2025-12-31",
         location: "Bengaluru, India",
         status: "confirmed",
     },
@@ -26,6 +28,7 @@ const EVENTS: Event[] = [
         name: "Samay Raina - Still Alive and Unfiltered",
         type: "show",
         date: "17th January 2026",
+        isoDate: "2026-01-17",
         location: "Bengaluru, India",
         status: "confirmed",
     },
@@ -34,12 +37,25 @@ const EVENTS: Event[] = [
         name: "Hanumankind Home Run",
         type: "concert",
         date: "1st February 2026",
+        isoDate: "2026-02-01",
         location: "Bengaluru, India",
         status: "confirmed",
     },
 ];
 
 export default function Events() {
+    // Filter out past events
+    const upcomingEvents = EVENTS.filter(event => {
+        const eventDate = new Date(event.isoDate);
+        const today = new Date();
+        // Reset time to midnight for accurate day comparison
+        today.setHours(0, 0, 0, 0);
+        return eventDate >= today;
+    }).sort((a, b) => new Date(a.isoDate).getTime() - new Date(b.isoDate).getTime());
+
+    // If no events, don't render section? Or render "No upcoming events"?
+    if (upcomingEvents.length === 0) return null;
+
     return (
         <section className="py-20 relative overflow-hidden" id="events">
             <div className="container mx-auto px-6">
@@ -60,7 +76,7 @@ export default function Events() {
                 </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {EVENTS.map((event, index) => (
+                    {upcomingEvents.map((event, index) => (
                         <motion.div
                             key={event.id}
                             initial={{ opacity: 0, y: 20 }}
