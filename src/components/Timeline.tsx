@@ -30,14 +30,7 @@ const TIMELINE_DATA: TimelineItem[] = [
         period: "June 2024 - December 2024",
         description: "Creating websites and managing social media platforms for various clients."
     },
-    {
-        id: "2.5",
-        type: "concert",
-        title: "Coldplay Concert",
-        organization: "Mumbai",
-        period: "Jan 2025",
-        description: "An unforgettable night of music and lights. (Dream Event)"
-    },
+
     {
         id: "3",
         type: "education",
