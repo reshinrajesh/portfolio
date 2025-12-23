@@ -95,7 +95,7 @@ export default function Navbar() {
                                 <Link
                                     href={link.href}
                                     onClick={() => setIsOpen(false)}
-                                    className="text-lg font-medium text-muted-foreground hover:text-foreground hover:pl-2 transition-all block"
+                                    className="text-lg font-medium text-muted-foreground hover:text-foreground hover:pl-2 transition-all block py-3"
                                 >
                                     {link.name}
                                 </Link>

@@ -7,7 +7,7 @@ import { projects } from "@/lib/projects";
 
 export default function Projects() {
     return (
-        <section id="projects" className="py-24">
+        <section id="projects" className="py-16 md:py-24">
             <div className="container mx-auto px-6">
                 <div className="mb-16">
                     <motion.h2
@@ -29,7 +29,7 @@ export default function Projects() {
                     </motion.p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6 md:gap-8">
                     {projects.map((project, index) => (
                         <ProjectCard key={index} {...project} index={index} />
                     ))}
