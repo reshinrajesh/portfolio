@@ -21,9 +21,20 @@ export function useKonamiCode() {
 
     useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === KONAMI_CODE[index]) {
+            const key = event.key.toLowerCase();
+            // Arrow keys might be case sensitive in some browsers? usually "ArrowUp" etc.
+            // But standard interaction: "ArrowUp" is standard. "b" and "a" should be lowercased.
+
+            const targetKey = KONAMI_CODE[index].toLowerCase();
+
+            // Handle special keys that might not match lowercase if we strictly lowercase everything
+            // "ArrowUp".toLowerCase() is "arrowup".
+            // So let's compare lowercased versions.
+
+            if (key === targetKey) {
                 const nextIndex = index + 1;
                 if (nextIndex === KONAMI_CODE.length) {
+                    console.log("Konami Code Triggered! 🐇");
                     setTriggered(true);
                     setIndex(0);
                 } else {
