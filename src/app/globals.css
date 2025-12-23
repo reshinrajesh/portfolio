@@ -102,7 +102,8 @@
   --ring: #3b82f6;
 }
 
-[data-theme="cyberpunk"] {
+[data-theme="cyberpunk"],
+.cyberpunk {
   --background: #000000;
   --foreground: #fff0f5;
 
@@ -134,7 +135,8 @@
   --ring: #ff00ff;
 }
 
-[data-theme="coffee"] {
+[data-theme="coffee"],
+.coffee {
   --background: #2c241b;
   /* Dark Espresso */
   --foreground: #e6dace;
