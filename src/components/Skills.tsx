@@ -1,20 +1,38 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Code2, Database, Layout, Server, Settings, Terminal, Cloud, Cpu } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import { supabase } from "@/lib/supabase-client";
 
-const skills = [
-    { name: "HTML/CSS", icon: Layout, color: "text-orange-400" },
-    { name: "JavaScript", icon: Code2, color: "text-yellow-300" },
-    { name: "Python", icon: Code2, color: "text-blue-400" },
-    { name: "Django", icon: Server, color: "text-green-600" },
-    { name: "PostgreSQL", icon: Database, color: "text-blue-300" },
-    { name: "Azure Fundamentals", icon: Cloud, color: "text-blue-500" },
-    { name: "IoT", icon: Cpu, color: "text-purple-400" },
-    { name: "Arduino", icon: Settings, color: "text-cyan-500" },
-];
+interface Skill {
+    id: string;
+    name: string;
+    icon: string;
+    color: string;
+    order: number;
+}
 
 export default function Skills() {
+    const [skills, setSkills] = useState<Skill[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchSkills = async () => {
+            const { data, error } = await supabase
+                .from('skills')
+                .select('*')
+                .order('order', { ascending: true });
+
+            if (!error && data) {
+                setSkills(data);
+            }
+            setLoading(false);
+        };
+
+        fetchSkills();
+    }, []);
+
     return (
         <section id="skills" className="py-24 bg-secondary/20">
             <div className="container mx-auto px-6">
@@ -39,21 +57,26 @@ export default function Skills() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {skills.map((skill, index) => (
-                        <motion.div
-                            key={skill.name}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
-                            className="p-6 rounded-2xl bg-card border border-white/5 hover:border-primary/50 transition-colors group"
-                        >
-                            <div className="mb-4 p-3 rounded-lg bg-background/50 w-fit group-hover:bg-primary/20 transition-colors">
-                                <skill.icon size={24} className={`${skill.color}`} />
-                            </div>
-                            <h3 className="font-semibold text-lg">{skill.name}</h3>
-                        </motion.div>
-                    ))}
+                    {skills.map((skill, index) => {
+                        // Dynamically get the icon component
+                        const IconComponent = (LucideIcons as any)[skill.icon] || LucideIcons.Code2;
+
+                        return (
+                            <motion.div
+                                key={skill.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.1 }}
+                                className="p-6 rounded-2xl bg-card border border-white/5 hover:border-primary/50 transition-colors group"
+                            >
+                                <div className="mb-4 p-3 rounded-lg bg-background/50 w-fit group-hover:bg-primary/20 transition-colors">
+                                    <IconComponent size={24} className={`${skill.color}`} />
+                                </div>
+                                <h3 className="font-semibold text-lg">{skill.name}</h3>
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

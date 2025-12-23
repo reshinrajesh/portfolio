@@ -11,7 +11,11 @@ interface Post {
     status: 'Draft' | 'Published';
     created_at: string;
     updated_at: string;
+    view_count: number;
 }
+
+import BarChart from "@/components/ui/BarChart";
+import { Eye } from "lucide-react";
 
 export default function DashboardClient({ posts }: { posts: Post[] }) {
     const [searchQuery, setSearchQuery] = useState("");
@@ -26,13 +30,20 @@ export default function DashboardClient({ posts }: { posts: Post[] }) {
     const stats = {
         total: posts.length,
         published: posts.filter(p => p.status === 'Published').length,
-        draft: posts.filter(p => p.status === 'Draft').length
+        draft: posts.filter(p => p.status === 'Draft').length,
+        totalViews: posts.reduce((acc, curr) => acc + (curr.view_count || 0), 0)
     };
+
+    // Get top 5 posts by views
+    const topPosts = [...posts]
+        .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
+        .slice(0, 5)
+        .map(p => ({ label: p.title, value: p.view_count || 0 }));
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header section with Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-card/50 backdrop-blur-sm border border-border p-6 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
                     <div className="p-3 bg-primary/10 rounded-lg text-primary">
                         <LayoutDashboard size={24} />
@@ -58,6 +69,52 @@ export default function DashboardClient({ posts }: { posts: Post[] }) {
                     <div>
                         <p className="text-sm text-muted-foreground">Drafts</p>
                         <h3 className="text-2xl font-bold">{stats.draft}</h3>
+                    </div>
+                </div>
+                <div className="bg-card/50 backdrop-blur-sm border border-border p-6 rounded-xl flex items-center gap-4 hover:border-blue-500/50 transition-colors">
+                    <div className="p-3 bg-blue-500/10 rounded-lg text-blue-500">
+                        <Eye size={24} />
+                    </div>
+                    <div>
+                        <p className="text-sm text-muted-foreground">Total Views</p>
+                        <h3 className="text-2xl font-bold">{stats.totalViews}</h3>
+                    </div>
+                </div>
+            </div>
+
+            {/* Analytics Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 bg-card/50 backdrop-blur-sm border border-border p-6 rounded-xl">
+                    <h3 className="text-lg font-semibold mb-6">Top Performing Posts</h3>
+                    {topPosts.length > 0 ? (
+                        <BarChart data={topPosts} />
+                    ) : (
+                        <div className="h-40 flex items-center justify-center text-muted-foreground text-sm">
+                            No view data available yet
+                        </div>
+                    )}
+                </div>
+                <div className="bg-card/50 backdrop-blur-sm border border-border p-6 rounded-xl">
+                    <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+                    <div className="space-y-3">
+                        <Link
+                            href="/editor"
+                            className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors group"
+                        >
+                            <div className="p-2 bg-primary/10 rounded-full text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                                <PlusCircle size={18} />
+                            </div>
+                            <span className="text-sm font-medium">Create New Post</span>
+                        </Link>
+                        <Link
+                            href="/admin/skills"
+                            className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors group"
+                        >
+                            <div className="p-2 bg-purple-500/10 rounded-full text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                                <Filter size={18} />
+                            </div>
+                            <span className="text-sm font-medium">Manage Skills</span>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -118,8 +175,8 @@ export default function DashboardClient({ posts }: { posts: Post[] }) {
                                     </td>
                                     <td className="p-4">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${post.status === "Published"
-                                                ? "bg-green-500/10 text-green-500 border-green-500/20"
-                                                : "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                                            ? "bg-green-500/10 text-green-500 border-green-500/20"
+                                            : "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
                                             }`}>
                                             <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${post.status === "Published" ? "bg-green-500" : "bg-yellow-500"
                                                 }`}></span>
