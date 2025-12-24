@@ -10,7 +10,7 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
     title: "Blogs | Reshin Rajesh",
-    description: "Thoughts, tutorials, and insights on web development and design.",
+    description: "99% Life Stories, 1% Tech Content. Sharing personal experiences and occasional code.",
 };
 
 export default async function BlogsPage() {
@@ -37,7 +37,7 @@ export default async function BlogsPage() {
                         Latest Writings
                     </h1>
                     <p className="text-lg text-muted-foreground">
-                        Exploring code, design, and everything in between. Here's what I've been working on.
+                        99% Life Stories, 1% Tech Content. Here's what I've been experiencing.
                     </p>
                 </header>
 
