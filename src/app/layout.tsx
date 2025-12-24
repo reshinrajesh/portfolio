@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Providers } from "./Providers";
 import { VibeProvider } from "@/lib/VibeContext";
@@ -32,6 +33,7 @@ export default function RootLayout({
             {children}
             <ChatWidget />
             <Analytics />
+            <SpeedInsights />
           </VibeProvider>
         </Providers>
       </body>
