@@ -11,13 +11,6 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // 0. Redirect www to non-www
-    if (hostname.startsWith('www.')) {
-        const newHostname = hostname.replace('www.', '');
-        const newUrl = new URL(url.pathname, `https://${newHostname}`);
-        return NextResponse.redirect(newUrl, 301);
-    }
-
     // 1. Handle Admin Subdomain
     if (hostname.startsWith('admin.')) {
         // Allow access to login page
