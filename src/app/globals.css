@@ -180,3 +180,45 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Vibe: Developer (Default is usually inherited, but enforcing mono for strong effect) */
+[data-vibe="developer"] {
+  --font-primary: var(--font-outfit);
+  /* Or a monospace font if available */
+  --color-primary: #2563eb;
+  /* Blue */
+}
+
+/* Vibe: Traveler */
+[data-vibe="traveler"] {
+  --color-primary: #f97316;
+  /* Orange-500 */
+  --font-primary: serif;
+  /* Fallback to serif for "Life" feel, or load a serif font */
+}
+
+/* Apply the vibe primary color globally if needed, or rely on component specific `text-primary` usage which uses tailwind config.
+   Tailwind config uses CSS variables, so if we override --color-primary (if it maps to --primary), it works.
+   Global CSS defines --primary in :root. We need to override it based on attribute.
+*/
+
+[data-vibe="developer"] {
+  --primary: #2563eb;
+  /* Blue-600 */
+}
+
+[data-vibe="traveler"] {
+  --primary: #f97316;
+  /* Orange-500 */
+}
+
+/* Dark mode overrides for vibes if necessary */
+.dark[data-vibe="developer"] {
+  --primary: #3b82f6;
+  /* Blue-500 */
+}
+
+.dark[data-vibe="traveler"] {
+  --primary: #fb923c;
+  /* Orange-400 */
+}

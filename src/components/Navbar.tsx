@@ -7,12 +7,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Logo from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
+import VibeToggle from "./VibeToggle";
 
 
 const navLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "#about" },
     { name: "Projects", href: "#projects" },
+    { name: "Gallery", href: "/gallery" },
     { name: "Blogs", href: "https://blogs.reshinrajesh.in" },
     { name: "Contact", href: "#contact" },
 ];
@@ -63,8 +65,9 @@ export default function Navbar() {
                         </motion.div>
                     ))}
 
-                    {/* Theme Toggle */}
-                    <div className="ml-4">
+                    {/* Theme Toggle & Vibe Toggle */}
+                    <div className="ml-4 flex items-center gap-2">
+                        <VibeToggle />
                         <ThemeToggle />
                     </div>
                 </div>
@@ -103,8 +106,11 @@ export default function Navbar() {
                         ))}
 
                         <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
-                            <span className="text-muted-foreground">Theme</span>
-                            <ThemeToggle />
+                            <span className="text-muted-foreground">Settings</span>
+                            <div className="flex items-center gap-2">
+                                <VibeToggle />
+                                <ThemeToggle />
+                            </div>
                         </div>
                     </motion.div>
                 )}

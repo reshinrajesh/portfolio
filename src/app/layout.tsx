@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { Providers } from "./Providers";
+import { VibeProvider } from "@/lib/VibeContext";
 import ChatWidget from "@/components/ChatWidget";
 
 const outfit = Outfit({
@@ -27,9 +28,11 @@ export default function RootLayout({
         className={`${outfit.variable} antialiased`}
       >
         <Providers>
-          {children}
-          <ChatWidget />
-          <Analytics />
+          <VibeProvider>
+            {children}
+            <ChatWidget />
+            <Analytics />
+          </VibeProvider>
         </Providers>
       </body>
     </html>
