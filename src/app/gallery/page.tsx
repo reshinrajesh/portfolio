@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Construction } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +10,7 @@ export const metadata = {
 export default function GalleryPage() {
     return (
         <main className="bg-background min-h-screen flex flex-col">
-            <Navbar />
+
 
             <div className="container mx-auto px-6 py-32 flex-grow flex flex-col items-center justify-center text-center">
                 <div className="p-4 rounded-full bg-secondary mb-6">
