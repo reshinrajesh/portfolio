@@ -56,8 +56,8 @@ export default async function BlogsPage() {
                             Coming Soon
                         </h3>
                         <p className="text-muted-foreground max-w-sm mx-auto">
-                            I'm currently crafting some deep dives and tutorials.
-                            Stay tuned for the first drop!
+                            I'm currently documenting my latest adventures and life lessons.
+                            The first story is on its way!
                         </p>
                     </div>
                 )}
