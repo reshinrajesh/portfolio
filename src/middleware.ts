@@ -11,6 +11,11 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    // Redirect /gallery on main domain to gallery subdomain
+    if (url.pathname.startsWith('/gallery') && !hostname.startsWith('gallery.')) {
+        return NextResponse.redirect(new URL('https://gallery.reshinrajesh.in'));
+    }
+
     // 1. Handle Admin Subdomain
     if (hostname.startsWith('admin.')) {
         // Allow access to login page
