@@ -12,11 +12,11 @@ import VibeToggle from "./VibeToggle";
 
 const navLinks = [
     { name: "Home", href: "/" },
-    { name: "About", href: "#about" },
-    { name: "Projects", href: "#projects" },
+    { name: "About", href: "/#about" },
+    { name: "Projects", href: "/#projects" },
     { name: "Gallery", href: "/gallery" },
     { name: "Blogs", href: "https://blogs.reshinrajesh.in" },
-    { name: "Contact", href: "#contact" },
+    { name: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
