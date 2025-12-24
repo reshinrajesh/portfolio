@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import Logo from "@/components/Logo";
 import { Construction } from "lucide-react";
 import Link from "next/link";
 
