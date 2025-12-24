@@ -51,7 +51,7 @@ export default function GalleryPreview() {
                                 Photography is how I freeze the chaos of life into something permanent.
                             </p>
 
-                            <Link href="/gallery">
+                            <Link href="https://gallery.reshinrajesh.in">
                                 <button className="group flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-medium hover:opacity-90 transition-opacity">
                                     View Full Gallery
                                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />

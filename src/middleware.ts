@@ -48,6 +48,12 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.rewrite(url);
     }
 
+    // 4. Handle Gallery Subdomain
+    if (hostname.startsWith('gallery.')) {
+        url.pathname = `/gallery${url.pathname}`;
+        return NextResponse.rewrite(url);
+    }
+
     return NextResponse.next();
 }
 

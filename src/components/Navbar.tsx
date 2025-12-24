@@ -14,7 +14,7 @@ const navLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/#about" },
     { name: "Projects", href: "/#projects" },
-    { name: "Gallery", href: "/gallery" },
+    { name: "Gallery", href: "https://gallery.reshinrajesh.in" },
     { name: "Blogs", href: "https://blogs.reshinrajesh.in" },
     { name: "Contact", href: "/#contact" },
 ];
