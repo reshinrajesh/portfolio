@@ -59,6 +59,12 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.rewrite(url);
     }
 
+    // 5. Handle Demo Subdomain
+    if (hostname.startsWith('demo.')) {
+        url.pathname = `/demo${url.pathname}`;
+        return NextResponse.rewrite(url);
+    }
+
     return NextResponse.next();
 }
 
