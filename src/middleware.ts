@@ -61,6 +61,19 @@ export default async function middleware(request: NextRequest) {
 
     // 5. Handle Demo Subdomain
     if (hostname.startsWith('demo.')) {
+        const token = await getToken({
+            req: request,
+            secret: process.env.NEXTAUTH_SECRET,
+            cookieName: '__Secure-reshin-admin-session'
+        });
+
+        if (!token) {
+            const loginUrl = new URL('https://admin.reshinrajesh.in/login');
+            // Add a callback URL to redirect back to demo after login
+            loginUrl.searchParams.set('callbackUrl', request.url);
+            return NextResponse.redirect(loginUrl);
+        }
+
         url.pathname = `/demo${url.pathname}`;
         return NextResponse.rewrite(url);
     }
