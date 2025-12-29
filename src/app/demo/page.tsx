@@ -1,6 +1,7 @@
 import React from 'react';
 import { Construction, FlaskConical } from 'lucide-react';
 import Link from 'next/link';
+import DemoSignOut from './components/DemoSignOut';
 
 // Lab Components
 import SpotifyLab from './components/SpotifyLab';
@@ -30,12 +31,15 @@ export default function DemoPage() {
                         </p>
                     </div>
 
-                    <Link
-                        href="https://reshinrajesh.in"
-                        className="px-4 py-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors text-sm"
-                    >
-                        ← Exit to Reality
-                    </Link>
+                    <div className="flex gap-3 items-center">
+                        <DemoSignOut />
+                        <Link
+                            href="https://reshinrajesh.in"
+                            className="px-4 py-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors text-sm"
+                        >
+                            ← Exit to Reality
+                        </Link>
+                    </div>
                 </header>
 
                 {/* Grid */}
