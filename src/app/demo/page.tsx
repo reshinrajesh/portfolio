@@ -39,54 +39,62 @@ export default function DemoPage() {
                 </header>
 
                 {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 items-stretch">
 
                     {/* 1. Spotify 2.0 */}
-                    <div className="group">
-                        <div className="flex items-center justify-between mb-4 px-2">
+                    <div className="group flex flex-col h-full">
+                        <div className="flex-none flex items-center justify-between mb-4 px-2">
                             <h2 className="text-xl font-semibold flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-green-500" />
                                 Spotify Visualizer
                             </h2>
                             <span className="text-xs text-neutral-500 px-2 py-1 rounded border border-white/10">v2.0-beta</span>
                         </div>
-                        <SpotifyLab />
+                        <div className="flex-1">
+                            <SpotifyLab />
+                        </div>
                     </div>
 
                     {/* 2. API Playground */}
-                    <div className="group">
-                        <div className="flex items-center justify-between mb-4 px-2">
+                    <div className="group flex flex-col h-full">
+                        <div className="flex-none flex items-center justify-between mb-4 px-2">
                             <h2 className="text-xl font-semibold flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-blue-500" />
                                 API Console
                             </h2>
                             <span className="text-xs text-neutral-500 px-2 py-1 rounded border border-white/10">Utility</span>
                         </div>
-                        <ApiPlayground />
+                        <div className="flex-1">
+                            <ApiPlayground />
+                        </div>
                     </div>
 
                     {/* 3. 3D Showcase */}
-                    <div className="group">
-                        <div className="flex items-center justify-between mb-4 px-2">
+                    <div className="group flex flex-col h-full">
+                        <div className="flex-none flex items-center justify-between mb-4 px-2">
                             <h2 className="text-xl font-semibold flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-purple-500" />
                                 Glassmorphism 3D
                             </h2>
                             <span className="text-xs text-neutral-500 px-2 py-1 rounded border border-white/10">UI/UX</span>
                         </div>
-                        <Showcase3D />
+                        <div className="flex-1">
+                            <Showcase3D />
+                        </div>
                     </div>
 
                     {/* 4. Travel Map */}
-                    <div className="group">
-                        <div className="flex items-center justify-between mb-4 px-2">
+                    <div className="group flex flex-col h-full">
+                        <div className="flex-none flex items-center justify-between mb-4 px-2">
                             <h2 className="text-xl font-semibold flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-orange-500" />
                                 World Tracker
                             </h2>
                             <span className="text-xs text-neutral-500 px-2 py-1 rounded border border-white/10">Concept</span>
                         </div>
-                        <TravelLab />
+                        <div className="flex-1">
+                            <TravelLab />
+                        </div>
                     </div>
 
                 </div>
