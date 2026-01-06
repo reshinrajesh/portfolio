@@ -3,12 +3,21 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { supabase } from '@/lib/supabase-server';
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
-        const { data: images, error } = await supabase
+        const { searchParams } = new URL(request.url);
+        const albumId = searchParams.get('album_id');
+
+        let query = supabase
             .from('gallery_images')
             .select('*')
             .order('created_at', { ascending: false });
+
+        if (albumId) {
+            query = query.eq('album_id', albumId);
+        }
+
+        const { data: images, error } = await query;
 
         if (error) {
             return NextResponse.json({ error: 'Failed to fetch images' }, { status: 500 });

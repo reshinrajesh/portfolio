@@ -27,6 +27,8 @@ export async function POST(request: Request) {
         const fileName = `${timestamp}-${randomString}.${fileExt}`;
         const filePath = `${fileName}`;
 
+        const albumId = formData.get('album_id') as string | null;
+
         // Upload to Supabase Storage
         const { error: uploadError } = await supabase.storage
             .from('gallery')
@@ -46,13 +48,13 @@ export async function POST(request: Request) {
             .getPublicUrl(filePath);
 
         // Insert into database
-        // Assuming we might want to store width/height later, but for now just URL
         const { data: image, error: dbError } = await supabase
             .from('gallery_images')
             .insert({
                 url: publicUrl,
                 file_path: filePath,
-                name: file.name
+                name: file.name,
+                album_id: albumId || null
             })
             .select()
             .single();
