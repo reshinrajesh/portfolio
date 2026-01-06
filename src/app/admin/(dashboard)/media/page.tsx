@@ -242,8 +242,8 @@ export default function MediaPage() {
                     </div>
 
                     {isCreatingAlbum && (
-                        <form onSubmit={handleCreateAlbum} className="bg-card border border-border p-4 rounded-xl flex gap-4 items-end animate-in fade-in slide-in-from-top-2">
-                            <div className="flex-1 space-y-2">
+                        <form onSubmit={handleCreateAlbum} className="bg-card border border-border p-4 rounded-xl flex flex-col sm:flex-row gap-4 items-end animate-in fade-in slide-in-from-top-2">
+                            <div className="flex-1 space-y-2 w-full">
                                 <label className="text-sm font-medium">Album Title</label>
                                 <input
                                     type="text"
@@ -254,21 +254,22 @@ export default function MediaPage() {
                                     autoFocus
                                 />
                             </div>
-                            <button
-                                type="submit"
-                                disabled={!newAlbumTitle.trim()}
-                                className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
-                            >
-                                <span className={!newAlbumTitle.trim() ? "opacity-0" : ""}>Create</span>
-                                {!newAlbumTitle.trim() && <span className="absolute">Create</span>}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setIsCreatingAlbum(false)}
-                                className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg font-medium"
-                            >
-                                Cancel
-                            </button>
+                            <div className="flex gap-2 w-full sm:w-auto">
+                                <button
+                                    type="submit"
+                                    disabled={!newAlbumTitle.trim()}
+                                    className="flex-1 sm:flex-none px-6 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 disabled:opacity-50 transition-opacity whitespace-nowrap"
+                                >
+                                    Create
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsCreatingAlbum(false)}
+                                    className="flex-1 sm:flex-none px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg font-medium transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
                         </form>
                     )}
 
