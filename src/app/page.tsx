@@ -4,6 +4,7 @@ import About from "@/components/About";
 import TravelLog from "@/components/TravelLog";
 import Showcase3D from "@/components/ui/Showcase3D";
 import LabLock from "@/components/LabLock";
+import { Lock } from "lucide-react";
 
 import Projects from "@/components/Projects";
 import Contact from "@/components/Contact";
@@ -31,6 +32,12 @@ export default function Home() {
             <LabLock>
               <div className="relative group cursor-pointer">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity" />
+
+                {/* Visual Lock Indicator */}
+                <div className="absolute -top-3 -right-3 z-20 bg-black border border-green-500/50 rounded-full p-2 text-green-500 shadow-lg shadow-green-500/20">
+                  <Lock size={16} />
+                </div>
+
                 <Showcase3D />
                 <div className="mt-6">
                   <span className="text-primary font-medium group-hover:underline">Enter the Lab &rarr;</span>
