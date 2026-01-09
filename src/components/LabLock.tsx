@@ -36,15 +36,29 @@ export default function LabLock({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const logAttempt = async (attemptCode: string, status: 'SUCCESS' | 'FAILURE') => {
+        try {
+            await fetch('/api/lab/log', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: attemptCode, status })
+            });
+        } catch (e) {
+            console.error("Failed to log attempt", e);
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Hardcoded password for now
         if (code.toLowerCase() === "admin" || code.toLowerCase() === "sudo open") {
+            logAttempt(code, 'SUCCESS');
             localStorage.setItem("lab_unlocked", "true");
             setUnlocked(true);
             setIsOpen(false);
             window.location.href = "https://demo.reshinrajesh.in";
         } else {
+            logAttempt(code, 'FAILURE');
             setError(true);
             setCode("");
             setTimeout(() => setError(false), 2000); // Reset error state
