@@ -30,7 +30,7 @@ export default function LabLock({ children }: { children: React.ReactNode }) {
     const handleTrigger = (e: React.MouseEvent) => {
         e.preventDefault();
         if (unlocked) {
-            router.push("/demo");
+            window.location.href = "https://demo.reshinrajesh.in";
         } else {
             setIsOpen(true);
         }
@@ -43,7 +43,7 @@ export default function LabLock({ children }: { children: React.ReactNode }) {
             localStorage.setItem("lab_unlocked", "true");
             setUnlocked(true);
             setIsOpen(false);
-            router.push("/demo");
+            window.location.href = "https://demo.reshinrajesh.in";
         } else {
             setError(true);
             setCode("");
