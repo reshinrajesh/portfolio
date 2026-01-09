@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import TravelLog from "@/components/TravelLog";
 import Showcase3D from "@/components/ui/Showcase3D";
+import LabLock from "@/components/LabLock";
 
 import Projects from "@/components/Projects";
 import Contact from "@/components/Contact";
@@ -27,15 +28,15 @@ export default function Home() {
             Where I test new UI concepts, animations, and breaking changes.
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-            <a href="/demo" className="group">
-              <div className="relative">
+            <LabLock>
+              <div className="relative group cursor-pointer">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity" />
                 <Showcase3D />
                 <div className="mt-6">
                   <span className="text-primary font-medium group-hover:underline">Enter the Lab &rarr;</span>
                 </div>
               </div>
-            </a>
+            </LabLock>
           </div>
         </div>
       </section>
