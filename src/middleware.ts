@@ -16,6 +16,15 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('https://gallery.reshinrajesh.in'));
     }
 
+    // Redirect /admin on main domain to admin subdomain
+    if (url.pathname.startsWith('/admin') && !hostname.startsWith('admin.')) {
+        const newUrl = new URL(request.url);
+        newUrl.hostname = 'admin.reshinrajesh.in';
+        // Remove /admin prefix since the subdomain rewrite handles it
+        newUrl.pathname = url.pathname.replace(/^\/admin/, '');
+        return NextResponse.redirect(newUrl);
+    }
+
     // 1. Handle Admin Subdomain
     if (hostname.startsWith('admin.')) {
         // Allow access to login page
