@@ -13,12 +13,28 @@ export default function ChatWidget() {
     // Legacy debugging removed
     const scrollRef = useRef<HTMLDivElement>(null);
 
+    const [mounted, setMounted] = useState(false);
+
+    // Delay mount to prioritize LCP/FCP
+    useEffect(() => {
+        // Don't render on bio subdomain (lightweight page)
+        if (window.location.hostname.startsWith('bio.')) return;
+
+        const timer = setTimeout(() => {
+            setMounted(true);
+        }, 2000); // 2 second delay
+
+        return () => clearTimeout(timer);
+    }, []);
+
     // Auto-scroll to bottom
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [messages]);
+
+    if (!mounted) return null;
 
     return (
         <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 text-foreground">
