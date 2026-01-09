@@ -146,7 +146,7 @@ export default function DashboardClient({ posts }: { posts: Post[] }) {
                     </div>
                 </div>
                 <Link
-                    href="/editor"
+                    href="/admin/editor"
                     className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20 w-full sm:w-auto justify-center font-medium"
                 >
                     <PlusCircle size={18} />

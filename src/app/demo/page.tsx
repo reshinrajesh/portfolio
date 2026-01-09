@@ -6,7 +6,7 @@ import DemoSignOut from './components/DemoSignOut';
 // Lab Components
 import SpotifyLab from './components/SpotifyLab';
 import TravelLab from './components/TravelLab';
-import Showcase3D from './components/Showcase3D';
+import Showcase3D from '@/components/ui/Showcase3D';
 import ApiPlayground from './components/ApiPlayground';
 
 export default function DemoPage() {

@@ -3,37 +3,21 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import Globe from "./Globe";
 
 export default function Hero() {
     return (
         <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
             {/* Background Elements */}
-            <div className="absolute inset-0 z-0">
-                <motion.div
-                    animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                    className="absolute top-20 right-10 w-96 h-96 bg-primary/20 rounded-full blur-[128px]"
-                />
-                <motion.div
-                    animate={{
-                        scale: [1, 1.1, 1],
-                        opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{
-                        duration: 6,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 1
-                    }}
-                    className="absolute bottom-20 left-10 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px]"
-                />
+            {/* Background Elements */}
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                <div className="absolute -right-20 top-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-30 md:opacity-50 pointer-events-auto">
+                    <Globe />
+                </div>
+
+                {/* Ambient Gradients - Keeping these for atmosphere but softer */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[128px]" />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[128px]" />
             </div>
 
             <div className="container mx-auto px-6 relative z-10">

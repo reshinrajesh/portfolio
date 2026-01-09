@@ -563,7 +563,38 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
                 </div>
             </div>
 
-            <div className="space-y-6">
+            <div
+                className="space-y-6"
+                onDragOver={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }}
+                onDrop={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const filename = `${Date.now()}-${file.name}`;
+                        const { error } = await supabase
+                            .storage
+                            .from('blog-images')
+                            .upload(filename, file);
+
+                        if (error) {
+                            console.error('Upload error:', error);
+                            alert('Failed to upload image.');
+                            return;
+                        }
+
+                        const { data: { publicUrl } } = supabase
+                            .storage
+                            .from('blog-images')
+                            .getPublicUrl(filename);
+
+                        editor?.chain().focus().setImage({ src: publicUrl }).run();
+                    }
+                }}
+            >
                 <input
                     type="text"
                     placeholder="Post Title"
@@ -572,9 +603,19 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
                     className="w-full text-4xl font-bold bg-transparent border-none focus:outline-none placeholder:text-muted-foreground/50"
                 />
 
-                <div className="bg-card border border-border rounded-xl min-h-[500px] overflow-hidden">
+                <div className="bg-card border border-border rounded-xl min-h-[500px] overflow-hidden relative">
                     <Toolbar editor={editor} onOpenSettings={() => setShowSettings(true)} />
+                    {editor && (
+                        /* BubbleMenu removed due to build issues */
+                        null
+                    )}
                     <EditorContent editor={editor} />
+                    {/* Drag Overlay Hint */}
+                    <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-xl pointer-events-none opacity-0 transition-opacity [&:has(+*:active)]:opacity-0" style={{ zIndex: 50 }} id="drag-overlay">
+                        <div className="absolute inset-0 flex items-center justify-center text-primary font-medium">
+                            Drop image to upload
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
