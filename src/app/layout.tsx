@@ -3,9 +3,9 @@ import { Outfit } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import { Providers } from "./Providers";
 import { VibeProvider } from "@/lib/VibeContext";
 import CommandPalette from "@/components/CommandPalette";
-import SpotlightCursor from "@/components/SpotlightCursor";
 import SpotlightCursor from "@/components/SpotlightCursor";
 
 const outfit = Outfit({
