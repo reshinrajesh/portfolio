@@ -6,6 +6,7 @@ import "./globals.css";
 import { Providers } from "./Providers";
 import { VibeProvider } from "@/lib/VibeContext";
 import ChatWidget from "@/components/ChatWidget";
+import CommandPalette from "@/components/CommandPalette";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -31,6 +32,7 @@ export default function RootLayout({
         <Providers>
           <VibeProvider>
             {children}
+            <CommandPalette />
             <ChatWidget />
             <Analytics />
             <SpeedInsights />
