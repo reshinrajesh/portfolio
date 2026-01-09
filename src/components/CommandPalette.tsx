@@ -12,7 +12,8 @@ import {
     Terminal,
     ExternalLink,
     Map,
-    X
+    X,
+    FileText
 } from "lucide-react";
 
 export default function CommandPalette() {
@@ -62,6 +63,12 @@ export default function CommandPalette() {
             label: "Experimental Lab",
             icon: Terminal,
             perform: () => router.push("https://demo.reshinrajesh.in"),
+        },
+        {
+            id: "resume",
+            label: "Resume / CV",
+            icon: FileText,
+            perform: () => router.push("/resume"),
         },
         {
             id: "blog",
