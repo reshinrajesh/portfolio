@@ -1,8 +1,10 @@
-"use client";
-
 import { motion, AnimatePresence } from "framer-motion";
 import UptimeChart from "@/components/UptimeChart";
-import { CheckCircle, Activity, Server, Shield, Globe, Terminal, Bell, Mail, X } from "lucide-react";
+import StatusGlobe from "@/components/StatusGlobe";
+import BrowserPing from "@/components/BrowserPing";
+import LatencyGraph from "@/components/LatencyGraph";
+import ThirdPartyStatus from "@/components/ThirdPartyStatus";
+import { CheckCircle, Activity, Server, Shield, Globe, Terminal, Bell, Mail, X, Layers, Cpu, Radio } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Logo from "@/components/Logo";
@@ -12,45 +14,70 @@ interface ServiceStatus {
     id: string;
     name: string;
     status: "operational" | "degraded" | "outage" | "maintenance";
+    category: "Core" | "Apps" | "Infrastructure";
     icon: React.ReactNode;
     uptime: string;
 }
 
 const INITIAL_SERVICES: ServiceStatus[] = [
+    // Core
     {
         id: "main",
         name: "Main Portfolio",
         status: "operational",
+        category: "Core",
         icon: <Globe size={18} />,
         uptime: "99.9%"
     },
     {
+        id: "api",
+        name: "Res.AI API Gateway",
+        status: "operational",
+        category: "Core",
+        icon: <Server size={18} />,
+        uptime: "99.95%"
+    },
+    // Apps
+    {
         id: "blog",
         name: "Blog Engine",
         status: "operational",
-        icon: <Activity size={18} />,
+        category: "Apps",
+        icon: <Layers size={18} />,
         uptime: "100%"
     },
+    {
+        id: "chat",
+        name: "AI Chat System",
+        status: "operational",
+        category: "Apps",
+        icon: <Radio size={18} />,
+        uptime: "99.8%"
+    },
+    // Infrastructure
     {
         id: "lab",
         name: "Experimental Lab",
         status: "operational",
+        category: "Infrastructure",
         icon: <Terminal size={18} />,
         uptime: "98.5%"
-    },
-    {
-        id: "api",
-        name: "Res.AI Chat API",
-        status: "operational",
-        icon: <Server size={18} />,
-        uptime: "99.8%"
     },
     {
         id: "security",
         name: "Security Systems",
         status: "operational",
+        category: "Infrastructure",
         icon: <Shield size={18} />,
         uptime: "100%"
+    },
+    {
+        id: "db",
+        name: "Database Clusters",
+        status: "operational",
+        category: "Infrastructure",
+        icon: <Cpu size={18} />,
+        uptime: "99.99%"
     }
 ];
 
@@ -101,129 +128,187 @@ export default function StatusPage() {
         return () => clearInterval(interval);
     }, []);
 
+    const groupedServices = {
+        Core: services.filter(s => s.category === "Core"),
+        Apps: services.filter(s => s.category === "Apps"),
+        Infrastructure: services.filter(s => s.category === "Infrastructure")
+    };
+
     return (
-        <div className="min-h-screen bg-black text-white font-sans selection:bg-green-500/30">
-            <div className="container mx-auto max-w-2xl px-6 py-24">
+        <div className="min-h-screen bg-black text-white font-sans selection:bg-green-500/30 overflow-x-hidden">
+            {/* Background Map Effect */}
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <StatusGlobe />
+            </div>
+
+            <div className="container mx-auto max-w-4xl px-6 py-24 relative z-10 transition-all duration-1000">
                 {/* Logo */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-8"
                 >
-                    <Logo className="text-xl" />
+                    <Logo className="text-xl backdrop-blur-md bg-black/30 px-4 py-2 rounded-full border border-white/5 inline-block" />
                 </motion.div>
 
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-12 flex justify-between items-center"
+                    className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6"
                 >
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">System Status</h1>
-                        <div className="flex items-center gap-2 mt-2">
-                            <span className="flex h-2 w-2 relative">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-500">
+                            System Status
+                        </h1>
+                        <div className="flex items-center gap-3">
+                            <span className="flex h-3 w-3 relative">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500 border border-black/50"></span>
                             </span>
-                            <p className="text-zinc-500 text-sm">Real-time monitoring active</p>
+                            <p className="text-zinc-400 text-sm font-medium">All systems operational</p>
                         </div>
                     </div>
-                    <button
-                        onClick={() => setIsSubscribeOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all text-sm font-medium"
-                    >
-                        <Bell size={16} />
-                        Subscribe
-                    </button>
+
+                    <div className="flex gap-4">
+                        <button
+                            onClick={() => setIsSubscribeOpen(true)}
+                            className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all text-sm font-bold backdrop-blur-md"
+                        >
+                            <Bell size={16} />
+                            Subscribe to Updates
+                        </button>
+                    </div>
                 </motion.div>
 
-                {/* Overall Status Banner */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.1 }}
-                    className={`mb-12 p-6 rounded-2xl border ${allOperational
-                        ? "bg-green-500/5 border-green-500/20"
-                        : "bg-yellow-500/5 border-yellow-500/20"
-                        }`}
-                >
-                    <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-full ${allOperational ? "bg-green-500 text-black" : "bg-yellow-500 text-black"}`}>
-                            {allOperational ? <CheckCircle size={24} /> : <Activity size={24} />}
-                        </div>
-                        <div>
-                            <h2 className={`text-xl font-bold ${allOperational ? "text-green-400" : "text-yellow-400"}`}>
-                                {allOperational ? "All Systems Operational" : "System Issues Detected"}
-                            </h2>
-                            <p className="text-zinc-400 text-sm mt-1">
-                                All services are running normally. No incidents reported today.
-                            </p>
-                        </div>
-                    </div>
-                </motion.div>
                 {/* Metrics Summary */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15 }}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16"
                 >
-                    <div className="p-5 rounded-2xl border border-white/5 bg-white/5 flex flex-col justify-between">
-                        <span className="text-xs text-zinc-500 uppercase tracking-widest font-bold">Overall Uptime</span>
-                        <div className="flex items-baseline gap-2 mt-2">
-                            <h3 className="text-4xl font-bold text-white tracking-tighter">99.98%</h3>
-                            <span className="text-emerald-500 text-xs font-medium">Last 90 days</span>
+                    <div className="p-6 rounded-3xl border border-white/5 bg-zinc-900/50 backdrop-blur-xl flex flex-col justify-between">
+                        <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">Current Status</span>
+                        <div className="mt-2 text-green-400 font-bold flex items-center gap-2">
+                            <CheckCircle size={20} />
+                            Operational
                         </div>
                     </div>
-                    <div className="p-5 rounded-2xl border border-white/5 bg-white/5 flex flex-col justify-between">
-                        <span className="text-xs text-zinc-500 uppercase tracking-widest font-bold">Response Time</span>
-                        <div className="flex items-baseline gap-2 mt-2">
-                            <h3 className="text-4xl font-bold text-white tracking-tighter">124ms</h3>
-                            <span className="text-emerald-500 text-xs font-medium">Global Avg</span>
+                    <div className="p-6 rounded-3xl border border-white/5 bg-zinc-900/50 backdrop-blur-xl flex flex-col justify-between">
+                        <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">Uptime (90d)</span>
+                        <div className="mt-2 text-white font-bold text-2xl tracking-tighter">
+                            99.98%
+                        </div>
+                    </div>
+                    <div className="p-6 rounded-3xl border border-white/5 bg-zinc-900/50 backdrop-blur-xl flex flex-col justify-between">
+                        <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">Avg Response</span>
+                        <div className="mt-2 text-white font-bold text-2xl tracking-tighter">
+                            124ms
+                        </div>
+                    </div>
+                    <div className="p-6 rounded-3xl border border-white/5 bg-zinc-900/50 backdrop-blur-xl flex flex-col justify-between">
+                        <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">Active Incidents</span>
+                        <div className="mt-2 text-white font-bold text-2xl tracking-tighter">
+                            {incidents.filter(i => i.status !== 'Resolved').length}
                         </div>
                     </div>
                 </motion.div>
 
-                {/* Services List */}
-                <div className="space-y-6">
-                    {services.map((service, index) => (
-                        <motion.div
-                            key={service.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 + (index * 0.05) }}
-                            className="p-5 rounded-xl border border-white/5 bg-white/5 hover:border-white/10 transition-colors"
-                        >
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center gap-4">
-                                    <div className="text-zinc-400">{service.icon}</div>
-                                    <span className="font-medium text-lg">{service.name}</span>
-                                </div>
-                                <div className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 ${service.status === "operational" ? "bg-green-500/10 text-green-400" :
-                                    service.status === "degraded" ? "bg-yellow-500/10 text-yellow-400" :
-                                        "bg-red-500/10 text-red-400"
-                                    }`}>
-                                    {service.status === "operational" ? "Operational" : service.status.charAt(0).toUpperCase() + service.status.slice(1)}
-                                </div>
-                            </div>
+                {/* Network Tools */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
+                >
+                    <BrowserPing />
+                    <ThirdPartyStatus />
+                    <div className="md:col-span-2 lg:col-span-1">
+                        <LatencyGraph />
+                    </div>
+                </motion.div>
 
-                            {/* History Graph */}
-                            <UptimeChart uptime={service.uptime} />
-                        </motion.div>
-                    ))}
-                </div>
+                {/* Categories */}
+                {Object.entries(groupedServices).map(([category, categoryServices], catIndex) => (
+                    <div key={category} className="mb-12">
+                        <motion.h3
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 + (catIndex * 0.1) }}
+                            className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-6 pl-2 border-l-2 border-primary"
+                        >
+                            {category}
+                        </motion.h3>
+                        <div className="grid gap-4">
+                            {categoryServices.map((service, index) => (
+                                <motion.div
+                                    key={service.id}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 + (index * 0.05) }}
+                                    className="p-6 rounded-2xl border border-white/5 bg-zinc-900/40 backdrop-blur-md hover:bg-zinc-900/60 transition-all group"
+                                >
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                                        <div className="flex items-center gap-4 min-w-[200px]">
+                                            <div className="p-3 rounded-xl bg-white/5 text-zinc-400 group-hover:text-white group-hover:bg-white/10 transition-colors">
+                                                {service.icon}
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-lg">{service.name}</h4>
+                                                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${service.status === 'operational' ? 'bg-green-500/10 text-green-400' :
+                                                    service.status === 'degraded' ? 'bg-yellow-500/10 text-yellow-400' : 'bg-red-500/10 text-red-400'
+                                                    }`}>
+                                                    {service.status === 'operational' ? 'Operational' : service.status}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex-1 w-full md:max-w-md">
+                                            <UptimeChart uptime={service.uptime} />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+
+                {/* Scheduled Maintenance */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="mb-16 p-6 rounded-2xl border border-white/5 bg-blue-500/5 flex items-start gap-4"
+                >
+                    <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400 mt-1">
+                        <CheckCircle size={20} />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-lg text-blue-400">No Maintenance Scheduled</h3>
+                        <p className="text-zinc-400 text-sm mt-1 mb-2">
+                            All systems are fully operational. We'll post here when we have planned updates.
+                        </p>
+                        <span className="text-xs text-zinc-500 font-mono">Next update window: TBD</span>
+                    </div>
+                </motion.div>
 
                 {/* Past Incidents */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    className="mt-16"
+                    transition={{ delay: 0.6 }}
+                    className="mt-24"
                 >
-                    <h3 className="text-xl font-bold mb-6">Past Incidents</h3>
+                    <div className="flex items-center justify-between mb-8">
+                        <h3 className="text-2xl font-bold">Incident History</h3>
+                        <Link href="/status/history" className="text-sm text-zinc-500 hover:text-white transition-colors">
+                            View Archive &rarr;
+                        </Link>
+                    </div>
+
                     <div className="space-y-12">
-                        {incidents.map((incident) => (
+                        {incidents.slice(0, 3).map((incident) => (
                             <div key={incident.id} className="relative pl-8 border-l-2 border-white/10">
                                 {/* Main Incident Marker */}
                                 <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-zinc-900 border-2 border-zinc-500 shadow-[0_0_10px_rgba(255,255,255,0.1)]" />
@@ -248,7 +333,6 @@ export default function StatusPage() {
                                     </p>
                                 </div>
 
-                                {/* Nested Updates Timeline */}
                                 {incident.updates && incident.updates.length > 0 && (
                                     <div className="mt-6 space-y-6 ml-2 border-l border-white/10 pl-8 relative">
                                         {[...incident.updates].reverse().map((update: any) => (
@@ -272,10 +356,11 @@ export default function StatusPage() {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="mt-12 pt-8 border-t border-white/5 text-center text-xs text-zinc-600"
+                    transition={{ delay: 0.8 }}
+                    className="mt-24 pt-8 border-t border-white/5 flex justify-between items-center text-xs text-zinc-600"
                 >
-                    <p>Last updated: {lastUpdated.toLocaleTimeString()}</p>
+                    <p>Powered by Res.AI Status Engine</p>
+                    <p>Last check: {lastUpdated.toLocaleTimeString()}</p>
                 </motion.div>
             </div>
 
