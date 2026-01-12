@@ -1,30 +1,54 @@
+import { RESUME_DATA } from "@/lib/resume-data";
+import { projects } from "@/lib/projects";
+
+// Helper to format projects
+const projectList = projects
+   .map(
+      (p) =>
+         `- ${p.title}: ${p.description} (Stack: ${p.tags.join(", ")})`
+   )
+   .join("\n");
+
+// Helper to format experience
+const workList = RESUME_DATA.work
+   .map(
+      (w) =>
+         `- ${w.title} at ${w.company} (${w.start} - ${w.end}): ${w.description}`
+   )
+   .join("\n");
+
+// Helper to format education
+const educationList = RESUME_DATA.education
+   .map(
+      (e) =>
+         `- ${e.degree} from ${e.school} (${e.start} - ${e.end})`
+   )
+   .join("\n");
+
 export const portfolioContext = `
 ABOUT RESHIN RAJESH:
-Reshin Rajesh is a Full Stack Developer and Creator based in India.
-He specializes in building clean, meaningful web experiences using modern technologies.
+${RESUME_DATA.summary}
 
-TECH STACK:
-- Frontend: Next.js (React framework), TypeScript, Tailwind CSS, Framer Motion
-- Backend: Next.js API Routes, Supabase (PostgreSQL), Node.js
-- Deployment: Vercel
-- Tools: VS Code, Git, GitHub
+Bio:
+- Name: ${RESUME_DATA.name}
+- Location: ${RESUME_DATA.location}
+- About: ${RESUME_DATA.about}
+
+WORK EXPERIENCE:
+${workList}
+
+EDUCATION:
+${educationList}
+
+SKILLS:
+${RESUME_DATA.skills.join(", ")}
 
 PROJECTS:
-1. Personal Portfolio (reshinrajesh.in):
-   - A showcase of his work and journey.
-   - Built with Next.js, TypeScript, and Tailwind CSS.
-   - Features a dynamic blog, admin dashboard, and now an AI chatbot!
-   
-2. Udemy Course Tracker:
-   - A tool to track progress on Udemy courses.
-   - Allows importing data via Puppeteer scraper.
-   - Helps manage study schedules.
+${projectList}
 
 CONTACT & SOCIALS:
-- Website: reshinrajesh.in
-- GitHub: github.com/reshinrajesh
-- LinkedIn: linkedin.com/in/reshinrajesh
-- Twitter/X: x.com/reshinrajesh
+${RESUME_DATA.contact.social.map((s) => `- ${s.name}: ${s.url}`).join("\n")}
+- Email: ${RESUME_DATA.contact.email}
 
 PHILOSOPHY:
 Reshin believes in simplicity, clarity, and authenticity. 

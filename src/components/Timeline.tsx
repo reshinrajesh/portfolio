@@ -120,7 +120,7 @@ export default function Timeline() {
                                     {item.title}
                                 </h3>
 
-                                <p className="text-sm font-medium text-primary/80 mb-3 flex items-center gap-2">
+                                <p className="text-sm font-medium text-primary mb-3 flex items-center gap-2">
                                     {item.type === 'travel' && <MapPin size={14} />}
                                     {item.organization}
                                 </p>

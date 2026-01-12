@@ -25,6 +25,11 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.redirect(newUrl);
     }
 
+    // Redirect /status on main domain to status subdomain
+    if (url.pathname.startsWith('/status') && !hostname.startsWith('status.') && !hostname.startsWith('admin.')) {
+        return NextResponse.redirect(new URL('https://status.reshinrajesh.in'));
+    }
+
     // 1. Handle Admin Subdomain
     if (hostname.startsWith('admin.')) {
         // Allow access to login page
@@ -71,6 +76,12 @@ export default async function middleware(request: NextRequest) {
     // 5. Handle Demo Subdomain
     if (hostname.startsWith('demo.')) {
         url.pathname = `/demo${url.pathname}`;
+        return NextResponse.rewrite(url);
+    }
+
+    // 6. Handle Status Subdomain
+    if (hostname.startsWith('status.')) {
+        url.pathname = `/status${url.pathname}`;
         return NextResponse.rewrite(url);
     }
 

@@ -4,7 +4,12 @@ import createGlobe from "cobe";
 import { useEffect, useRef } from "react";
 import { useSpring } from "react-spring";
 
-export default function Globe({ className }: { className?: string }) {
+interface GlobeProps {
+    className?: string;
+    markers?: Array<{ location: [number, number]; size: number }>;
+}
+
+export default function Globe({ className, markers = [] }: GlobeProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const pointerInteracting = useRef<number | null>(null);
     const pointerInteractionMovement = useRef(0);
@@ -37,11 +42,7 @@ export default function Globe({ className }: { className?: string }) {
             baseColor: [0.3, 0.3, 0.3],
             markerColor: [0.1, 0.8, 1],
             glowColor: [1, 1, 1],
-            markers: [
-                // location: [latitude, longitude]
-                { location: [37.7595, -122.4367], size: 0.03 },
-                { location: [40.7128, -74.006], size: 0.1 },
-            ],
+            markers: markers,
             onRender: (state) => {
                 // This prevents rotation while dragging
                 if (!pointerInteracting.current) {

@@ -11,6 +11,12 @@ export default function Footer() {
                     <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
                         &copy; {new Date().getFullYear()} Reshin Rajesh. All rights reserved.
                     </p>
+                    <div className="flex items-center gap-4 text-xs">
+                        <Link href="https://status.reshinrajesh.in" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                            System Status
+                        </Link>
+                    </div>
                     <div className="flex items-center gap-4">
                         <LastFmWidget />
                     </div>

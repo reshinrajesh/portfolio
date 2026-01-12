@@ -7,6 +7,7 @@ import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
 import TextAlign from '@tiptap/extension-text-align'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPost, updatePost } from '@/app/actions';
@@ -19,7 +20,8 @@ import {
     AlignLeft, AlignCenter, AlignRight,
     Link as LinkIcon, Image as ImageIcon, Undo, Redo,
     Youtube as YoutubeIcon, MapPin, Globe, Video as VideoIcon,
-    Settings, Save
+    Settings, Save, Search, Monitor, Smartphone, Layout, PanelsLeftBottom, PanelsRightBottom,
+    Eye, EyeOff, LayoutPanelLeft, X, Check
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -169,167 +171,161 @@ const Toolbar = ({ editor, onOpenSettings }: { editor: Editor | null, onOpenSett
 
         editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
     }
-
     return (
-        <>
-            <LocationPicker
-                isOpen={showMapPicker}
-                onClose={() => setShowMapPicker(false)}
-                onSelect={handleLocationSelect}
-            />
-            <div className="border-b border-border p-4 flex flex-wrap gap-2 sticky top-0 bg-card z-10 w-full overflow-x-auto items-center">
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    accept="image/*"
-                />
-                <input
-                    type="file"
-                    ref={videoInputRef}
-                    onChange={handleVideoUpload}
-                    className="hidden"
-                    accept="video/*"
-                />
-
-                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+        <div className="sticky top-0 z-20 w-full overflow-x-auto no-scrollbar bg-zinc-950/80 backdrop-blur-md border-b border-white/5 p-2 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1">
+                {/* Text Styles */}
+                <div className="flex items-center gap-0.5 bg-white/5 p-1 rounded-xl border border-white/5 mr-1">
                     <button
                         onClick={() => editor.chain().focus().toggleBold().run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('bold') ? 'bg-secondary text-primary' : ''}`}
-                        title="Bold"
+                        className={`p-2 rounded-lg transition-all ${editor.isActive('bold') ? 'bg-primary text-black font-black' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
                     >
-                        <Bold size={18} />
+                        <Bold size={14} />
                     </button>
                     <button
                         onClick={() => editor.chain().focus().toggleItalic().run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('italic') ? 'bg-secondary text-primary' : ''}`}
-                        title="Italic"
+                        className={`p-2 rounded-lg transition-all ${editor.isActive('italic') ? 'bg-primary text-black font-black' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
                     >
-                        <Italic size={18} />
+                        <Italic size={14} />
                     </button>
                     <button
                         onClick={() => editor.chain().focus().toggleUnderline().run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('underline') ? 'bg-secondary text-primary' : ''}`}
-                        title="Underline"
+                        className={`p-2 rounded-lg transition-all ${editor.isActive('underline') ? 'bg-primary text-black font-black' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
                     >
-                        <UnderlineIcon size={18} />
+                        <UnderlineIcon size={14} />
                     </button>
                 </div>
 
-                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                {/* Headings */}
+                <div className="flex items-center gap-0.5 bg-white/5 p-1 rounded-xl border border-white/5 mr-1">
                     <button
                         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('heading', { level: 1 }) ? 'bg-secondary text-primary' : ''}`}
-                        title="H1"
+                        className={`px-2 py-1.5 rounded-lg text-[10px] font-black tracking-tighter transition-all ${editor.isActive('heading', { level: 1 }) ? 'bg-primary text-black' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
                     >
-                        <Heading1 size={18} />
+                        H1
                     </button>
                     <button
                         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('heading', { level: 2 }) ? 'bg-secondary text-primary' : ''}`}
-                        title="H2"
+                        className={`px-2 py-1.5 rounded-lg text-[10px] font-black tracking-tighter transition-all ${editor.isActive('heading', { level: 2 }) ? 'bg-primary text-black' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
                     >
-                        <Heading2 size={18} />
+                        H2
                     </button>
                 </div>
 
-                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                {/* Lists & Alignment */}
+                <div className="flex items-center gap-0.5 bg-white/5 p-1 rounded-xl border border-white/5 mr-1">
                     <button
                         onClick={() => editor.chain().focus().toggleBulletList().run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('bulletList') ? 'bg-secondary text-primary' : ''}`}
-                        title="Bullet List"
+                        className={`p-2 rounded-lg transition-all ${editor.isActive('bulletList') ? 'bg-primary text-black' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
                     >
-                        <List size={18} />
+                        <List size={14} />
                     </button>
                     <button
-                        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('orderedList') ? 'bg-secondary text-primary' : ''}`}
-                        title="Ordered List"
+                        onClick={() => editor.chain().focus().setTextAlign('center').run()}
+                        className={`p-2 rounded-lg transition-all ${editor.isActive({ textAlign: 'center' }) ? 'bg-primary text-black' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
                     >
-                        <ListOrdered size={18} />
+                        <AlignCenter size={14} />
                     </button>
                 </div>
 
-                <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                    <button
-                        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('blockquote') ? 'bg-secondary text-primary' : ''}`}
-                        title="Blockquote"
-                    >
-                        <Quote size={18} />
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('codeBlock') ? 'bg-secondary text-primary' : ''}`}
-                        title="Code Block"
-                    >
-                        <Code size={18} />
-                    </button>
-                </div>
-
-                <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                    <button
-                        onClick={setLink}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('link') ? 'bg-secondary text-primary' : ''}`}
-                        title="Link"
-                    >
-                        <LinkIcon size={18} />
-                    </button>
+                {/* Media & Interactive */}
+                <div className="flex items-center gap-0.5 bg-white/5 p-1 rounded-xl border border-white/5">
                     <button
                         onClick={() => fileInputRef.current?.click()}
-                        className="p-2 rounded hover:bg-secondary/50"
-                        title="Upload Image"
+                        className="p-2 text-zinc-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                     >
-                        <ImageIcon size={18} />
+                        <ImageIcon size={14} />
                     </button>
                     <button
                         onClick={() => videoInputRef.current?.click()}
-                        className="p-2 rounded hover:bg-secondary/50"
-                        title="Upload Video"
+                        className="p-2 text-zinc-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                     >
-                        <VideoIcon size={18} />
+                        <VideoIcon size={14} />
                     </button>
                     <button
-                        onClick={addYoutube}
-                        className={`p-2 rounded hover:bg-secondary/50 ${editor.isActive('youtube') ? 'bg-secondary text-primary' : ''}`}
-                        title="Add YouTube Video"
+                        onClick={() => setShowLocationMenu(!showLocationMenu)}
+                        className={`p-2 rounded-lg transition-all relative ${showLocationMenu ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
                     >
-                        <YoutubeIcon size={18} />
-                    </button>
-                </div>
-
-                <div className="flex gap-1 border-r border-border pr-2 mr-2">
-                    <button
-                        onClick={openMapPicker}
-                        className={`p-2 rounded hover:bg-secondary/50 ${showMapPicker ? 'bg-secondary text-primary' : ''}`}
-                        title="Pick Location"
-                    >
-                        <MapPin size={18} />
+                        <MapPin size={14} />
                     </button>
                     <button
-                        onClick={addCurrentLocation}
-                        className="p-2 rounded hover:bg-secondary/50"
-                        title="Add Current Location"
+                        onClick={() => editor.chain().focus().toggleCode().run()}
+                        className={`p-2 rounded-lg transition-all ${editor.isActive('code') ? 'bg-primary text-black' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
                     >
-                        <Globe size={18} />
-                    </button>
-                </div>
-
-                <div className="flex gap-1 ml-auto">
-                    <button
-                        onClick={onOpenSettings}
-                        className="p-2 rounded hover:bg-secondary/50 flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                        title="Post Settings"
-                    >
-                        <Settings size={18} />
-                        <span className="text-xs hidden sm:inline">Settings</span>
+                        <Code size={14} />
                     </button>
                 </div>
             </div>
-        </>
-    )
-}
+
+            <div className="flex items-center gap-2 pr-2">
+                <button
+                    onClick={() => editor.chain().focus().undo().run()}
+                    className="p-2 text-zinc-600 hover:text-zinc-300 transition-colors"
+                >
+                    <Undo size={14} />
+                </button>
+                <button
+                    onClick={() => editor.chain().focus().redo().run()}
+                    className="p-2 text-zinc-600 hover:text-zinc-300 transition-colors"
+                >
+                    <Redo size={14} />
+                </button>
+                <div className="w-[1px] h-4 bg-white/10 mx-1" />
+                <button
+                    onClick={onOpenSettings}
+                    className="p-2 text-zinc-500 hover:text-primary transition-all hover:bg-primary/10 rounded-lg flex items-center gap-2"
+                >
+                    <Settings size={14} />
+                    <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Settings</span>
+                </button>
+            </div>
+
+            {/* Hidden Inputs */}
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageUpload}
+            />
+            <input
+                type="file"
+                ref={videoInputRef}
+                className="hidden"
+                accept="video/*"
+                onChange={handleVideoUpload}
+            />
+
+            <AnimatePresence>
+                {showLocationMenu && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                        className="absolute top-14 left-72 bg-zinc-950 border border-white/10 rounded-2xl shadow-2xl p-2 z-50 flex flex-col gap-1 w-48 backdrop-blur-xl"
+                    >
+                        <button onClick={addCurrentLocation} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl transition-colors text-xs font-bold text-zinc-300">
+                            <MapPin size={14} className="text-primary" />
+                            Current Location
+                        </button>
+                        <button onClick={openMapPicker} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl transition-colors text-xs font-bold text-zinc-300">
+                            <Globe size={14} className="text-primary" />
+                            Map Picker
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {showMapPicker && (
+                <LocationPicker
+                    isOpen={true}
+                    onSelect={handleLocationSelect}
+                    onClose={() => setShowMapPicker(false)}
+                />
+            )}
+        </div>
+    );
+};
 
 const SettingsModal = ({
     isOpen,
@@ -430,16 +426,17 @@ const SettingsModal = ({
     );
 };
 
-const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
-    const [title, setTitle] = useState(initialPost?.title || '');
+export default function TiptapEditor({ initialPost }: { initialPost?: Post | null }) {
+    const [title, setTitle] = useState(initialPost?.title || "");
+    const [tags, setTags] = useState<string[]>(initialPost?.tags || []);
+    const [seoTitle, setSeoTitle] = useState(initialPost?.seo_title || "");
+    const [seoDesc, setSeoDesc] = useState(initialPost?.seo_description || "");
     const [isSaving, setIsSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [showSettings, setShowSettings] = useState(false);
-
-    // New Fields
-    const [tags, setTags] = useState<string[]>(initialPost?.tags || []);
-    const [seoTitle, setSeoTitle] = useState(initialPost?.seo_title || '');
-    const [seoDesc, setSeoDesc] = useState(initialPost?.seo_description || '');
+    const [viewMode, setViewMode] = useState<'editor' | 'split' | 'preview'>('editor');
+    const [showSEO, setShowSEO] = useState(false);
+    const [isDirty, setIsDirty] = useState(false);
 
     const router = useRouter();
 
@@ -516,7 +513,7 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
     }, [editor, title, tags, seoTitle, seoDesc, initialPost?.id]);
 
     return (
-        <div className="max-w-4xl mx-auto relative">
+        <div className={`mx-auto transition-all duration-500 ${viewMode === 'split' ? 'max-w-[1600px] px-8' : 'max-w-4xl px-4'}`}>
             <SettingsModal
                 isOpen={showSettings}
                 onClose={() => setShowSettings(false)}
@@ -525,101 +522,223 @@ const TiptapEditor = ({ initialPost }: { initialPost?: Post | null }) => {
                 seoDesc={seoDesc} setSeoDesc={setSeoDesc}
             />
 
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold">New Post</h1>
-                <div className="flex gap-4 items-center">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 pt-4">
+                <div className="flex flex-col gap-1">
+                    <h1 className="text-3xl font-black tracking-tighter">EDITOR <span className="text-primary/50">2.0</span></h1>
+                    <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${isDirty ? 'bg-yellow-500 animate-pulse' : 'bg-emerald-500'}`} />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                            {isDirty ? 'Unsaved Changes' : 'All Changes Saved'}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 bg-zinc-900/50 backdrop-blur-xl border border-white/5 p-1.5 rounded-2xl">
+                    <button
+                        onClick={() => setViewMode('editor')}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${viewMode === 'editor' ? 'bg-white/10 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+                    >
+                        <LayoutPanelLeft size={14} />
+                        Editor
+                    </button>
+                    <button
+                        onClick={() => setViewMode('split')}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${viewMode === 'split' ? 'bg-white/10 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+                    >
+                        <Layout size={14} />
+                        Split
+                    </button>
+                    <button
+                        onClick={() => setViewMode('preview')}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${viewMode === 'preview' ? 'bg-white/10 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+                    >
+                        <Eye size={14} />
+                        Preview
+                    </button>
+                    <div className="w-[1px] h-4 bg-white/10 mx-1" />
+                    <button
+                        onClick={() => setShowSEO(!showSEO)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${showSEO ? 'bg-primary/20 text-primary border border-primary/20' : 'text-zinc-500 hover:text-zinc-300'}`}
+                    >
+                        <Search size={14} />
+                        SEO
+                    </button>
+                </div>
+
+                <div className="flex gap-3 items-center ml-auto">
                     {lastSaved && (
-                        <span className="text-xs text-muted-foreground mr-2">
-                            Saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-tighter mr-2 hidden sm:inline">
+                            last saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                         </span>
                     )}
                     <button
-                        onClick={async () => {
-                            await handleSave('Draft', true);
-                            if (initialPost?.id) {
-                                window.open(`https://blogs.reshinrajesh.in/${initialPost.id}`, '_blank');
-                            } else {
-                                alert("Please save the post at least once before previewing.");
-                            }
-                        }}
-                        className="px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                    >
-                        Preview
-                    </button>
-                    <button
                         onClick={() => handleSave('Draft')}
                         disabled={isSaving}
-                        className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground disabled:opacity-50"
+                        className="px-4 py-2 text-xs font-bold text-zinc-400 hover:text-white transition-colors"
                     >
-                        Save Draft
+                        Draft
                     </button>
                     <button
                         onClick={() => handleSave('Published')}
                         disabled={isSaving}
-                        className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:opacity-90 font-medium disabled:opacity-50 flex items-center gap-2"
+                        className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl hover:scale-105 active:scale-95 transition-all font-bold text-xs shadow-xl shadow-primary/20 flex items-center gap-2"
                     >
-                        {isSaving ? 'Publishing...' : 'Publish'}
+                        {isSaving ? 'Working...' : 'Publish'}
                     </button>
                 </div>
             </div>
 
-            <div
-                className="space-y-6"
-                onDragOver={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }}
-                onDrop={async (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const file = e.dataTransfer.files[0];
-                    if (file && file.type.startsWith('image/')) {
-                        const filename = `${Date.now()}-${file.name}`;
-                        const { error } = await supabase
-                            .storage
-                            .from('blog-images')
-                            .upload(filename, file);
+            <div className={`grid gap-8 transition-all duration-700 ${viewMode === 'split' ? 'grid-cols-2' :
+                viewMode === 'preview' ? 'grid-cols-1' : 'grid-cols-1'
+                }`}>
+                {/* Editor Column */}
+                {(viewMode === 'editor' || viewMode === 'split') && (
+                    <div
+                        className="space-y-6"
+                        onDragOver={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
+                        onDrop={async (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const file = e.dataTransfer.files[0];
+                            if (file && file.type.startsWith('image/')) {
+                                const filename = `${Date.now()}-${file.name}`;
+                                const { error } = await supabase
+                                    .storage
+                                    .from('blog-images')
+                                    .upload(filename, file);
 
-                        if (error) {
-                            console.error('Upload error:', error);
-                            alert('Failed to upload image.');
-                            return;
-                        }
+                                if (error) {
+                                    console.error('Upload error:', error);
+                                    alert('Failed to upload image.');
+                                    return;
+                                }
 
-                        const { data: { publicUrl } } = supabase
-                            .storage
-                            .from('blog-images')
-                            .getPublicUrl(filename);
+                                const { data: { publicUrl } } = supabase
+                                    .storage
+                                    .from('blog-images')
+                                    .getPublicUrl(filename);
 
-                        editor?.chain().focus().setImage({ src: publicUrl }).run();
-                    }
-                }}
-            >
-                <input
-                    type="text"
-                    placeholder="Post Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full text-4xl font-bold bg-transparent border-none focus:outline-none placeholder:text-muted-foreground/50"
-                />
+                                editor?.chain().focus().setImage({ src: publicUrl }).run();
+                            }
+                        }}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Post Title"
+                            value={title}
+                            onChange={(e) => {
+                                setTitle(e.target.value);
+                                setIsDirty(true);
+                            }}
+                            className="w-full text-4xl font-bold bg-transparent border-none focus:outline-none placeholder:text-zinc-800"
+                        />
 
-                <div className="bg-card border border-border rounded-xl min-h-[500px] overflow-hidden relative">
-                    <Toolbar editor={editor} onOpenSettings={() => setShowSettings(true)} />
-                    {editor && (
-                        /* BubbleMenu removed due to build issues */
-                        null
-                    )}
-                    <EditorContent editor={editor} />
-                    {/* Drag Overlay Hint */}
-                    <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-xl pointer-events-none opacity-0 transition-opacity [&:has(+*:active)]:opacity-0" style={{ zIndex: 50 }} id="drag-overlay">
-                        <div className="absolute inset-0 flex items-center justify-center text-primary font-medium">
-                            Drop image to upload
+                        <div className="bg-zinc-950 border border-white/5 rounded-3xl min-h-[600px] overflow-hidden relative shadow-2xl">
+                            <Toolbar editor={editor} onOpenSettings={() => setShowSettings(true)} />
+                            <div className="p-8">
+                                <EditorContent editor={editor} />
+                            </div>
+
+                            {/* Drag Overlay Hint */}
+                            <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-3xl pointer-events-none opacity-0 transition-opacity [&:has(+*:active)]:opacity-0" style={{ zIndex: 50 }} id="drag-overlay">
+                                <div className="absolute inset-0 flex items-center justify-center text-primary font-bold">
+                                    Drop image to upload
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
+
+                {/* Preview Column */}
+                {(viewMode === 'preview' || viewMode === 'split') && (
+                    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-700">
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Live Preview</span>
+                            <div className="flex gap-2">
+                                <div className="w-2 h-2 rounded-full bg-zinc-800" />
+                                <div className="w-2 h-2 rounded-full bg-zinc-800" />
+                                <div className="w-2 h-2 rounded-full bg-zinc-800" />
+                            </div>
+                        </div>
+                        <div className="bg-white text-black rounded-3xl p-12 min-h-[600px] shadow-2xl overflow-y-auto max-h-[85vh] selection:bg-primary/20">
+                            <h1 className="text-5xl font-black mb-8 tracking-tighter leading-none">{title || "Untitled Post"}</h1>
+                            <div className="prose prose-zinc prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: editor?.getHTML() || "" }} />
+                        </div>
+                    </div>
+                )}
             </div>
+
+            {/* SEO Analysis Sidebar */}
+            <AnimatePresence>
+                {showSEO && (
+                    <motion.div
+                        initial={{ x: 400, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: 400, opacity: 0 }}
+                        className="fixed top-0 right-0 w-96 h-screen bg-zinc-950 border-l border-white/10 z-[100] p-8 shadow-2xl overflow-y-auto"
+                    >
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-xl font-black tracking-tighter underline decoration-primary decoration-4">SEO ANALYSIS</h2>
+                            <button onClick={() => setShowSEO(false)} className="p-2 hover:bg-white/5 rounded-lg transition-colors">
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="space-y-8">
+                            {/* Google Preview */}
+                            <section>
+                                <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">Google Search Preview</h3>
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200">
+                                    <p className="text-[#1a0dab] text-xl font-medium mb-1 line-clamp-2 hover:underline cursor-pointer">
+                                        {seoTitle || title || "Untitled Post"} | Reshin.
+                                    </p>
+                                    <p className="text-[#006621] text-sm mb-1 truncate">https://blogs.reshinrajesh.in/...</p>
+                                    <p className="text-zinc-600 text-sm line-clamp-3">
+                                        {seoDesc || (editor?.getText().slice(0, 160) + "...") || "No description provided."}
+                                    </p>
+                                </div>
+                            </section>
+
+                            {/* SEO Stats */}
+                            <section className="grid grid-cols-2 gap-4">
+                                <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Reading Time</p>
+                                    <p className="text-2xl font-black mt-1">~{Math.ceil((editor?.getText().length || 0) / 1000)}m</p>
+                                </div>
+                                <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Character Count</p>
+                                    <p className="text-2xl font-black mt-1">{editor?.getText().length || 0}</p>
+                                </div>
+                            </section>
+
+                            {/* Checklist */}
+                            <section className="space-y-4">
+                                <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">SEO Checklist</h3>
+                                <div className="space-y-3">
+                                    {[
+                                        { label: "Post Title set", check: title.length > 5 },
+                                        { label: "SEO Title optimized", check: seoTitle.length > 10 },
+                                        { label: "Meta description provided", check: seoDesc.length > 20 },
+                                        { label: "Content > 300 words", check: (editor?.getText().split(' ').length || 0) > 300 },
+                                        { label: "Images included", check: editor?.getHTML().includes('<img') }
+                                    ].map((item, i) => (
+                                        <div key={i} className="flex items-center gap-3">
+                                            <div className={`w-4 h-4 rounded-md border flex items-center justify-center ${item.check ? 'bg-emerald-500 border-emerald-500' : 'border-white/20'}`}>
+                                                {item.check && <Check size={10} className="text-black font-black" />}
+                                            </div>
+                                            <span className={`text-xs ${item.check ? 'text-zinc-300' : 'text-zinc-600'}`}>{item.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }
 
-export default TiptapEditor

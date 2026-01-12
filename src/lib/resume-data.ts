@@ -34,24 +34,48 @@ export const RESUME_DATA = {
     },
     education: [
         {
-            school: "University Name", // Placeholder
+            school: "Srinivas University",
             degree: "Bachelor of Technology in Computer Science",
-            start: "2020",
+            start: "2021",
             end: "2024",
+        },
+        {
+            school: "Nettur Technical Training Foundation",
+            degree: "Diploma in Cloud Computing",
+            start: "2018",
+            end: "2021",
         },
     ],
     work: [
         {
-            company: "Freelance",
-            link: "https://reshinrajesh.in",
-            badges: ["Remote"],
-            title: "Full Stack Developer",
-            start: "2022",
+            company: "Seria Applied Research Pvt. Ltd.",
+            link: "",
+            badges: [],
+            title: "Associate Professional Services Engineer",
+            start: "May 2024",
             end: "Present",
             description:
-                "Developed and deployed custom web applications using Next.js, React, and Supabase. Implemented complex features like secure authentication, real-time databases, and interactive 3D elements.",
+                "Specializing in IT infrastructure management, storage administration, and cloud solutions. Providing professional support to help businesses scale efficiently with secure tech solutions.",
         },
-        // Add more experience here
+        {
+            company: "The Print",
+            link: "",
+            badges: [],
+            title: "Web Developer and Social Media Manager",
+            start: "June 2024",
+            end: "December 2024",
+            description: "Creating websites and managing social media platforms for various clients.",
+        },
+        {
+            company: "Vitvara Technologies",
+            link: "",
+            badges: ["Intern"],
+            title: "Full Stack Web Developer Intern",
+            start: "Jul 2023",
+            end: "Aug 2023",
+            description:
+                "Implemented responsive design principles to create a seamless user experience across various devices. Contributed to the development of database structures and integration with web applications.",
+        },
     ],
     skills: [
         "React/Next.js",

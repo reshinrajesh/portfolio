@@ -1,35 +1,29 @@
-import OpenAI from 'openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
+import { google } from '@ai-sdk/google';
+import { streamText } from 'ai';
 import { systemPrompt } from '@/lib/context';
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
-export const runtime = 'edge';
+// Allow streaming responses up to 30 seconds
+export const maxDuration = 30;
 
 export async function POST(req: Request) {
     try {
         const { messages } = await req.json();
-        console.log('Sending request to OpenAI with messages count:', messages.length);
 
-        const response = await openai.chat.completions.create({
-            model: 'gpt-4o',
-            stream: true,
-            messages: [
-                { role: 'system', content: systemPrompt },
-                ...messages
-            ],
+        // Check for API Key
+        if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+            console.error('Missing Google API Key');
+            return new Response('Missing API Key', { status: 500 });
+        }
+
+        const result = await streamText({
+            model: google('gemini-1.5-flash') as any,
+            system: systemPrompt,
+            messages,
         });
 
-        console.log('OpenAI response received');
-        const stream = OpenAIStream(response as any);
-        return new StreamingTextResponse(stream);
-    } catch (error: any) {
-        console.error('OpenAI API Error:', error);
-        return new Response(JSON.stringify({ error: error.message || 'Internal Server Error' }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        return result.toDataStreamResponse();
+    } catch (error) {
+        console.error('Chat API Error:', error);
+        return new Response(JSON.stringify({ error: 'Failed to generate response' }), { status: 500 });
     }
 }

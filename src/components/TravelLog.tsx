@@ -5,24 +5,7 @@ import { Map, MapPin, Navigation, Calendar } from "lucide-react";
 import Image from "next/image";
 import Globe from "./Globe";
 
-interface Trip {
-    id: string;
-    place: string;
-    date: string;
-    description: string;
-    tags: string[];
-    // photos: string[]; // Future: array of photo URLs
-}
-
-const TRIPS: Trip[] = [
-    {
-        id: "1",
-        place: "Mumbai, Maharashtra",
-        date: "2024",
-        description: "The city of dreams. Explored the vibrant streets, Marine Drive, and the fast-paced life of Mumbai.",
-        tags: ["City", "Culture", "Food"],
-    },
-];
+import { TRIPS } from "@/lib/travel-data";
 
 export default function TravelLog() {
     return (
@@ -114,7 +97,7 @@ export default function TravelLog() {
                         className="relative hidden lg:block h-[600px] w-full"
                     >
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <Globe />
+                            <Globe markers={TRIPS.map(t => ({ location: t.coordinates, size: 0.1 }))} />
                         </div>
                         {/* Optional overlay decoration */}
                         <div className="absolute bottom-10 left-10 p-4 bg-background/80 backdrop-blur-md rounded-xl border border-border/50 max-w-xs">
