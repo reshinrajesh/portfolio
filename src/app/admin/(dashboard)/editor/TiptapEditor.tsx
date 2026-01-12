@@ -250,12 +250,33 @@ const Toolbar = ({ editor, onOpenSettings }: { editor: Editor | null, onOpenSett
                     >
                         <VideoIcon size={14} />
                     </button>
-                    <button
-                        onClick={() => setShowLocationMenu(!showLocationMenu)}
-                        className={`p-2 rounded-lg transition-all relative ${showLocationMenu ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
-                    >
-                        <MapPin size={14} />
-                    </button>
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowLocationMenu(!showLocationMenu)}
+                            className={`p-2 rounded-lg transition-all ${showLocationMenu ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
+                        >
+                            <MapPin size={14} />
+                        </button>
+                        <AnimatePresence>
+                            {showLocationMenu && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                                    className="absolute top-full left-0 mt-2 bg-zinc-950 border border-white/10 rounded-2xl shadow-2xl p-2 z-[60] flex flex-col gap-1 w-48 backdrop-blur-xl"
+                                >
+                                    <button onClick={addCurrentLocation} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl transition-colors text-xs font-bold text-zinc-300">
+                                        <MapPin size={14} className="text-primary" />
+                                        Current Location
+                                    </button>
+                                    <button onClick={openMapPicker} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl transition-colors text-xs font-bold text-zinc-300">
+                                        <Globe size={14} className="text-primary" />
+                                        Pick on Map
+                                    </button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                     <button
                         onClick={() => editor.chain().focus().toggleCode().run()}
                         className={`p-2 rounded-lg transition-all ${editor.isActive('code') ? 'bg-primary text-black' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
@@ -303,26 +324,6 @@ const Toolbar = ({ editor, onOpenSettings }: { editor: Editor | null, onOpenSett
                 accept="video/*"
                 onChange={handleVideoUpload}
             />
-
-            <AnimatePresence>
-                {showLocationMenu && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                        className="absolute top-14 left-72 bg-zinc-950 border border-white/10 rounded-2xl shadow-2xl p-2 z-50 flex flex-col gap-1 w-48 backdrop-blur-xl"
-                    >
-                        <button onClick={addCurrentLocation} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl transition-colors text-xs font-bold text-zinc-300">
-                            <MapPin size={14} className="text-primary" />
-                            Current Location
-                        </button>
-                        <button onClick={openMapPicker} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl transition-colors text-xs font-bold text-zinc-300">
-                            <Globe size={14} className="text-primary" />
-                            Map Picker
-                        </button>
-                    </motion.div>
-                )}
-            </AnimatePresence>
 
             {showMapPicker && (
                 <LocationPicker
@@ -923,7 +924,7 @@ export default function TiptapEditor({ initialPost }: { initialPost?: Post | nul
                             className="w-full text-4xl font-bold bg-transparent border-none focus:outline-none placeholder:text-zinc-800"
                         />
 
-                        <div className="bg-zinc-950 border border-white/5 rounded-3xl min-h-[600px] overflow-hidden relative shadow-2xl">
+                        <div className="bg-zinc-950 border border-white/5 rounded-3xl min-h-[600px] relative shadow-2xl">
                             <Toolbar editor={editor} onOpenSettings={() => setShowSettings(true)} />
                             <div className="p-8">
                                 <EditorContent editor={editor} />
