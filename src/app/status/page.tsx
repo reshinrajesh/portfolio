@@ -1,3 +1,5 @@
+"use client";
+
 import { motion, AnimatePresence } from "framer-motion";
 import UptimeChart from "@/components/UptimeChart";
 import StatusGlobe from "@/components/StatusGlobe";
