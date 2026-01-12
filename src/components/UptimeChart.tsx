@@ -29,14 +29,14 @@ export default function UptimeChart({ days = 90, uptime = "99.9%" }: UptimeChart
                     date.setDate(date.getDate() - (days - 1 - i));
 
                     return (
-                        <div key={i} className="group relative">
+                        <div key={i} className="group relative hover:z-50">
                             <motion.div
                                 initial={{ opacity: 0, scale: 0 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: i * 0.005, duration: 0.2 }}
                                 className={`w-3 h-3 rounded-[2px] transition-all hover:scale-125 hover:z-10 cursor-help ${status === 1 ? "bg-emerald-500/20 hover:bg-emerald-400 group-hover:shadow-[0_0_10px_rgba(52,211,153,0.5)]" :
-                                        status === 2 ? "bg-yellow-500 hover:bg-yellow-400" :
-                                            "bg-red-500 hover:bg-red-400"
+                                    status === 2 ? "bg-yellow-500 hover:bg-yellow-400" :
+                                        "bg-red-500 hover:bg-red-400"
                                     }`}
                             />
                             {/* Tooltip */}
