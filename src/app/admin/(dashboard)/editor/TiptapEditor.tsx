@@ -524,7 +524,7 @@ export default function TiptapEditor({ initialPost }: { initialPost?: Post | nul
 
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4 pt-4">
                 <div className="flex flex-col gap-1">
-                    <h1 className="text-3xl font-black tracking-tighter">EDITOR <span className="text-primary/50">2.0</span></h1>
+                    <h1 className="text-3xl font-black tracking-tighter">EDITOR</h1>
                     <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${isDirty ? 'bg-yellow-500 animate-pulse' : 'bg-emerald-500'}`} />
                         <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
