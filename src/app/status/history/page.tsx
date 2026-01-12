@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, AlertCircle, CheckCircle, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getIncidents } from "@/app/status/actions";
@@ -70,7 +70,7 @@ export default function StatusHistoryPage() {
                     </div>
                 ) : (
                     <div className="space-y-12">
-                        {Object.entries(groupedIncidents).map(([month, monthIncidents], groupIndex) => (
+                        {(Object.entries(groupedIncidents) as [string, any[]][]).map(([month, monthIncidents], groupIndex) => (
                             <motion.div
                                 key={month}
                                 initial={{ opacity: 0, y: 20 }}
@@ -84,16 +84,16 @@ export default function StatusHistoryPage() {
                                     {monthIncidents.map((incident: any) => (
                                         <div key={incident.id} className="relative pl-8 border-l-2 border-white/10 group">
                                             <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 shadow-[0_0_10px_rgba(255,255,255,0.05)] transition-colors ${incident.status === 'Resolved' ? 'bg-zinc-900 border-green-500 group-hover:bg-green-500' :
-                                                    incident.status === 'Investigating' ? 'bg-zinc-900 border-red-500 group-hover:bg-red-500' :
-                                                        'bg-zinc-900 border-yellow-500 group-hover:bg-yellow-500'
+                                                incident.status === 'Investigating' ? 'bg-zinc-900 border-red-500 group-hover:bg-red-500' :
+                                                    'bg-zinc-900 border-yellow-500 group-hover:bg-yellow-500'
                                                 }`} />
 
                                             <div className="mb-2">
                                                 <div className="flex flex-wrap items-center gap-3 mb-2">
                                                     <h3 className="font-bold text-xl text-white group-hover:text-primary transition-colors">{incident.title}</h3>
                                                     <span className={`text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 border font-black uppercase tracking-widest ${incident.status === 'Resolved' || incident.status === 'Completed'
-                                                            ? 'text-green-500 border-green-500/20'
-                                                            : 'text-yellow-500 border-yellow-500/20'
+                                                        ? 'text-green-500 border-green-500/20'
+                                                        : 'text-yellow-500 border-yellow-500/20'
                                                         }`}>
                                                         {incident.status}
                                                     </span>
