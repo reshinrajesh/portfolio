@@ -4,6 +4,7 @@ import Link from "next/link";
 import { LayoutDashboard, FileText, ExternalLink, PlusCircle, Image as ImageIcon, UserCircle, Shield, Activity } from "lucide-react";
 import SignOutButton from "./SignOutButton";
 import Logo from "@/components/Logo";
+import AutoLogout from "@/components/admin/AutoLogout";
 import { authOptions } from "@/lib/auth";
 
 export const metadata = {
@@ -25,6 +26,7 @@ export default async function AdminLayout({
 
     return (
         <div className="flex min-h-screen bg-background text-foreground">
+            <AutoLogout />
             {/* Sidebar */}
             <aside className="w-64 border-r border-border p-6 flex flex-col bg-card/50 backdrop-blur-sm">
                 <Logo />
