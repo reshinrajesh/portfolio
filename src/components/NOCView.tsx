@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import StatusGlobe from "./StatusGlobe";
 import DependencyGraph from "./DependencyGraph";
+import DeploymentStream from "./DeploymentStream";
 import { Clock, Activity, Shield, Server, Globe, Terminal, AlertTriangle } from "lucide-react";
 
 export default function NOCView({ services, incidents }: { services: any[], incidents: any[] }) {
@@ -115,10 +116,10 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                     </div>
                 </div>
 
-                {/* Right Column: Logs & Raw Metrics */}
+                {/* Right Column: Logs, Deployments & Raw Metrics */}
                 <div className="lg:col-span-1 flex flex-col gap-4 min-h-0">
                     {/* Live Logs Terminal */}
-                    <div className="flex-1 bg-black border border-zinc-800 rounded-3xl p-4 font-mono text-xs overflow-hidden flex flex-col">
+                    <div className="h-[200px] bg-black border border-zinc-800 rounded-3xl p-4 font-mono text-xs overflow-hidden flex flex-col shrink-0">
                         <div className="flex items-center gap-2 mb-2 pb-2 border-b border-zinc-900">
                             <Terminal size={14} className="text-zinc-500" />
                             <span className="text-zinc-500 uppercase tracking-widest">System Events</span>
@@ -144,21 +145,25 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                         </div>
                     </div>
 
+                    {/* Deployment Stream */}
+                    <div className="flex-1 min-h-[250px] shrink-0">
+                        <DeploymentStream />
+                    </div>
+
                     {/* Service Matrix */}
-                    <div className="h-[300px] bg-zinc-900/30 border border-white/5 rounded-3xl p-4 overflow-y-auto">
+                    <div className=" bg-zinc-900/30 border border-white/5 rounded-3xl p-4 overflow-y-auto shrink-0 max-h-[300px]">
                         <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Service Health Matrix</h3>
                         <div className="grid grid-cols-1 gap-2">
                             {services.map(service => (
                                 <div key={service.id} className="flex items-center justify-between p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                                     <div className="flex items-center gap-3">
-                                        {/* <span className="text-zinc-400">{service.icon}</span> This might be an object, need to handle if passed from page */}
                                         <span className="font-bold text-zinc-300">{service.name}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-24 h-1 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div className="w-16 md:w-24 h-1 bg-zinc-800 rounded-full overflow-hidden">
                                             <div className="h-full bg-green-500 w-[99%]"></div>
                                         </div>
-                                        <span className="text-green-400 font-mono">{service.uptime}</span>
+                                        <span className="text-green-400 font-mono text-[10px]">{service.uptime}</span>
                                     </div>
                                 </div>
                             ))}
