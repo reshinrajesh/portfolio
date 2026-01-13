@@ -6,7 +6,7 @@ import StatusGlobe from "@/components/StatusGlobe";
 import BrowserPing from "@/components/BrowserPing";
 import LatencyGraph from "@/components/LatencyGraph";
 import ThirdPartyStatus from "@/components/ThirdPartyStatus";
-import { CheckCircle, Activity, Server, Shield, Globe, Terminal, Bell, Mail, X, Layers, Cpu, Radio, ChevronDown, ExternalLink, Check } from "lucide-react";
+import { CheckCircle, Activity, Server, Shield, Globe, Terminal, Bell, Mail, X, Layers, Cpu, Radio } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Logo from "@/components/Logo";
@@ -91,7 +91,7 @@ export default function StatusPage() {
     const [incidents, setIncidents] = useState<any[]>([]);
     const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
     const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
-    const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+
     const [viewMode, setViewMode] = useState<"standard" | "noc">("standard");
     const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "loading" | "success">("idle");
     const [email, setEmail] = useState("");
@@ -216,49 +216,11 @@ export default function StatusPage() {
                         <motion.div variants={itemVariants} className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                             <div>
                                 <div className="relative z-50">
-                                    <button
-                                        onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                                        className="flex items-center gap-3 text-4xl md:text-5xl font-black tracking-tighter mb-4 group text-left"
-                                    >
-                                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-500 group-hover:to-white transition-all">
+                                    <div className="flex items-center gap-3 text-4xl md:text-5xl font-black tracking-tighter mb-4 text-left">
+                                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-500">
                                             System Status
                                         </span>
-                                        <ChevronDown
-                                            size={32}
-                                            className={`text-zinc-500 group-hover:text-white transition-all duration-300 ${isStatusDropdownOpen ? 'rotate-180' : ''}`}
-                                        />
-                                    </button>
-
-                                    <AnimatePresence>
-                                        {isStatusDropdownOpen && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                className="absolute top-14 left-0 w-64 bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl p-2 flex flex-col gap-1 backdrop-blur-xl"
-                                            >
-                                                <button
-                                                    onClick={() => setIsStatusDropdownOpen(false)}
-                                                    className="flex items-center gap-3 w-full p-3 rounded-xl bg-white/10 text-white font-bold text-sm"
-                                                >
-                                                    <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                                                    Main Dashboard
-                                                    <Check className="ml-auto text-white/50" size={14} />
-                                                </button>
-
-                                                <a
-                                                    href="https://res2.statuspage.io/"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-white/5 text-zinc-400 hover:text-white transition-colors text-sm font-medium group"
-                                                >
-                                                    <div className="w-2 h-2 rounded-full bg-zinc-600 group-hover:bg-blue-500 transition-colors" />
-                                                    Atlassian Status
-                                                    <ExternalLink className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" size={14} />
-                                                </a>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                    </div>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <span className="flex h-3 w-3 relative">
