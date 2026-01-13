@@ -34,6 +34,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: post.seo_title || `${post.title} | Reshin Rajesh`,
         description: post.seo_description || `Read ${post.title} by Reshin Rajesh.`,
+        openGraph: {
+            title: post.seo_title || post.title,
+            description: post.seo_description || `Read ${post.title} by Reshin Rajesh.`,
+            type: 'article',
+            url: `https://blogs.reshinrajesh.in/${id}`,
+            images: [
+                {
+                    url: 'https://reshinrajesh.in/opengraph-image.png', // Fallback to main site OG
+                    width: 1200,
+                    height: 630,
+                    alt: post.title,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: post.seo_title || post.title,
+            description: post.seo_description || `Read ${post.title} by Reshin Rajesh.`,
+            images: ['https://reshinrajesh.in/opengraph-image.png'],
+        },
     };
 }
 

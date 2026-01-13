@@ -3,7 +3,12 @@
 import { motion } from "framer-motion";
 import { Map, MapPin, Navigation, Calendar } from "lucide-react";
 import Image from "next/image";
-import Globe from "./Globe";
+import dynamic from 'next/dynamic';
+
+const Globe = dynamic(() => import("./Globe"), {
+    ssr: false,
+    loading: () => <div className="w-full h-full bg-secondary/5 rounded-full animate-pulse" />
+});
 
 import { TRIPS } from "@/lib/travel-data";
 
