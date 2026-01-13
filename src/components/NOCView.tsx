@@ -65,7 +65,7 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                     </div>
                 </div>
 
-                <ClockWidget timezone="UTC" label="UTC (Universal)" />
+                <ClockWidget timezone="Europe/London" label="London (GMT)" />
                 <ClockWidget timezone="Asia/Kolkata" label="IST (Local)" />
                 <ClockWidget timezone="Asia/Qatar" label="AST (Doha)" />
 
