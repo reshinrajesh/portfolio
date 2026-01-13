@@ -3,7 +3,7 @@ import { MoveLeft } from "lucide-react";
 import Link from "next/link";
 import { socials } from "@/lib/socials";
 
-export const revalidate = 0;
+
 
 export default async function BioPage() {
     const bioContent = await getBio();

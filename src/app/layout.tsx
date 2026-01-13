@@ -5,8 +5,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Providers } from "./Providers";
 import { VibeProvider } from "@/lib/VibeContext";
-import CommandPalette from "@/components/CommandPalette";
-import SpotlightCursor from "@/components/SpotlightCursor";
+import dynamic from 'next/dynamic';
+
+const CommandPalette = dynamic(() => import("@/components/CommandPalette"), { ssr: false });
+const SpotlightCursor = dynamic(() => import("@/components/SpotlightCursor"), { ssr: false });
 
 const outfit = Outfit({
   variable: "--font-outfit",
