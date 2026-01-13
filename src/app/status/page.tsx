@@ -152,6 +152,27 @@ export default function StatusPage() {
         Infrastructure: services.filter(s => s.category === "Infrastructure")
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                when: "beforeChildren"
+            }
+        },
+        exit: { opacity: 0, transition: { duration: 0.2 } }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        show: {
+            opacity: 1,
+            y: 0,
+            transition: { type: "spring" as const, stiffness: 50, damping: 20 }
+        }
+    };
+
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-green-500/30 overflow-x-hidden">
             {/* Background Map Effect */}
@@ -180,27 +201,19 @@ export default function StatusPage() {
                 ) : (
                     <motion.div
                         key="standard-view"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, transition: { duration: 0.2 } }}
-                        className="container mx-auto max-w-4xl px-6 py-24 relative z-10 transition-all duration-1000"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="show"
+                        exit="exit"
+                        className="container mx-auto max-w-4xl px-6 py-24 relative z-10"
                     >
                         {/* Logo */}
-                        <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mb-8"
-                        >
+                        <motion.div variants={itemVariants} className="mb-8">
                             <Logo className="text-xl backdrop-blur-md bg-black/30 px-4 py-2 rounded-full border border-white/5 inline-block" />
                         </motion.div>
 
                         {/* Header */}
-                        <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6"
-                        >
-                            {/* ... Header Content ... */}
+                        <motion.div variants={itemVariants} className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                             <div>
                                 <div className="relative z-50">
                                     <button
@@ -275,12 +288,7 @@ export default function StatusPage() {
                         </motion.div>
 
                         {/* Metrics Summary */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.15 }}
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16"
-                        >
+                        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
                             <div className="p-6 rounded-3xl border border-white/5 bg-zinc-900/50 backdrop-blur-xl flex flex-col justify-between">
                                 <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">Current Status</span>
                                 <div className="mt-2 text-green-400 font-bold flex items-center gap-2">
@@ -309,12 +317,7 @@ export default function StatusPage() {
                         </motion.div>
 
                         {/* Network Tools */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
-                        >
+                        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
                             <BrowserPing />
                             <ThirdPartyStatus />
                             <div className="md:col-span-2 lg:col-span-1">
@@ -323,23 +326,16 @@ export default function StatusPage() {
                         </motion.div>
 
                         {/* Categories */}
-                        {Object.entries(groupedServices).map(([category, categoryServices], catIndex) => (
-                            <div key={category} className="mb-12">
-                                <motion.h3
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.2 + (catIndex * 0.1) }}
-                                    className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-6 pl-2 border-l-2 border-primary"
-                                >
+                        {Object.entries(groupedServices).map(([category, categoryServices]) => (
+                            <motion.div key={category} variants={itemVariants} className="mb-12">
+                                <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-6 pl-2 border-l-2 border-primary">
                                     {category}
-                                </motion.h3>
+                                </h3>
                                 <div className="grid gap-4">
-                                    {categoryServices.map((service, index) => (
+                                    {categoryServices.map((service) => (
                                         <motion.div
                                             key={service.id}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.3 + (index * 0.05), type: "spring", stiffness: 100, damping: 15 }}
+                                            whileHover={{ scale: 1.02 }}
                                             className="p-6 rounded-2xl border border-white/5 bg-zinc-900/40 backdrop-blur-md hover:bg-zinc-900/60 transition-all group"
                                         >
                                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -364,16 +360,11 @@ export default function StatusPage() {
                                         </motion.div>
                                     ))}
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
 
                         {/* Scheduled Maintenance */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                            className="mb-16 p-6 rounded-2xl border border-white/5 bg-blue-500/5 flex items-start gap-4"
-                        >
+                        <motion.div variants={itemVariants} className="mb-16 p-6 rounded-2xl border border-white/5 bg-blue-500/5 flex items-start gap-4">
                             <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400 mt-1">
                                 <CheckCircle size={20} />
                             </div>
@@ -387,12 +378,7 @@ export default function StatusPage() {
                         </motion.div>
 
                         {/* Past Incidents */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.6 }}
-                            className="mt-24"
-                        >
+                        <motion.div variants={itemVariants} className="mt-24">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-2xl font-bold">Incident History</h3>
                                 <Link href="/history" className="text-sm text-zinc-500 hover:text-white transition-colors">
@@ -447,9 +433,7 @@ export default function StatusPage() {
 
                         {/* Footer */}
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.8 }}
+                            variants={itemVariants}
                             className="mt-24 pt-8 border-t border-white/5 flex justify-between items-center text-xs text-zinc-600"
                         >
                             <p>Powered by Res.AI Status Engine</p>
