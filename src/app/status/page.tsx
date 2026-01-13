@@ -91,6 +91,17 @@ export default function StatusPage() {
     const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
     const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
     const [viewMode, setViewMode] = useState<"standard" | "noc">("standard");
+    const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "loading" | "success">("idle");
+    const [email, setEmail] = useState("");
+
+    const handleSubscribe = async () => {
+        if (!email) return;
+        setSubscribeStatus("loading");
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        setSubscribeStatus("success");
+        setEmail("");
+    };
 
     const allOperational = services.every(s => s.status === "operational");
 
@@ -423,25 +434,54 @@ export default function StatusPage() {
                                 Get real-time notifications when we detect issues or schedule maintenance.
                             </p>
 
-                            <div className="space-y-4">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest px-1">Email Address</label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
-                                        <input
-                                            type="email"
-                                            placeholder="you@example.com"
-                                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-white"
-                                        />
+                            {subscribeStatus === 'success' ? (
+                                <div className="text-center py-8">
+                                    <div className="w-16 h-16 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <CheckCircle size={32} />
                                     </div>
+                                    <h3 className="text-xl font-bold mb-2">You're Subscribed!</h3>
+                                    <p className="text-zinc-400 mb-6">We'll send updates to <span className="text-white font-medium">{email}</span>.</p>
+                                    <button
+                                        onClick={() => setIsSubscribeOpen(false)}
+                                        className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white py-3 rounded-2xl font-bold transition-all"
+                                    >
+                                        Close
+                                    </button>
                                 </div>
-                                <button className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                                    Subscribe Now
-                                </button>
-                                <p className="text-center text-[10px] text-zinc-600 px-4">
-                                    By subscribing, you agree to receive status update emails. You can unsubscribe at any time.
-                                </p>
-                            </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest px-1">Email Address</label>
+                                        <div className="relative">
+                                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                                            <input
+                                                type="email"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                placeholder="you@example.com"
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-white"
+                                            />
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={handleSubscribe}
+                                        disabled={subscribeStatus === 'loading' || !email}
+                                        className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {subscribeStatus === 'loading' ? (
+                                            <>
+                                                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                                Subscribing...
+                                            </>
+                                        ) : (
+                                            "Subscribe Now"
+                                        )}
+                                    </button>
+                                    <p className="text-center text-[10px] text-zinc-600 px-4">
+                                        By subscribing, you agree to receive status update emails. You can unsubscribe at any time.
+                                    </p>
+                                </div>
+                            )}
                         </motion.div>
                     </div>
                 )}
