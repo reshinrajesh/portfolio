@@ -52,7 +52,7 @@ export default function LoginPage() {
                 setFailedAttempts(prev => prev + 1);
             } else {
                 const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
-                router.push(callbackUrl || "/admin/dashboard");
+                router.push(callbackUrl || "/admin");
             }
         } catch (error) {
             console.error("Login failed", error);
