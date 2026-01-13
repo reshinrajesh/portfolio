@@ -38,6 +38,13 @@ export default async function middleware(request: NextRequest) {
             return NextResponse.rewrite(url);
         }
 
+        // Redirect /admin to / on admin subdomain to avoid double nesting
+        if (url.pathname.startsWith('/admin')) {
+            const newUrl = new URL(request.url);
+            newUrl.pathname = url.pathname.replace(/^\/admin/, '') || '/';
+            return NextResponse.redirect(newUrl);
+        }
+
         // Check for session
         const token = await getToken({
             req: request,
