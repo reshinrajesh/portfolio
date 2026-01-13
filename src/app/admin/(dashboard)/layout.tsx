@@ -34,42 +34,42 @@ export default async function AdminLayout({
 
                 <nav className="flex flex-col gap-2">
                     <Link
-                        href="/admin"
+                        href="/"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1"
                     >
                         <LayoutDashboard size={20} />
                         <span>All Posts</span>
                     </Link>
                     <Link
-                        href="/admin/editor"
+                        href="/editor"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1"
                     >
                         <PlusCircle size={20} />
                         <span>Create New</span>
                     </Link>
                     <Link
-                        href="/admin/media"
+                        href="/media"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1"
                     >
                         <ImageIcon size={20} />
                         <span>Media Gallery</span>
                     </Link>
                     <Link
-                        href="/admin/profile"
+                        href="/profile"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1"
                     >
                         <UserCircle size={20} />
                         <span>Profile</span>
                     </Link>
                     <Link
-                        href="/admin/security"
+                        href="/security"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-500/10 hover:text-red-500 transition-all text-muted-foreground hover:translate-x-1 group"
                     >
                         <Shield size={20} className="group-hover:text-red-500 transition-colors" />
                         <span>Security</span>
                     </Link>
                     <Link
-                        href="/admin/status"
+                        href="/status"
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-muted-foreground hover:translate-x-1 group"
                     >
                         <Activity size={20} className="group-hover:text-primary transition-colors" />
