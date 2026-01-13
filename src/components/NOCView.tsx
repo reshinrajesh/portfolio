@@ -51,10 +51,30 @@ export default function NOCView({ services, incidents }: { services: any[], inci
         );
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0 }
+    };
+
     return (
-        <div className="min-h-screen bg-black text-white p-4 lg:p-6 font-mono text-sm overflow-hidden flex flex-col gap-4">
+        <motion.div
+            className="min-h-screen bg-black text-white p-4 lg:p-6 font-mono text-sm overflow-hidden flex flex-col gap-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+        >
             {/* Top Bar - Clocks & Summary */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 <div className="col-span-2 md:col-span-2 lg:col-span-1 bg-primary/10 border border-primary/20 p-4 rounded-xl flex items-center gap-4">
                     <div className="p-3 bg-primary/20 rounded-full animate-pulse">
                         <Activity className="text-primary" size={24} />
@@ -85,19 +105,19 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                         <div className="text-2xl font-bold text-white">42ms</div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Main Content Grid */}
             <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0">
                 {/* Left Column: Graph & Services */}
-                <div className="lg:col-span-1 flex flex-col gap-4 min-h-0">
+                <motion.div variants={itemVariants} className="lg:col-span-1 flex flex-col gap-4 min-h-0">
                     <div className="flex-1 bg-zinc-900/30 border border-white/5 rounded-3xl p-6 backdrop-blur-sm flex flex-col relative overflow-hidden">
                         <DependencyGraph serviceStatus={services} />
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Middle Column: Globe Map (Big) */}
-                <div className="lg:col-span-1 bg-zinc-900/30 border border-white/5 rounded-3xl relative overflow-hidden min-h-[400px]">
+                <motion.div variants={itemVariants} className="lg:col-span-1 bg-zinc-900/30 border border-white/5 rounded-3xl relative overflow-hidden min-h-[400px]">
                     <div className="absolute top-4 left-4 z-10">
                         <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Global Traffic Map</h3>
                     </div>
@@ -114,10 +134,10 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                             </div>
                         ))}
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Right Column: Logs, Deployments & Raw Metrics */}
-                <div className="lg:col-span-1 flex flex-col gap-4 min-h-0">
+                <motion.div variants={itemVariants} className="lg:col-span-1 flex flex-col gap-4 min-h-0">
                     {/* Live Logs Terminal */}
                     <div className="h-[200px] bg-black border border-zinc-800 rounded-3xl p-4 font-mono text-xs overflow-hidden flex flex-col shrink-0">
                         <div className="flex items-center gap-2 mb-2 pb-2 border-b border-zinc-900">
@@ -169,8 +189,8 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                             ))}
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 }
