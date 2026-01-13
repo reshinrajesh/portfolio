@@ -20,8 +20,8 @@ export function SystemStatusBadge() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             className={`absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-md border ${isHealthy
-                    ? "bg-green-500/10 border-green-500/20 text-green-400"
-                    : "bg-red-500/10 border-red-500/20 text-red-400"
+                ? "bg-green-500/10 border-green-500/20 text-green-400"
+                : "bg-red-500/10 border-red-500/20 text-red-400"
                 }`}
         >
             <div className={`w-2 h-2 rounded-full ${isHealthy ? "bg-green-500 animate-pulse" : "bg-red-500"}`} />
@@ -108,19 +108,73 @@ export function IntruderCapture({ attempts }: { attempts: number }) {
 }
 
 export function AdvancedAuthOptions() {
+    const [loading, setLoading] = useState(false);
+
+    const handlePasskeyLogin = async () => {
+        setLoading(true);
+        try {
+            // 1. Get options
+            const email = prompt("Enter admin email for passkey login:");
+            if (!email) {
+                setLoading(false);
+                return;
+            }
+
+            const optRes = await fetch('/api/auth/passkey/login/options', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            if (!optRes.ok) {
+                const err = await optRes.json();
+                alert(`Error: ${err.error}`);
+                setLoading(false);
+                return;
+            }
+
+            const options = await optRes.json();
+
+            // 2. Start Ceremony
+            const { startAuthentication } = await import('@simplewebauthn/browser');
+            const asseResp = await startAuthentication(options);
+
+            // 3. Verify via NextAuth (using credentials provider hack)
+            const { signIn } = await import('next-auth/react');
+            const res = await signIn('credentials', {
+                redirect: false,
+                email: email,
+                password: JSON.stringify(asseResp) // Sending the response as "password"
+            });
+
+            if (res?.error) {
+                alert("Passkey authentication failed.");
+            } else {
+                window.location.href = "/admin"; // Force reload/redirect
+            }
+
+        } catch (e) {
+            console.error(e);
+            alert("Passkey error. See console.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="grid grid-cols-2 gap-3 pt-2">
             <button
                 type="button"
-                className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white/70 text-sm font-medium p-3 rounded-xl transition-colors border border-white/5"
-                onClick={() => alert("Biometric/Passkey auth requires backend configuration.")}
+                className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white/70 text-sm font-medium p-3 rounded-xl transition-colors border border-white/5 disabled:opacity-50"
+                onClick={handlePasskeyLogin}
+                disabled={loading}
             >
                 <Fingerprint className="w-4 h-4" />
-                <span>Passkey</span>
+                <span>{loading ? "Verifying..." : "Passkey"}</span>
             </button>
             <button
                 type="button"
-                className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white/70 text-sm font-medium p-3 rounded-xl transition-colors border border-white/5"
+                className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white/70 text-sm font-medium p-3 rounded-xl transition-colors border border-white/5 disabled:opacity-50"
                 onClick={() => alert("Magic Link sent to admin email (Simulation).")}
             >
                 <Mail className="w-4 h-4" />

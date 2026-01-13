@@ -1,6 +1,7 @@
 
 import { supabase } from "@/lib/supabase-server";
 import { Terminal, Shield, Lock, Unlock, AlertTriangle } from "lucide-react";
+import { PasskeyManager } from "@/components/admin/PasskeyManager";
 
 export const revalidate = 0; // Disable cache for logs
 
@@ -68,6 +69,9 @@ export default async function SecurityPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Passkey Management */}
+            <PasskeyManager />
 
             {/* Terminal Log */}
             <div className="bg-black border border-green-500/20 rounded-lg overflow-hidden font-mono shadow-2xl">
