@@ -101,7 +101,7 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                         <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Global Traffic Map</h3>
                     </div>
                     <div className="absolute inset-0">
-                        <StatusGlobe />
+                        <StatusGlobe className="max-w-none w-full h-full m-0 absolute inset-0 opacity-100 mix-blend-normal top-0" />
                     </div>
 
                     {/* Overlay Stats on Map */}

@@ -2,8 +2,13 @@
 
 import createGlobe from "cobe";
 import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
-export default function StatusGlobe() {
+interface StatusGlobeProps {
+    className?: string;
+}
+
+export default function StatusGlobe({ className }: StatusGlobeProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -50,7 +55,10 @@ export default function StatusGlobe() {
     }, []);
 
     return (
-        <div className="w-full max-w-[600px] aspect-square mx-auto relative -my-24 opacity-80 mix-blend-screen pointer-events-none">
+        <div className={cn(
+            "w-full max-w-[600px] aspect-square mx-auto relative -my-24 opacity-80 mix-blend-screen pointer-events-none",
+            className
+        )}>
             <canvas
                 ref={canvasRef}
                 style={{ width: 600, height: 600, maxWidth: "100%", aspectRatio: 1 }}
