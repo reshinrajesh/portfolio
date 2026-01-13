@@ -83,11 +83,14 @@ const INITIAL_SERVICES: ServiceStatus[] = [
     }
 ];
 
+import NOCView from "@/components/NOCView";
+
 export default function StatusPage() {
     const [services, setServices] = useState<ServiceStatus[]>(INITIAL_SERVICES);
     const [incidents, setIncidents] = useState<any[]>([]);
     const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
     const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
+    const [viewMode, setViewMode] = useState<"standard" | "noc">("standard");
 
     const allOperational = services.every(s => s.status === "operational");
 
@@ -136,6 +139,20 @@ export default function StatusPage() {
         Infrastructure: services.filter(s => s.category === "Infrastructure")
     };
 
+    if (viewMode === "noc") {
+        return (
+            <div className="relative">
+                <button
+                    onClick={() => setViewMode("standard")}
+                    className="fixed bottom-6 right-6 z-[100] px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-widest transition-all"
+                >
+                    Exit NOC Mode
+                </button>
+                <NOCView services={services} incidents={incidents} />
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-green-500/30 overflow-x-hidden">
             {/* Background Map Effect */}
@@ -173,6 +190,13 @@ export default function StatusPage() {
                     </div>
 
                     <div className="flex gap-4">
+                        <button
+                            onClick={() => setViewMode("noc")}
+                            className="hidden md:flex items-center gap-2 px-6 py-3 bg-zinc-900/50 hover:bg-zinc-800 border border-white/10 rounded-full transition-all text-sm font-bold backdrop-blur-md uppercase tracking-wide text-zinc-400 hover:text-white"
+                        >
+                            <Activity size={16} />
+                            NOC Mode
+                        </button>
                         <button
                             onClick={() => setIsSubscribeOpen(true)}
                             className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all text-sm font-bold backdrop-blur-md"
