@@ -7,8 +7,8 @@ import { Providers } from "./Providers";
 import { VibeProvider } from "@/lib/VibeContext";
 import dynamic from 'next/dynamic';
 
-const CommandPalette = dynamic(() => import("@/components/CommandPalette"), { ssr: false });
-const SpotlightCursor = dynamic(() => import("@/components/SpotlightCursor"), { ssr: false });
+const CommandPalette = dynamic(() => import("@/components/CommandPalette"));
+const SpotlightCursor = dynamic(() => import("@/components/SpotlightCursor"));
 
 const outfit = Outfit({
   variable: "--font-outfit",

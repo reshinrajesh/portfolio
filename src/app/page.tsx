@@ -5,8 +5,7 @@ import TravelLog from "@/components/TravelLog";
 import dynamic from 'next/dynamic';
 
 const Showcase3D = dynamic(() => import("@/components/ui/Showcase3D"), {
-  loading: () => <div className="h-full min-h-[300px] flex items-center justify-center"><div className="w-64 h-80 rounded-3xl bg-white/5 animate-pulse" /></div>,
-  ssr: false
+  loading: () => <div className="h-full min-h-[300px] flex items-center justify-center"><div className="w-64 h-80 rounded-3xl bg-white/5 animate-pulse" /></div>
 });
 import LabLock from "@/components/LabLock";
 import { Lock } from "lucide-react";
