@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 import { motion, AnimatePresence } from "framer-motion";
+import { SystemStatusBadge, GreetingWithTime, CapsLockWarning, IntruderCapture, AdvancedAuthOptions } from "@/components/admin/LoginWidgets";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -13,12 +14,30 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const [focusedInput, setFocusedInput] = useState<string | null>(null);
+    const [capsLockActive, setCapsLockActive] = useState(false);
+    const [failedAttempts, setFailedAttempts] = useState(0);
     const router = useRouter();
+
+    const checkCapsLock = (e: React.KeyboardEvent | React.MouseEvent | React.FocusEvent) => {
+        if ('getModifierState' in e && typeof e.getModifierState === 'function') {
+            if (e.getModifierState("CapsLock")) {
+                setCapsLockActive(true);
+            } else {
+                setCapsLockActive(false);
+            }
+        }
+    };
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError("");
+
+        // DECOY LOGIN LOGIC
+        if (password === "bluepill") {
+            router.push("/admin/decoy");
+            return;
+        }
 
         try {
             const res = await signIn("credentials", {
@@ -30,9 +49,10 @@ export default function LoginPage() {
             if (res?.error) {
                 setError("Invalid credentials. Access denied.");
                 setIsLoading(false);
+                setFailedAttempts(prev => prev + 1);
             } else {
                 const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
-                router.push(callbackUrl || "/admin");
+                router.push(callbackUrl || "/admin/dashboard");
             }
         } catch (error) {
             console.error("Login failed", error);
@@ -42,12 +62,19 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-black relative overflow-hidden">
+        <div
+            className="min-h-screen w-full flex items-center justify-center bg-black relative overflow-hidden"
+            onKeyDown={checkCapsLock}
+            onClick={checkCapsLock}
+        >
             {/* Ambient Background Effects */}
             <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] animate-blob" />
                 <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[120px] animate-blob animation-delay-2000" />
             </div>
+
+            <SystemStatusBadge />
+            <IntruderCapture attempts={failedAttempts} />
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -57,25 +84,11 @@ export default function LoginPage() {
             >
                 <div className="backdrop-blur-2xl bg-white/[0.03] border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl ring-1 ring-white/5">
 
-                    <div className="text-center space-y-3 mb-8">
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.1, duration: 0.5 }}
-                            className="flex justify-center mb-6"
-                        >
-                            <Logo asLink={false} className="text-4xl cursor-default" />
-                        </motion.div>
-                        <h2 className="text-2xl font-semibold tracking-tight text-white/90">
-                            Welcome Back
-                        </h2>
-                        <p className="text-sm text-white/40">
-                            Secure access for authorized personnel only
-                        </p>
-                    </div>
+                    <GreetingWithTime />
 
                     <form onSubmit={handleLogin} className="space-y-5">
-                        <div className="space-y-4">
+                        <div className="space-y-4 relative">
+
                             {/* Email Input */}
                             <motion.div
                                 className="relative group"
@@ -113,13 +126,18 @@ export default function LoginPage() {
                                         placeholder="Password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        onFocus={() => setFocusedInput('password')}
+                                        onFocus={(e) => {
+                                            setFocusedInput('password');
+                                            checkCapsLock(e);
+                                        }}
                                         onBlur={() => setFocusedInput(null)}
+                                        onKeyUp={checkCapsLock}
                                         disabled={isLoading}
                                         className="w-full bg-transparent text-white placeholder-white/20 border-none rounded-xl px-12 py-3.5 focus:outline-none focus:ring-0"
                                         required
                                     />
                                 </div>
+                                <CapsLockWarning isActive={capsLockActive} />
                             </motion.div>
                         </div>
 
@@ -159,6 +177,10 @@ export default function LoginPage() {
                                 )}
                             </div>
                         </motion.button>
+
+                        <div className="pt-2">
+                            <AdvancedAuthOptions />
+                        </div>
 
                         <div className="pt-4 text-center">
                             <p className="text-xs text-white/20 uppercase tracking-widest font-mono">Restricted Area • ID: {Math.random().toString(36).substr(2, 6).toUpperCase()}</p>
