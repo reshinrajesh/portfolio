@@ -328,7 +328,7 @@ export default function StatusPage() {
                 >
                     <div className="flex items-center justify-between mb-8">
                         <h3 className="text-2xl font-bold">Incident History</h3>
-                        <Link href="/status/history" className="text-sm text-zinc-500 hover:text-white transition-colors">
+                        <Link href="/history" className="text-sm text-zinc-500 hover:text-white transition-colors">
                             View Archive &rarr;
                         </Link>
                     </div>

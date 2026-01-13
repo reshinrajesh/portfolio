@@ -46,7 +46,7 @@ export default function StatusHistoryPage() {
                     className="mb-8"
                 >
                     <Link
-                        href="/status"
+                        href="/"
                         className="inline-flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-medium mb-8"
                     >
                         <ArrowLeft size={16} />
