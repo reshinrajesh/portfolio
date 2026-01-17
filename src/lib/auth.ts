@@ -1,5 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { createClient } from '@supabase/supabase-js';
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -7,24 +8,44 @@ export const authOptions: NextAuthOptions = {
             name: "Credentials",
             credentials: {
                 email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" }
+                password: { label: "Password", type: "password" },
+                token: { label: "Token", type: "text" } // Added token field
             },
             async authorize(credentials) {
                 const adminEmail = process.env.ADMIN_EMAIL;
                 const adminPassword = process.env.ADMIN_PASSWORD;
 
-                if (!adminEmail || !adminPassword) {
-                    throw new Error("Missing admin configuration");
+                // 1. Magic Link Flow (Token based)
+                if (credentials?.email && credentials?.token) {
+                    const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+                    const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+                    const supabase = createClient(url, key);
+
+                    const { data: tokenData } = await supabase
+                        .from('verification_tokens')
+                        .select('*')
+                        .eq('identifier', credentials.email)
+                        .eq('token', credentials.token)
+                        .single();
+
+                    if (tokenData && new Date(tokenData.expires) > new Date()) {
+                        // Valid Token!
+                        // cleanup
+                        await supabase.from('verification_tokens').delete().eq('token', credentials.token);
+                        return { id: "1", name: "Admin", email: adminEmail };
+                    }
+
+                    // If token invalid, fall through (or return null)
+                    return null;
                 }
 
-                // Passkey Flow
+                // 2. Passkey Flow (JSON password)
                 if (credentials?.password?.startsWith('{')) {
                     try {
                         const response = JSON.parse(credentials.password);
                         const { verifyAuthenticationResponse } = await import('@simplewebauthn/server');
                         const { supabase } = await import('@/lib/supabase-server');
 
-                        // Helper: Find user by email
                         const { data: user } = await supabase
                             .from('users')
                             .select('*')
@@ -33,7 +54,6 @@ export const authOptions: NextAuthOptions = {
 
                         if (!user || !user.current_challenge) return null;
 
-                        // Find authenticator
                         const { data: authenticator } = await supabase
                             .from('authenticators')
                             .select('*')
@@ -59,13 +79,11 @@ export const authOptions: NextAuthOptions = {
                         });
 
                         if (verification.verified) {
-                            // Update counter
                             await supabase
                                 .from('authenticators')
                                 .update({ counter: verification.authenticationInfo.newCounter })
                                 .eq('credentialID', authenticator.credentialID);
 
-                            // Clear challenge
                             await supabase.from('users').update({ current_challenge: null }).eq('id', user.id);
 
                             return { id: "1", name: "Admin", email: adminEmail };
@@ -76,6 +94,7 @@ export const authOptions: NextAuthOptions = {
                     }
                 }
 
+                // 3. Regular Password Flow
                 if (
                     credentials?.email === adminEmail &&
                     credentials?.password === adminPassword

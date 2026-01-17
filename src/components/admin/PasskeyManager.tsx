@@ -12,10 +12,13 @@ export function PasskeyManager() {
             // 1. Get Options
             const res = await fetch('/api/auth/passkey/register/options');
             if (!res.ok) {
-                const err = await res.json();
-                alert(`Error: ${err.error}`);
-                setStatus('error');
-                return;
+                const text = await res.text();
+                try {
+                    const err = JSON.parse(text);
+                    throw new Error(err.error || text);
+                } catch {
+                    throw new Error(`${res.status}: ${text}`);
+                }
             }
             const options = await res.json();
 
@@ -34,13 +37,18 @@ export function PasskeyManager() {
                 setStatus('success');
                 alert("Passkey registered successfully!");
             } else {
-                setStatus('error');
-                alert("Verification failed.");
+                const text = await verifyRes.text();
+                try {
+                    const updatedErr = JSON.parse(text);
+                    throw new Error(updatedErr.error || text);
+                } catch {
+                    throw new Error(`Verification ${verifyRes.status}: ${text}`);
+                }
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
             setStatus('error');
-            alert("Registration failed");
+            alert(`Registration failed: ${e.message || e}`);
         } finally {
             setTimeout(() => setStatus('idle'), 3000);
         }

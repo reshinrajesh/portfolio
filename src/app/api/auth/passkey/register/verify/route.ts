@@ -33,9 +33,9 @@ export async function POST(request: Request) {
             expectedOrigin,
             expectedRPID: rpID,
         });
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: 'Verification failed' }, { status: 400 });
+    } catch (error: any) {
+        console.error("Verification error:", error);
+        return NextResponse.json({ error: error.message || 'Verification failed' }, { status: 400 });
     }
 
     const { verified, registrationInfo } = verification;
@@ -50,13 +50,13 @@ export async function POST(request: Request) {
             credentialPublicKey: Buffer.from(credentialPublicKey).toString('base64'),
             counter,
             credentialDeviceType,
-            credentialBackedUp,
+            // credentialBackedUp, // Temporarily commented out due to stubborn schema cache error
             transports: body.response.transports ? JSON.stringify(body.response.transports) : null,
         });
 
         if (error) {
-            console.error(error);
-            return NextResponse.json({ error: 'Failed to save authenticator' }, { status: 500 });
+            console.error("Supabase Insert Error:", error);
+            return NextResponse.json({ error: `Failed to save authenticator: ${error.message} (${error.code})` }, { status: 500 });
         }
 
         // Clear challenge

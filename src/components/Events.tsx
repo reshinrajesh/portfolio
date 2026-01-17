@@ -50,6 +50,15 @@ const EVENTS: Event[] = [
         location: "Bengaluru, India",
         status: "confirmed",
     },
+    {
+        id: "5",
+        name: "Shirley Setia Live",
+        type: "concert",
+        date: "7th February 2026",
+        isoDate: "2026-02-07",
+        location: "Bengaluru, India",
+        status: "confirmed",
+    },
 ];
 
 export default function Events() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Camera, ShieldAlert, Fingerprint, Mail, Key, Globe, Clock, Lock } from "lucide-react";
+import { Camera, ShieldAlert, Fingerprint, Mail, Key, Globe, Clock, Lock, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function SystemStatusBadge() {
@@ -161,6 +161,32 @@ export function AdvancedAuthOptions() {
         }
     };
 
+    const handleMagicLink = async () => {
+        const email = prompt("Enter email for Magic Link:");
+        if (!email) return;
+
+        setLoading(true);
+        try {
+            const res = await fetch('/api/auth/magic/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert("Error: " + data.error);
+            } else {
+                alert(`Magic Link sent to ${email}!\n\nWhen you click the link in your email, you will be logged in.`);
+            }
+        } catch (e: any) {
+            console.error("Magic link error:", e);
+            alert("Connection error: " + e.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="grid grid-cols-2 gap-3 pt-2">
             <button
@@ -175,7 +201,8 @@ export function AdvancedAuthOptions() {
             <button
                 type="button"
                 className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white/70 text-sm font-medium p-3 rounded-xl transition-colors border border-white/5 disabled:opacity-50"
-                onClick={() => alert("Magic Link sent to admin email (Simulation).")}
+                onClick={handleMagicLink}
+                disabled={loading}
             >
                 <Mail className="w-4 h-4" />
                 <span>Magic Link</span>
