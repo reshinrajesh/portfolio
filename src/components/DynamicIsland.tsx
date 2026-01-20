@@ -11,16 +11,9 @@ export default function DynamicIsland() {
     const { data, isExpanded, setIsExpanded } = usePlayer();
     const [isHovered, setIsHovered] = useState(false);
 
-    // Mock data for visualization if nothing is playing
-    const displayData = (data && data.isPlaying) ? data : {
-        isPlaying: true, // Force true for demo
-        title: "Starboy",
-        artist: "The Weeknd, Daft Punk",
-        albumImageUrl: "https://i.scdn.co/image/ab67616d0000b2734718e28d24227b9dc7491d43",
-        songUrl: "#"
-    };
+    if (!data || !data.isPlaying) return null;
 
-    // if (!data || !data.isPlaying) return null; // Original logic disabled for demo
+    const displayData = data;
 
     const toggleExpand = () => setIsExpanded(!isExpanded);
 

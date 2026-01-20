@@ -8,7 +8,6 @@ import { VibeProvider } from "@/lib/VibeContext";
 import dynamic from 'next/dynamic';
 
 const CommandPalette = dynamic(() => import("@/components/CommandPalette"));
-const DynamicIsland = dynamic(() => import("@/components/DynamicIsland"));
 const SpotlightCursor = dynamic(() => import("@/components/SpotlightCursor"));
 
 const outfit = Outfit({
@@ -43,7 +42,6 @@ export default function RootLayout({
           <VibeProvider>
             {children}
             <SpotlightCursor />
-            <DynamicIsland />
             <CommandPalette />
             <Analytics />
             <SpeedInsights />
