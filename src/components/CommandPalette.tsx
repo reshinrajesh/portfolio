@@ -133,17 +133,7 @@ export default function CommandPalette() {
 
     return (
         <>
-            {!open && (
-                <button
-                    onClick={() => { setOpen(true); setMode('chat'); }}
-                    className="fixed bottom-4 right-4 z-50 p-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:scale-110 transition-transform flex items-center gap-2 group border border-primary-foreground/20"
-                >
-                    <Sparkles size={20} className="fill-current" />
-                    <span className="w-0 overflow-hidden group-hover:w-auto hover:mr-2 transition-all duration-300 font-medium whitespace-nowrap">
-                        Ask AI
-                    </span>
-                </button>
-            )}
+
 
             <AnimatePresence>
                 {open && (
