@@ -1,17 +1,31 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import TravelLog from "@/components/TravelLog";
 import dynamic from 'next/dynamic';
+
+// Heavy components - Lazy load
+const About = dynamic(() => import("@/components/About"), {
+  loading: () => <div className="min-h-[50vh] flex items-center justify-center"><div className="w-full max-w-4xl h-96 bg-secondary/5 rounded-3xl animate-pulse" /></div>
+});
+
+const TravelLog = dynamic(() => import("@/components/TravelLog"), {
+  loading: () => <div className="min-h-[50vh] flex items-center justify-center"><div className="w-full max-w-6xl h-96 bg-secondary/5 rounded-3xl animate-pulse" /></div>
+});
+
+const Projects = dynamic(() => import("@/components/Projects"), {
+  loading: () => <div className="min-h-[50vh] flex items-center justify-center"><div className="w-full max-w-6xl h-96 bg-secondary/5 rounded-3xl animate-pulse" /></div>
+});
+
+const Contact = dynamic(() => import("@/components/Contact"), {
+  loading: () => <div className="min-h-[30vh]" />
+});
 
 const Showcase3D = dynamic(() => import("@/components/ui/Showcase3D"), {
   loading: () => <div className="h-full min-h-[300px] flex items-center justify-center"><div className="w-64 h-80 rounded-3xl bg-white/5 animate-pulse" /></div>
 });
+
 import LabLock from "@/components/LabLock";
 import { Lock } from "lucide-react";
 
-import Projects from "@/components/Projects";
-import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 export default function Home() {
