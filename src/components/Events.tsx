@@ -51,6 +51,15 @@ const EVENTS: Event[] = [
         location: "Bengaluru, India",
         status: "confirmed",
     },
+    {
+        id: "6",
+        name: "Grassroots Edition X - HMK OTW",
+        type: "concert",
+        date: "8th February 2026",
+        isoDate: "2026-02-08",
+        location: "Bengaluru, India",
+        status: "confirmed",
+    },
 ];
 
 export default function Events() {
