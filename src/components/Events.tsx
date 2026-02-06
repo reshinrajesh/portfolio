@@ -43,15 +43,6 @@ const EVENTS: Event[] = [
     },
 
     {
-        id: "5",
-        name: "Shirley Setia Live",
-        type: "concert",
-        date: "7th February 2026",
-        isoDate: "2026-02-07",
-        location: "Bengaluru, India",
-        status: "confirmed",
-    },
-    {
         id: "6",
         name: "Grassroots Edition X - HMK OTW",
         type: "concert",
