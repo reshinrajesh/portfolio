@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronDown, ExternalLink } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Logo from "./Logo";
@@ -96,16 +96,7 @@ export default function Navbar() {
                                         Dashboard
                                     </Link>
 
-                                    <a
-                                        href="https://res2.statuspage.io/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-3 w-full p-2.5 rounded-lg hover:bg-white/10 text-zinc-300 hover:text-white transition-colors text-sm font-medium group"
-                                    >
-                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                                        Atlassian Page
-                                        <ExternalLink className="ml-auto opacity-50 group-hover:opacity-100 transition-opacity" size={12} />
-                                    </a>
+
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -162,16 +153,7 @@ export default function Navbar() {
                                 <div className="w-2 h-2 rounded-full bg-green-500" />
                                 Live Dashboard
                             </Link>
-                            <a
-                                href="https://res2.statuspage.io/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-3 text-base font-medium text-zinc-400 hover:text-white py-2"
-                            >
-                                <div className="w-2 h-2 rounded-full bg-blue-500" />
-                                Atlassian Page
-                                <ExternalLink size={14} className="opacity-50" />
-                            </a>
+
                         </div>
 
                         <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
