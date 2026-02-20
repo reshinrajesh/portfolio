@@ -76,11 +76,8 @@ export default function LoginPage() {
             <SystemStatusBadge />
             <IntruderCapture attempts={failedAttempts} />
 
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="w-full max-w-[420px] relative z-10 px-4"
+            <div
+                className="w-full max-w-[420px] relative z-10 px-4 animate-fade-up"
             >
                 <div className="backdrop-blur-2xl bg-white/[0.03] border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl ring-1 ring-white/5">
 
@@ -187,7 +184,7 @@ export default function LoginPage() {
                         </div>
                     </form>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 }

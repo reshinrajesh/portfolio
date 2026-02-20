@@ -36,12 +36,9 @@ export default function Navbar() {
     }, []);
 
     return (
-        <motion.nav
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.5 }}
+        <nav
             className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 animate-slide-down",
                 scrolled
                     ? "bg-background/80 backdrop-blur-md border-b border-white/10 py-4"
                     : "bg-transparent py-6"
@@ -166,6 +163,6 @@ export default function Navbar() {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </motion.nav>
+        </nav>
     );
 }

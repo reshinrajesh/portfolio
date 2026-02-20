@@ -40,34 +40,25 @@ export default function Hero() {
                 <div className="max-w-3xl">
 
 
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                        className="text-4xl md:text-7xl font-bold tracking-tight mb-6 leading-tight"
+                    <h1
+                        className="text-4xl md:text-7xl font-bold tracking-tight mb-6 leading-tight animate-fade-up delay-100"
                     >
                         Hi, I'm <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">
                             Reshin Rajesh.
                         </span>
-                    </motion.h1>
+                    </h1>
 
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                        className="text-xl text-muted-foreground mb-8 text-black dark:text-gray-300"
+                    <p
+                        className="text-xl text-muted-foreground mb-8 text-black dark:text-gray-300 animate-fade-up delay-200"
                     >
                         Crafting code during the day, chasing concerts and sunsets by night.
                         <br className="hidden md:block" />
                         A Full Stack Developer living life 50% in the terminal and 50% on the road.
-                    </motion.p>
+                    </p>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
-                        className="flex flex-wrap gap-4"
+                    <div
+                        className="flex flex-wrap gap-4 animate-fade-up delay-300"
                     >
                         <Link
                             href="#projects"
@@ -82,7 +73,7 @@ export default function Hero() {
                         >
                             Visit My Blogs <ExternalLink size={18} />
                         </Link>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
 
