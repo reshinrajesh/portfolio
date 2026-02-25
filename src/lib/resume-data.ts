@@ -99,15 +99,6 @@ export const RESUME_DATA = {
                 href: "https://reshinrajesh.in",
             },
         },
-        {
-            title: "Experimental Lab",
-            techStack: ["React", "Three.js", "Spotify API"],
-            description:
-                "A secure testing ground for new web technologies, featuring JWT-based route protection and real-time API integrations.",
-            link: {
-                label: "demo.reshinrajesh.in",
-                href: "https://demo.reshinrajesh.in",
-            },
-        },
+
     ],
 };

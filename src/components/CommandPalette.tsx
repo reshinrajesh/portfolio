@@ -76,12 +76,7 @@ export default function CommandPalette() {
             icon: Mail,
             perform: () => router.push("/#contact"),
         },
-        {
-            id: "demos",
-            label: "Experimental Lab",
-            icon: Terminal,
-            perform: () => router.push("https://demo.reshinrajesh.in"),
-        },
+
         {
             id: "resume",
             label: "Resume / CV",
@@ -187,9 +182,7 @@ export default function CommandPalette() {
                                                     >
                                                         <action.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
                                                         <span className="flex-1 font-medium">{action.label}</span>
-                                                        {action.id === "demos" && (
-                                                            <span className="text-[10px] bg-red-500/10 text-red-500 px-1.5 py-0.5 rounded border border-red-500/20">LAB</span>
-                                                        )}
+
                                                         {action.id === "ask-ai" && (
                                                             <span className="text-[10px] bg-blue-500/10 text-blue-500 px-1.5 py-0.5 rounded border border-blue-500/20">NEW</span>
                                                         )}
