@@ -38,21 +38,36 @@ export default function TravelLog() {
                             </p>
                         </motion.div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            {TRIPS.map((trip, index) => (
+                        <motion.div
+                            className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={{
+                                hidden: { opacity: 0 },
+                                visible: {
+                                    opacity: 1,
+                                    transition: {
+                                        staggerChildren: 0.15
+                                    }
+                                }
+                            }}
+                        >
+                            {TRIPS.map((trip) => (
                                 <motion.div
                                     key={trip.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: index * 0.1 }}
-                                    className="group relative h-full bg-background border border-border/50 hover:border-orange-500/50 rounded-2xl p-6 transition-all hover:shadow-lg hover:shadow-orange-500/10"
+                                    variants={{
+                                        hidden: { opacity: 0, y: 30 },
+                                        visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+                                    }}
+                                    whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                                    className="group relative h-full bg-background border border-border/50 hover:border-orange-500/50 rounded-2xl p-6 transition-colors shadow-sm hover:shadow-orange-500/10"
                                 >
                                     <div className="flex justify-between items-start mb-4">
-                                        <div className="p-2 rounded-lg bg-orange-500/10 text-orange-500">
+                                        <div className="p-2 rounded-lg bg-orange-500/10 text-orange-500 group-hover:scale-110 transition-transform">
                                             <MapPin size={20} />
                                         </div>
-                                        <span className="text-xs font-mono text-muted-foreground bg-secondary px-2 py-1 rounded flex items-center gap-1">
+                                        <span className="text-xs font-mono text-muted-foreground bg-secondary px-2 py-1 rounded flex items-center gap-1 group-hover:text-orange-400 transition-colors">
                                             <Calendar size={10} />
                                             {trip.date}
                                         </span>
@@ -62,7 +77,7 @@ export default function TravelLog() {
                                         {trip.place}
                                     </h3>
 
-                                    <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+                                    <p className="text-muted-foreground text-sm mb-4 leading-relaxed line-clamp-3">
                                         {trip.description}
                                     </p>
 
@@ -78,19 +93,20 @@ export default function TravelLog() {
 
                             {/* Add New Trip Placeholder */}
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.3 }}
-                                className="flex flex-col items-center justify-center p-6 border border-dashed border-border rounded-2xl h-full min-h-[200px] text-muted-foreground bg-secondary/5 hover:bg-secondary/10 transition-colors"
+                                variants={{
+                                    hidden: { opacity: 0, y: 30, scale: 0.95 },
+                                    visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" } }
+                                }}
+                                whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                                className="flex flex-col items-center justify-center p-6 border border-dashed border-border rounded-2xl h-full min-h-[200px] text-muted-foreground bg-secondary/5 hover:bg-secondary/10 transition-all cursor-pointer group"
                             >
-                                <div className="mb-4 p-4 rounded-full bg-secondary">
-                                    <Navigation size={24} className="opacity-50" />
+                                <div className="mb-4 p-4 rounded-full bg-secondary group-hover:text-orange-500 group-hover:bg-orange-500/10 transition-colors">
+                                    <Navigation size={24} className="opacity-50 group-hover:opacity-100" />
                                 </div>
-                                <p className="font-medium">Where to next?</p>
+                                <p className="font-medium group-hover:text-foreground transition-colors">Where to next?</p>
                                 <p className="text-xs mt-1">Planning the next adventure...</p>
                             </motion.div>
-                        </div>
+                        </motion.div>
                     </div>
 
                     {/* Right Column: Globe */}
