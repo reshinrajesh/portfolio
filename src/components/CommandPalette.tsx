@@ -91,12 +91,7 @@ export default function CommandPalette() {
             icon: ExternalLink,
             perform: () => window.open("https://blogs.reshinrajesh.in", "_blank"),
         },
-        {
-            id: "travel",
-            label: "Travel Map",
-            icon: Map,
-            perform: () => router.push("/map"),
-        },
+
         {
             id: "party",
             label: "Party Mode",
