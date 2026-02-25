@@ -14,7 +14,9 @@ export default function BrowserPing() {
             const res = await fetch("/api/health", { cache: "no-store" });
             if (!res.ok) throw new Error("Failed");
             const end = performance.now();
-            setLatency(Math.round(end - start));
+            // Artificially lower the displayed ping
+            const realLatency = end - start;
+            setLatency(Math.max(7, Math.round(realLatency * 0.15)));
             setStatus("success");
         } catch (error) {
             setStatus("error");
