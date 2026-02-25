@@ -11,6 +11,15 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    // --- GLOBAL MAINTENANCE OVERRIDE ---
+    // Set to false to disable site-wide maintenance mode
+    const MAINTENANCE_MODE = true;
+    if (MAINTENANCE_MODE && url.pathname !== '/maintenance') {
+        url.pathname = '/maintenance';
+        return NextResponse.rewrite(url);
+    }
+    // -----------------------------------
+
     // Redirect /gallery on main domain to gallery subdomain
     if (url.pathname.startsWith('/gallery') && !hostname.startsWith('gallery.')) {
         return NextResponse.redirect(new URL('https://gallery.reshinrajesh.in'));
