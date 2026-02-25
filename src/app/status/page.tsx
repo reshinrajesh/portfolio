@@ -26,7 +26,7 @@ const INITIAL_SERVICES: ServiceStatus[] = [
     {
         id: "main",
         name: "Main Portfolio",
-        status: "maintenance",
+        status: "operational",
         category: "Core",
         icon: <Globe size={18} />,
         uptime: "99.9%"
@@ -35,7 +35,7 @@ const INITIAL_SERVICES: ServiceStatus[] = [
     {
         id: "blog",
         name: "Blog Engine",
-        status: "maintenance",
+        status: "operational",
         category: "Apps",
         icon: <Layers size={18} />,
         uptime: "100%"
@@ -44,7 +44,7 @@ const INITIAL_SERVICES: ServiceStatus[] = [
     {
         id: "security",
         name: "Security Systems",
-        status: "maintenance",
+        status: "operational",
         category: "Infrastructure",
         icon: <Shield size={18} />,
         uptime: "100%"
@@ -52,7 +52,7 @@ const INITIAL_SERVICES: ServiceStatus[] = [
     {
         id: "db",
         name: "Database Clusters",
-        status: "maintenance",
+        status: "operational",
         category: "Infrastructure",
         icon: <Cpu size={18} />,
         uptime: "99.99%"
@@ -114,12 +114,12 @@ export default function StatusPage() {
         };
 
         // Initial fetch
-        // fetchStatus(); // Disabled for maintenance mock
+        fetchStatus();
         fetchIncidents();
 
         // Poll every 60 seconds (60000 ms)
-        // const interval = setInterval(fetchStatus, 60000);
-        // return () => clearInterval(interval);
+        const interval = setInterval(fetchStatus, 60000);
+        return () => clearInterval(interval);
     }, []);
 
     const groupedServices = {
@@ -200,10 +200,10 @@ export default function StatusPage() {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <span className="flex h-3 w-3 relative">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500 border border-black/50"></span>
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500 border border-black/50"></span>
                                     </span>
-                                    <p className="text-zinc-400 text-sm font-medium">System Under Maintenance</p>
+                                    <p className="text-zinc-400 text-sm font-medium">All systems operational</p>
                                 </div>
                             </div>
 
@@ -229,9 +229,9 @@ export default function StatusPage() {
                         <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
                             <div className="p-6 rounded-3xl border border-white/5 bg-zinc-900/50 backdrop-blur-xl flex flex-col justify-between">
                                 <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">Current Status</span>
-                                <div className="mt-2 text-blue-400 font-bold flex items-center gap-2">
-                                    <Activity size={20} />
-                                    Maintenance
+                                <div className="mt-2 text-green-400 font-bold flex items-center gap-2">
+                                    <CheckCircle size={20} />
+                                    Operational
                                 </div>
                             </div>
                             <div className="p-6 rounded-3xl border border-white/5 bg-zinc-900/50 backdrop-blur-xl flex flex-col justify-between">
@@ -302,16 +302,16 @@ export default function StatusPage() {
                         ))}
 
                         {/* Scheduled Maintenance */}
-                        <motion.div variants={itemVariants} className="mb-16 p-6 rounded-2xl border border-blue-500/20 bg-blue-500/10 flex items-start gap-4 shadow-[0_0_30px_rgba(59,130,246,0.1)]">
-                            <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400 mt-1">
-                                <Activity size={20} className="animate-pulse" />
+                        <motion.div variants={itemVariants} className="mb-16 p-6 rounded-2xl border border-white/5 bg-blue-500/5 flex items-start gap-4">
+                            <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400 mt-1">
+                                <CheckCircle size={20} />
                             </div>
                             <div>
-                                <h3 className="font-bold text-lg text-blue-400">Ongoing System Maintenance</h3>
-                                <p className="text-zinc-300 text-sm mt-1 mb-2">
-                                    We are currently performing scheduled maintenance to improve system stability and deploy new features. Some services may be unavailable or degraded.
+                                <h3 className="font-bold text-lg text-blue-400">No Maintenance Scheduled</h3>
+                                <p className="text-zinc-400 text-sm mt-1 mb-2">
+                                    All systems are fully operational. We'll post here when we have planned updates.
                                 </p>
-                                <span className="text-xs text-blue-300 font-mono font-bold">Estimated completion: Next hour</span>
+                                <span className="text-xs text-zinc-500 font-mono">Next update window: TBD</span>
                             </div>
                         </motion.div>
 
