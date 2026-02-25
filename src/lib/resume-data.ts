@@ -13,7 +13,6 @@ export const RESUME_DATA = {
     personalWebsiteUrl: "https://reshinrajesh.in",
     contact: {
         email: "reshinrajesh@gmail.com", // Placeholder
-        tel: "+91 0000000000", // Placeholder
         social: [
             {
                 name: "GitHub",

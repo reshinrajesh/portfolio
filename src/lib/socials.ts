@@ -7,12 +7,7 @@ export const socials = [
         icon: Mail,
         display: "mail@reshinrajesh.in",
     },
-    {
-        name: "Phone",
-        link: "tel:+918137063118",
-        icon: Phone,
-        display: "+91 81370 63118",
-    },
+
     {
         name: "LinkedIn",
         link: "https://linkedin.com/in/reshinrajesh",
