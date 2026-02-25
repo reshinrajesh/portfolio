@@ -243,7 +243,7 @@ export default function StatusPage() {
                             <div className="p-6 rounded-3xl border border-white/5 bg-zinc-900/50 backdrop-blur-xl flex flex-col justify-between">
                                 <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">Avg Response</span>
                                 <div className="mt-2 text-white font-bold text-2xl tracking-tighter flex items-end">
-                                    <CountingNumber value={124} suffix="ms" duration={1.5} />
+                                    <CountingNumber value={18} suffix="ms" duration={1.5} />
                                 </div>
                             </div>
                             <div className="p-6 rounded-3xl border border-white/5 bg-zinc-900/50 backdrop-blur-xl flex flex-col justify-between">
