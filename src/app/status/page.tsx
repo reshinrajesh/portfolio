@@ -31,14 +31,6 @@ const INITIAL_SERVICES: ServiceStatus[] = [
         icon: <Globe size={18} />,
         uptime: "99.9%"
     },
-    {
-        id: "api",
-        name: "Res.AI API Gateway",
-        status: "maintenance",
-        category: "Core",
-        icon: <Server size={18} />,
-        uptime: "99.95%"
-    },
     // Apps
     {
         id: "blog",
@@ -48,23 +40,7 @@ const INITIAL_SERVICES: ServiceStatus[] = [
         icon: <Layers size={18} />,
         uptime: "100%"
     },
-    {
-        id: "chat",
-        name: "AI Chat System",
-        status: "maintenance",
-        category: "Apps",
-        icon: <Radio size={18} />,
-        uptime: "99.8%"
-    },
     // Infrastructure
-    {
-        id: "lab",
-        name: "Experimental Lab",
-        status: "maintenance",
-        category: "Infrastructure",
-        icon: <Terminal size={18} />,
-        uptime: "98.5%"
-    },
     {
         id: "security",
         name: "Security Systems",

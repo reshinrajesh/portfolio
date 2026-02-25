@@ -10,8 +10,6 @@ export async function GET() {
     const status = {
         main: "operational",
         blog: "operational",
-        lab: "operational",
-        api: "operational",
         security: "operational",
     };
 
@@ -22,12 +20,10 @@ export async function GET() {
         if (error) {
             console.error("Supabase health check failed:", error);
             status.blog = "degraded"; // Blog relies on DB
-            status.api = "degraded";  // API might rely on DB
         }
     } catch (e) {
         console.error("Health check error:", e);
         status.blog = "degraded";
-        status.api = "degraded";
     }
 
     // 2. Check API / Main Site (Self)
