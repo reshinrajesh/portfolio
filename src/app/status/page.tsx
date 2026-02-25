@@ -302,18 +302,40 @@ export default function StatusPage() {
                         ))}
 
                         {/* Scheduled Maintenance */}
-                        <motion.div variants={itemVariants} className="mb-16 p-6 rounded-2xl border border-white/5 bg-blue-500/5 flex items-start gap-4">
-                            <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400 mt-1">
-                                <CheckCircle size={20} />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-lg text-blue-400">No Maintenance Scheduled</h3>
-                                <p className="text-zinc-400 text-sm mt-1 mb-2">
-                                    All systems are fully operational. We'll post here when we have planned updates.
-                                </p>
-                                <span className="text-xs text-zinc-500 font-mono">Next update window: TBD</span>
-                            </div>
-                        </motion.div>
+                        {incidents.filter(i => i.title.toLowerCase().includes('maintenance')).length > 0 ? (
+                            <motion.div variants={itemVariants} className="mb-16 p-6 rounded-2xl border border-white/5 bg-zinc-900/40 backdrop-blur-md flex flex-col md:flex-row items-start gap-4">
+                                <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400 mt-1 shrink-0">
+                                    <CheckCircle size={20} />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-lg text-white">Recent Maintenance</h3>
+                                    <p className="text-zinc-400 text-sm mt-1 mb-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                                        "{incidents.filter(i => i.title.toLowerCase().includes('maintenance'))[0].description}"
+                                    </p>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 border font-black uppercase tracking-widest ${incidents.filter(i => i.title.toLowerCase().includes('maintenance'))[0].status === 'Completed' || incidents.filter(i => i.title.toLowerCase().includes('maintenance'))[0].status === 'Resolved' ? 'text-green-500 border-green-500/20' : 'text-blue-500 border-blue-500/20'}`}>
+                                            {incidents.filter(i => i.title.toLowerCase().includes('maintenance'))[0].status}
+                                        </span>
+                                        <span className="text-xs text-zinc-500 font-mono">
+                                            {new Date(incidents.filter(i => i.title.toLowerCase().includes('maintenance'))[0].date).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ) : (
+                            <motion.div variants={itemVariants} className="mb-16 p-6 rounded-2xl border border-white/5 bg-blue-500/5 flex items-start gap-4">
+                                <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400 mt-1">
+                                    <CheckCircle size={20} />
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-lg text-blue-400">No Maintenance Scheduled</h3>
+                                    <p className="text-zinc-400 text-sm mt-1 mb-2">
+                                        All systems are fully operational. We'll post here when we have planned updates.
+                                    </p>
+                                    <span className="text-xs text-zinc-500 font-mono">Next update window: TBD</span>
+                                </div>
+                            </motion.div>
+                        )}
 
                         {/* Past Incidents */}
                         <motion.div variants={itemVariants} className="mt-24">
