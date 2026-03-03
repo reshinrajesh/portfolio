@@ -1,6 +1,6 @@
 import { verifyRegistrationResponse } from '@simplewebauthn/server';
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase-server';
+import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
@@ -12,11 +12,9 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    const { data: user } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', session.user.email)
-        .single();
+    const user = await prisma.user.findUnique({
+        where: { email: session.user.email }
+    });
 
     if (!user || !user.current_challenge) {
         return NextResponse.json({ error: 'User or challenge not found' }, { status: 400 });
@@ -44,23 +42,29 @@ export async function POST(request: Request) {
         const { id: credentialID, publicKey: credentialPublicKey, counter, transports } = registrationInfo.credential;
         const { credentialDeviceType, credentialBackedUp } = registrationInfo;
 
-        const { error } = await supabase.from('authenticators').insert({
-            user_id: user.id,
-            credentialID: credentialID,
-            credentialPublicKey: Buffer.from(credentialPublicKey).toString('base64'),
-            counter,
-            credentialDeviceType,
-            // credentialBackedUp, // Temporarily commented out due to stubborn schema cache error
-            transports: body.response.transports ? JSON.stringify(body.response.transports) : null,
-        });
-
-        if (error) {
-            console.error("Supabase Insert Error:", error);
-            return NextResponse.json({ error: `Failed to save authenticator: ${error.message} (${error.code})` }, { status: 500 });
+        try {
+            await prisma.authenticator.create({
+                data: {
+                    userId: user.id,
+                    providerAccountId: credentialID, // Assuming passkey maps to this conceptually or isn't strictly required
+                    credentialID: credentialID,
+                    credentialPublicKey: Buffer.from(credentialPublicKey).toString('base64'),
+                    counter,
+                    credentialDeviceType,
+                    credentialBackedUp,
+                    transports: body.response.transports ? JSON.stringify(body.response.transports) : null,
+                }
+            });
+        } catch (error: any) {
+            console.error("Prisma Insert Error:", error);
+            return NextResponse.json({ error: `Failed to save authenticator: ${error.message}` }, { status: 500 });
         }
 
         // Clear challenge
-        await supabase.from('users').update({ current_challenge: null }).eq('id', user.id);
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { current_challenge: null }
+        });
 
         return NextResponse.json({ verified: true });
     }

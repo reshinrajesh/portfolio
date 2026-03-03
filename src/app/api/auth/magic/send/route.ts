@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import prisma from '@/lib/prisma';
 import { Resend } from 'resend';
 import crypto from 'crypto';
 
@@ -11,29 +11,26 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Email is required" }, { status: 400 });
         }
 
-        const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-        if (!url || !key) {
-            throw new Error("Missing server configuration");
-        }
-
-        const supabase = createClient(url, key);
-
         // 1. Generate Token
         const token = crypto.randomBytes(32).toString('hex');
         const expires = new Date(Date.now() + 1000 * 60 * 15); // 15 mins
 
         // 2. Save to DB (Clean up old tokens first)
-        await supabase.from('verification_tokens').delete().eq('identifier', email);
+        try {
+            await prisma.verificationToken.deleteMany({
+                where: { identifier: email }
+            });
 
-        const { error: dbError } = await supabase.from('verification_tokens').insert({
-            identifier: email,
-            token: token,
-            expires: expires.toISOString()
-        });
-
-        if (dbError) throw new Error("Database error: " + dbError.message);
+            await prisma.verificationToken.create({
+                data: {
+                    identifier: email,
+                    token: token,
+                    expires: expires
+                }
+            });
+        } catch (dbError: any) {
+            throw new Error("Database error: " + dbError.message);
+        }
 
         // 3. Send Email
         const resend = new Resend('re_M9SkUfAR_Lzt3ZEnVTZoJuQ2hi1pLk14s'); // User provided key

@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase-server";
+import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import { Calendar, User, ArrowLeft, BookOpen } from "lucide-react";
 import Link from "next/link";
@@ -19,11 +19,10 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { id } = await params;
-    const { data: post } = await supabase
-        .from("posts")
-        .select("title, seo_title, seo_description")
-        .eq("id", id)
-        .single();
+    const post = await prisma.post.findUnique({
+        where: { id: id },
+        select: { title: true, seo_title: true, seo_description: true }
+    });
 
     if (!post) {
         return {
@@ -64,11 +63,9 @@ export default async function BlogPostPage({ params }: Props) {
     const domain = headersList.get('host') || '';
     const isSubdomain = domain.startsWith('blogs.');
 
-    const { data: post } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("id", id)
-        .single();
+    const post = await prisma.post.findUnique({
+        where: { id: id }
+    });
 
     if (!post) {
         notFound();

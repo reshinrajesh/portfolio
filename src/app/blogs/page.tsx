@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase-server";
+import prisma from "@/lib/prisma";
 import BlogNavbar from "@/components/BlogNavbar";
 import BlogCard from "@/components/blog/BlogCard";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -14,11 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogsPage() {
-    const { data: posts } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("status", "Published") // Only show published posts
-        .order("created_at", { ascending: false });
+    const posts = await prisma.post.findMany({
+        where: { status: "Published" },
+        orderBy: { created_at: "desc" }
+    });
 
     const headersList = await headers();
     const domain = headersList.get('host') || '';
@@ -43,7 +42,7 @@ export default async function BlogsPage() {
 
                 {posts && posts.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        {posts.map((post, index) => (
+                        {posts.map((post: any, index: number) => (
                             <BlogCard key={post.id} post={post} index={index} isSubdomain={isSubdomain} />
                         ))}
                     </div>

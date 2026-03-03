@@ -1,6 +1,7 @@
 "use server";
 
-import { supabase } from "@/lib/supabase-server";
+import prisma from "@/lib/prisma";
+import { list, del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 
 
@@ -16,9 +17,14 @@ interface PostData {
 }
 
 export async function createPost(post: PostData) {
-    const { error } = await supabase.from('posts').insert(post);
-
-    if (error) {
+    try {
+        await prisma.post.create({
+            data: {
+                ...post,
+                content: post.content || ""
+            }
+        });
+    } catch (error) {
         console.error("Error creating post:", error);
         throw new Error("Failed to create post");
     }
@@ -29,12 +35,12 @@ export async function createPost(post: PostData) {
 }
 
 export async function updatePost(id: string, post: PostData) {
-    const { error } = await supabase.from('posts').update({
-        ...post,
-        updated_at: new Date().toISOString()
-    }).eq('id', id);
-
-    if (error) {
+    try {
+        await prisma.post.update({
+            where: { id: id },
+            data: { ...post }
+        });
+    } catch (error) {
         console.error("Error updating post:", error);
         throw new Error("Failed to update post");
     }
@@ -45,9 +51,11 @@ export async function updatePost(id: string, post: PostData) {
 }
 
 export async function deletePost(id: string) {
-    const { error } = await supabase.from('posts').delete().eq('id', id);
-
-    if (error) {
+    try {
+        await prisma.post.delete({
+            where: { id: id }
+        });
+    } catch (error) {
         console.error("Error deleting post:", error);
         throw new Error("Failed to delete post");
     }
@@ -58,67 +66,80 @@ export async function deletePost(id: string) {
 }
 
 export async function getMediaFiles() {
-    const { data, error } = await supabase
-        .storage
-        .from('blog-images')
-        .list('', {
-            limit: 100,
-            offset: 0,
-            sortBy: { column: 'created_at', order: 'desc' },
+    try {
+        // Vercel Blob list
+        const { blobs } = await list({
+            prefix: 'blog-images/',
+            limit: 100
         });
 
-    if (error) {
-        console.error("Error fetching media:", error);
+        // Map to expected format
+        const filesWithUrls = blobs.map((blob) => ({
+            name: blob.pathname.replace('blog-images/', ''),
+            publicUrl: blob.url,
+            created_at: blob.uploadedAt.toISOString(),
+            size: blob.size,
+            id: blob.url, // using URL as ID for easy deletion
+        }));
+
+        // Sort by date descending
+        return filesWithUrls.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    } catch (error) {
+        console.error("Error fetching media from blob:", error);
         return [];
     }
-
-    // Get public URLs for each file
-    const filesWithUrls = data.map((file) => {
-        const { data: { publicUrl } } = supabase
-            .storage
-            .from('blog-images')
-            .getPublicUrl(file.name);
-
-        return {
-            ...file,
-            publicUrl
-        };
-    });
-
-    return filesWithUrls;
 }
 
-export async function deleteMediaFile(filename: string) {
-    const { error } = await supabase
-        .storage
-        .from('blog-images')
-        .remove([filename]);
-
-    if (error) {
-        console.error("Error deleting file:", error);
+export async function deleteMediaFile(url: string) {
+    try {
+        await del(url);
+        revalidatePath("/admin/media");
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting file from blob:", error);
         throw new Error("Failed to delete file");
     }
+}
 
-    revalidatePath("/admin/media");
-    return { success: true };
+export async function uploadMediaFile(formData: FormData) {
+    try {
+        const file = formData.get('file') as File;
+        if (!file) throw new Error("No file uploaded");
+
+        const filename = `blog-images/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+
+        const blob = await put(filename, file, {
+            access: 'public',
+            contentType: file.type,
+        });
+
+        return { publicUrl: blob.url };
+    } catch (error) {
+        console.error('Error uploading to Vercel Blob:', error);
+        throw new Error("Failed to upload file");
+    }
 }
 
 export async function getBio() {
-    const { data } = await supabase
-        .from('site_content')
-        .select('value')
-        .eq('key', 'bio')
-        .single();
-
-    return data?.value || '';
+    try {
+        const data = await prisma.siteContent.findUnique({
+            where: { key: 'bio' }
+        });
+        return data?.value || '';
+    } catch (error) {
+        console.error("Error fetching bio:", error);
+        return '';
+    }
 }
 
 export async function updateBio(content: string) {
-    const { error } = await supabase
-        .from('site_content')
-        .upsert({ key: 'bio', value: content, updated_at: new Date().toISOString() });
-
-    if (error) {
+    try {
+        await prisma.siteContent.upsert({
+            where: { key: 'bio' },
+            create: { key: 'bio', value: content },
+            update: { value: content }
+        });
+    } catch (error) {
         console.error("Error updating bio:", error);
         throw new Error("Failed to update bio");
     }
@@ -128,14 +149,12 @@ export async function updateBio(content: string) {
 }
 
 export async function incrementViewCount(id: string) {
-    // We use rpc in a real scenario to avoid race conditions, but simple update works for low traffic.
-    // Or better: fetch current, increment, update. 
-    // Even better: Supabase doesn't support 'increment' in simple JS client easily without RPC.
-    // Let's assume standard fetch-update for now or raw SQL if possible.
-    // Since we are server-side, we can just do:
-    const { data } = await supabase.from('posts').select('view_count').eq('id', id).single();
-    const current = data?.view_count || 0;
-
-    await supabase.from('posts').update({ view_count: current + 1 }).eq('id', id);
-    // No revalidate needed for the UI immediately usually
+    try {
+        await prisma.post.update({
+            where: { id: id },
+            data: { view_count: { increment: 1 } }
+        });
+    } catch (error) {
+        console.error("Error incrementing view count:", error);
+    }
 }

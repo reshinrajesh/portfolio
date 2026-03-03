@@ -1,17 +1,22 @@
-
-import { supabase } from "@/lib/supabase-server";
+import prisma from "@/lib/prisma";
 import { Terminal, Shield, Lock, Unlock, AlertTriangle } from "lucide-react";
 import { PasskeyManager } from "@/components/admin/PasskeyManager";
+
+import { AccessLog } from "@prisma/client";
 
 export const revalidate = 0; // Disable cache for logs
 
 export default async function SecurityPage() {
-    // Fetch logs from Supabase
-    const { data: logs, error } = await supabase
-        .from('access_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50);
+    let logs: AccessLog[] | null = null;
+    let error = false;
+    try {
+        logs = await prisma.accessLog.findMany({
+            orderBy: { created_at: 'desc' },
+            take: 50
+        });
+    } catch (e) {
+        error = true;
+    }
 
     if (error) {
         return <div className="text-red-500 font-mono">ERROR: CONNECTION_FAILED</div>;
@@ -19,8 +24,8 @@ export default async function SecurityPage() {
 
     // Calculate metrics
     const totalAttempts = logs?.length || 0;
-    const failures = logs?.filter(l => l.status === 'FAILURE').length || 0;
-    const successes = logs?.filter(l => l.status === 'SUCCESS').length || 0;
+    const failures = logs?.filter((l: AccessLog) => l.status === 'FAILURE').length || 0;
+    const successes = logs?.filter((l: AccessLog) => l.status === 'SUCCESS').length || 0;
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
@@ -90,7 +95,7 @@ export default async function SecurityPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                            {logs?.map((log) => (
+                            {logs?.map((log: AccessLog) => (
                                 <tr key={log.id} className="hover:bg-white/5 transition-colors">
                                     <td className="p-4 text-neutral-400">
                                         {new Date(log.created_at).toLocaleString()}

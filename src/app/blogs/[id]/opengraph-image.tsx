@@ -1,7 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { createClient } from '@supabase/supabase-js'
-
-export const runtime = 'edge'
+import prisma from "@/lib/prisma";
 
 export const alt = 'Blog Post | Reshin Rajesh'
 export const size = {
@@ -14,23 +12,10 @@ export const contentType = 'image/png'
 export default async function Image({ params }: { params: { id: string } }) {
     const { id } = await params;
 
-    // Initialize Supabase client directly for Edge runtime
-    // We can't use the shared lib if it uses Node.js specific modules, 
-    // but looking at imports it seems safe. However, simpler to just init here if needed or use the lib.
-    // The lib/supabase-server.ts likely uses process.env.
-    // Let's try importing from lib first, but usually Edge requires specific handling.
-    // Actually, createClient from @supabase/supabase-js works in Edge.
-
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-
-    const { data: post } = await supabase
-        .from('posts')
-        .select('title, content, updated_at')
-        .eq('id', id)
-        .single()
+    const post = await prisma.post.findUnique({
+        where: { id: id },
+        select: { title: true, content: true, updated_at: true }
+    });
 
     if (!post) {
         return new ImageResponse(

@@ -1,39 +1,36 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
+import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export async function getIncidents() {
-    const { data, error } = await supabase
-        .from('status_incidents')
-        .select('*')
-        .order('date', { ascending: false });
-
-    if (error) {
+    try {
+        const data = await prisma.statusIncident.findMany({
+            orderBy: { date: 'desc' }
+        });
+        return data.map((inc: any) => ({
+            ...inc,
+            date: inc.date.toISOString(),
+            updates: inc.updates as any
+        }));
+    } catch (error) {
         console.error("Error fetching incidents:", error);
         return [];
     }
-    return data;
 }
 
 export async function addIncident(formData: { title: string, description: string, status: string, date: string }) {
-    const { error } = await supabase
-        .from('status_incidents')
-        .insert([
-            {
+    try {
+        await prisma.statusIncident.create({
+            data: {
                 title: formData.title,
                 description: formData.description,
                 status: formData.status,
-                date: new Date(formData.date).toISOString(),
+                date: new Date(formData.date),
                 updates: [] // Initial empty updates
             }
-        ]);
-
-    if (error) {
+        });
+    } catch (error: any) {
         throw new Error(error.message);
     }
 
@@ -42,36 +39,39 @@ export async function addIncident(formData: { title: string, description: string
 }
 
 export async function addIncidentUpdate(incidentId: string, update: { status: string, message: string, date: string }) {
-    // First, get current updates
-    const { data, error: getError } = await supabase
-        .from('status_incidents')
-        .select('updates')
-        .eq('id', incidentId)
-        .single();
+    try {
+        // First, get current updates
+        const incident = await prisma.statusIncident.findUnique({
+            where: { id: incidentId },
+            select: { updates: true }
+        });
 
-    if (getError) throw new Error(getError.message);
+        if (!incident) throw new Error("Incident not found");
 
-    const currentUpdates = data.updates || [];
-    const newUpdates = [...currentUpdates, { ...update, id: crypto.randomUUID() }];
+        const currentUpdates = (incident.updates as any[]) || [];
+        const newUpdates = [...currentUpdates, { ...update, id: crypto.randomUUID() }];
 
-    const { error: updateError } = await supabase
-        .from('status_incidents')
-        .update({ updates: newUpdates, status: update.status }) // Also update the main status
-        .eq('id', incidentId);
-
-    if (updateError) throw new Error(updateError.message);
+        await prisma.statusIncident.update({
+            where: { id: incidentId },
+            data: {
+                updates: newUpdates,
+                status: update.status
+            }
+        });
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
 
     revalidatePath('/status');
     revalidatePath('/admin/status');
 }
 
 export async function deleteIncident(id: string) {
-    const { error } = await supabase
-        .from('status_incidents')
-        .delete()
-        .match({ id });
-
-    if (error) {
+    try {
+        await prisma.statusIncident.delete({
+            where: { id }
+        });
+    } catch (error: any) {
         throw new Error(error.message);
     }
 

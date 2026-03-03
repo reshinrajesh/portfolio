@@ -1,6 +1,6 @@
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase-server';
+import prisma from '@/lib/prisma';
 
 export async function POST(request: Request) {
     const { email } = await request.json();
@@ -9,20 +9,17 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Email required' }, { status: 400 });
     }
 
-    const { data: user } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', email)
-        .single();
+    const user = await prisma.user.findUnique({
+        where: { email: email }
+    });
 
     if (!user) {
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const { data: authenticators } = await supabase
-        .from('authenticators')
-        .select('*')
-        .eq('user_id', user.id);
+    const authenticators = await prisma.authenticator.findMany({
+        where: { userId: user.id }
+    });
 
     if (!authenticators || authenticators.length === 0) {
         return NextResponse.json({ error: 'No passkeys registered' }, { status: 400 });
@@ -32,17 +29,17 @@ export async function POST(request: Request) {
 
     const options = await generateAuthenticationOptions({
         rpID,
-        allowCredentials: authenticators.map(auth => ({
+        allowCredentials: authenticators.map((auth: any) => ({
             id: auth.credentialID,
             transports: auth.transports ? JSON.parse(auth.transports) : undefined,
         })),
     });
 
     // Save challenge
-    await supabase
-        .from('users')
-        .update({ current_challenge: options.challenge })
-        .eq('id', user.id);
+    await prisma.user.update({
+        where: { id: user.id },
+        data: { current_challenge: options.challenge }
+    });
 
     return NextResponse.json(options);
 }

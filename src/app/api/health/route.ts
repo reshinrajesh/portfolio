@@ -1,10 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import prisma from '@/lib/prisma';
 
 export async function GET() {
     const status = {
@@ -14,13 +9,8 @@ export async function GET() {
     };
 
     try {
-        // 1. Check Database (Supabase)
-        const { error } = await supabase.from('site_content').select('count', { count: 'exact', head: true });
-
-        if (error) {
-            console.error("Supabase health check failed:", error);
-            status.blog = "degraded"; // Blog relies on DB
-        }
+        // 1. Check Database (Prisma)
+        await prisma.siteContent.count();
     } catch (e) {
         console.error("Health check error:", e);
         status.blog = "degraded";

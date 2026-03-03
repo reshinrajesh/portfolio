@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase-server";
+import prisma from "@/lib/prisma";
 import TiptapEditor from "./TiptapEditor";
 
 export const revalidate = 0;
@@ -17,12 +17,9 @@ export default async function EditorPage({
     const { id } = await searchParams;
 
     if (id) {
-        const { data } = await supabase
-            .from('posts')
-            .select('*')
-            .eq('id', id)
-            .single();
-        post = data;
+        post = await prisma.post.findUnique({
+            where: { id: id }
+        }) as any;
     }
 
     return (

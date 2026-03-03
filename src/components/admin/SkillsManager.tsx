@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase-client";
+import { getSkills, addSkill, updateSkill, deleteSkill } from "@/app/admin/skills/actions";
 import { PlusCircle, Trash2, Edit2, Save, X, GripVertical } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -29,15 +29,11 @@ export default function SkillsManager() {
 
     const fetchSkills = async () => {
         setLoading(true);
-        const { data, error } = await supabase
-            .from('skills')
-            .select('*')
-            .order('order', { ascending: true });
-
-        if (error) {
-            console.error('Error fetching skills:', error);
-        } else {
+        try {
+            const data = await getSkills();
             setSkills(data || []);
+        } catch (error) {
+            console.error('Error fetching skills:', error);
         }
         setLoading(false);
     };
@@ -55,21 +51,16 @@ export default function SkillsManager() {
     const handleSave = async () => {
         if (!formData.name || !formData.icon) return;
 
-        if (editingId) {
-            // Update
-            const { error } = await supabase
-                .from('skills')
-                .update(formData)
-                .eq('id', editingId);
-
-            if (error) console.error('Error updating skill:', error);
-        } else {
-            // Create
-            const { error } = await supabase
-                .from('skills')
-                .insert([{ ...formData, order: skills.length + 1 }]);
-
-            if (error) console.error('Error creating skill:', error);
+        try {
+            if (editingId) {
+                // Update
+                await updateSkill(editingId, formData);
+            } else {
+                // Create
+                await addSkill({ ...formData, order: skills.length + 1 });
+            }
+        } catch (error) {
+            console.error('Error saving skill:', error);
         }
 
         resetForm();
@@ -90,13 +81,12 @@ export default function SkillsManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this skill?")) return;
 
-        const { error } = await supabase
-            .from('skills')
-            .delete()
-            .eq('id', id);
-
-        if (error) console.error('Error deleting skill:', error);
-        else fetchSkills();
+        try {
+            await deleteSkill(id);
+            fetchSkills();
+        } catch (error) {
+            console.error('Error deleting skill:', error);
+        }
     };
 
     return (

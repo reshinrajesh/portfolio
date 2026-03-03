@@ -1,10 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
+import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function GET(request: Request) {
     const url = new URL(request.url);
@@ -20,14 +15,8 @@ export async function GET(request: Request) {
     let dbErrorDetails = "";
 
     try {
-        // 1. Check Database (Supabase)
-        const { error } = await supabase.from('site_content').select('count', { count: 'exact', head: true });
-
-        if (error) {
-            console.error("Cron Health check failed (Supabase):", error);
-            isDbDown = true;
-            dbErrorDetails = error.message;
-        }
+        // 1. Check Database (Prisma)
+        await prisma.siteContent.count();
     } catch (e: any) {
         console.error("Cron Health check error:", e);
         isDbDown = true;
@@ -36,14 +25,14 @@ export async function GET(request: Request) {
 
     // 2. Check existing incidents to avoid spamming
     // We look for an incident that is currently 'investigating' or 'identified' related to DB downtime
-    const { data: existingIncidents, error: fetchError } = await supabase
-        .from('status_incidents')
-        .select('*')
-        .in('status', ['investigating', 'identified'])
-        .order('date', { ascending: false })
-        .limit(1);
-
-    if (fetchError) {
+    let existingIncidents: any = [];
+    try {
+        existingIncidents = await prisma.statusIncident.findMany({
+            where: { status: { in: ['investigating', 'identified'] } },
+            orderBy: { date: 'desc' },
+            take: 1
+        });
+    } catch (fetchError) {
         console.error("Failed to fetch existing incidents during cron:", fetchError);
         return NextResponse.json({ status: "error", message: "Failed to check existing incidents" }, { status: 500 });
     }
@@ -62,11 +51,11 @@ export async function GET(request: Request) {
                 updates: []
             };
 
-            const { error: insertError } = await supabase
-                .from('status_incidents')
-                .insert([newIncident]);
-
-            if (insertError) {
+            try {
+                await prisma.statusIncident.create({
+                    data: newIncident
+                });
+            } catch (insertError) {
                 console.error("Failed to auto-create incident:", insertError);
                 return NextResponse.json({ status: "error", message: "Failed to create incident" }, { status: 500 });
             }
@@ -97,15 +86,15 @@ export async function GET(request: Request) {
 
             const updatedUpdates = [...(activeIncident.updates || []), resolutionUpdate];
 
-            const { error: resolveError } = await supabase
-                .from('status_incidents')
-                .update({
-                    status: "resolved",
-                    updates: updatedUpdates
-                })
-                .eq('id', activeIncident.id);
-
-            if (resolveError) {
+            try {
+                await prisma.statusIncident.update({
+                    where: { id: activeIncident.id },
+                    data: {
+                        status: "resolved",
+                        updates: updatedUpdates
+                    }
+                });
+            } catch (resolveError) {
                 console.error("Failed to auto-resolve incident:", resolveError);
                 return NextResponse.json({ status: "error", message: "Failed to resolve incident" }, { status: 500 });
             }

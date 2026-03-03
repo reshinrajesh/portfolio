@@ -10,8 +10,7 @@ import TextAlign from '@tiptap/extension-text-align'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { createPost, updatePost } from '@/app/actions';
-import { supabase } from '@/lib/supabase-client';
+import { createPost, updatePost, uploadMediaFile } from '@/app/actions';
 import { VideoExtension } from '@/components/admin/VideoExtension';
 import {
     Bold, Italic, Underline as UnderlineIcon,
@@ -109,24 +108,16 @@ const Toolbar = ({ editor, onOpenSettings }: { editor: Editor | null, onOpenSett
         const file = event.target.files?.[0];
         if (!file) return;
 
-        const filename = `${Date.now()}-${file.name}`;
-        const { error } = await supabase
-            .storage
-            .from('blog-images')
-            .upload(filename, file);
+        const formData = new FormData();
+        formData.append('file', file);
 
-        if (error) {
+        try {
+            const { publicUrl } = await uploadMediaFile(formData);
+            editor.chain().focus().setImage({ src: publicUrl }).run();
+        } catch (error) {
             console.error('Upload error:', error);
-            alert('Failed to upload image. Make sure the "blog-images" bucket exists and is public.');
-            return;
+            alert('Failed to upload image.');
         }
-
-        const { data: { publicUrl } } = supabase
-            .storage
-            .from('blog-images')
-            .getPublicUrl(filename);
-
-        editor.chain().focus().setImage({ src: publicUrl }).run();
 
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
@@ -137,30 +128,23 @@ const Toolbar = ({ editor, onOpenSettings }: { editor: Editor | null, onOpenSett
         const file = event.target.files?.[0];
         if (!file) return;
 
-        const filename = `${Date.now()}-${file.name}`;
-        const { error } = await supabase
-            .storage
-            .from('blog-images')
-            .upload(filename, file);
+        const formData = new FormData();
+        formData.append('file', file);
 
-        if (error) {
+        try {
+            const { publicUrl } = await uploadMediaFile(formData);
+
+            editor.chain().focus().insertContent({
+                type: 'video',
+                attrs: {
+                    src: publicUrl,
+                    class: 'rounded-lg max-w-full my-4 border border-border w-full aspect-video'
+                }
+            }).run();
+        } catch (error) {
             console.error('Upload error:', error);
             alert('Failed to upload video.');
-            return;
         }
-
-        const { data: { publicUrl } } = supabase
-            .storage
-            .from('blog-images')
-            .getPublicUrl(filename);
-
-        editor.chain().focus().insertContent({
-            type: 'video',
-            attrs: {
-                src: publicUrl,
-                class: 'rounded-lg max-w-full my-4 border border-border w-full aspect-video'
-            }
-        }).run();
 
         if (videoInputRef.current) {
             videoInputRef.current.value = '';
@@ -892,24 +876,16 @@ export default function TiptapEditor({ initialPost }: { initialPost?: Post | nul
                             e.stopPropagation();
                             const file = e.dataTransfer.files[0];
                             if (file && file.type.startsWith('image/')) {
-                                const filename = `${Date.now()}-${file.name}`;
-                                const { error } = await supabase
-                                    .storage
-                                    .from('blog-images')
-                                    .upload(filename, file);
+                                const formData = new FormData();
+                                formData.append('file', file);
 
-                                if (error) {
+                                try {
+                                    const { publicUrl } = await uploadMediaFile(formData);
+                                    editor?.chain().focus().setImage({ src: publicUrl }).run();
+                                } catch (error) {
                                     console.error('Upload error:', error);
                                     alert('Failed to upload image.');
-                                    return;
                                 }
-
-                                const { data: { publicUrl } } = supabase
-                                    .storage
-                                    .from('blog-images')
-                                    .getPublicUrl(filename);
-
-                                editor?.chain().focus().setImage({ src: publicUrl }).run();
                             }
                         }}
                     >

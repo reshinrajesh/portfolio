@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import Logo from "@/components/Logo";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase-server";
+import prisma from "@/lib/prisma";
 import { Folder } from "lucide-react";
 
 export const metadata = {
@@ -23,18 +23,18 @@ export default async function GalleryPage({
 
     // Fetch albums and images in parallel
     const [albumsRes, imagesRes] = await Promise.all([
-        supabase.from('albums').select('*').order('created_at', { ascending: false }),
+        prisma.album.findMany({ orderBy: { created_at: 'desc' } }),
         (async () => {
-            let query = supabase.from('gallery_images').select('*').order('created_at', { ascending: false });
-            if (albumId) {
-                query = query.eq('album_id', albumId);
-            }
-            return query;
+            let whereClause = albumId ? { album_id: albumId } : {};
+            return prisma.galleryImage.findMany({
+                where: whereClause,
+                orderBy: { created_at: 'desc' }
+            });
         })()
     ]);
 
-    const albums = albumsRes.data || [];
-    const images = imagesRes.data || [];
+    const albums = albumsRes || [];
+    const images = imagesRes || [];
 
     // Get active album title if filtering
     const activeAlbum = albums.find((a: any) => a.id === albumId);

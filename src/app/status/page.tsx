@@ -396,7 +396,7 @@ export default function StatusPage() {
                             variants={itemVariants}
                             className="mt-24 pt-8 border-t border-white/5 flex justify-between items-center text-xs text-zinc-600"
                         >
-                            <p>Powered by Res.AI Status Engine</p>
+                            <p></p>
                             <p>Last check: {lastUpdated.toLocaleTimeString()}</p>
                         </motion.div>
                     </motion.div>
@@ -488,6 +488,6 @@ export default function StatusPage() {
                     </div>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 }
