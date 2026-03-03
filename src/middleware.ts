@@ -13,7 +13,7 @@ export default async function middleware(request: NextRequest) {
 
     // --- GLOBAL MAINTENANCE OVERRIDE ---
     // Set to false to disable site-wide maintenance mode
-    const MAINTENANCE_MODE = true;
+    const MAINTENANCE_MODE = false;
     if (MAINTENANCE_MODE && !hostname.startsWith('status.') && url.pathname !== '/maintenance') {
         url.pathname = '/maintenance';
         return NextResponse.rewrite(url);
