@@ -37,9 +37,6 @@ The goal is simplicity, clarity, and authenticity.
 
 ---
 
-## 🌍 Live Website
-
-🔗 [https://portfolio-black-seven-43.vercel.app](https://portfolio-black-seven-43.vercel.app)
 
 ---
 
