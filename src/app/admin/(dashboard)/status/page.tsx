@@ -1,6 +1,8 @@
 import { getIncidents } from "@/app/status/actions";
 import StatusClient from "./StatusClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
     title: "System Status | Admin",
 };

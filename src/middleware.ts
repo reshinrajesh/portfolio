@@ -27,11 +27,15 @@ export default async function middleware(request: NextRequest) {
 
     // Redirect /admin on main domain to admin subdomain
     if (url.pathname.startsWith('/admin') && !hostname.startsWith('admin.')) {
-        const newUrl = new URL(request.url);
-        newUrl.hostname = 'admin.reshinrajesh.in';
-        // Remove /admin prefix since the subdomain rewrite handles it
-        newUrl.pathname = url.pathname.replace(/^\/admin/, '');
-        return NextResponse.redirect(newUrl);
+        try {
+            const newUrl = new URL(request.url || "http://localhost:3000");
+            newUrl.hostname = 'admin.reshinrajesh.in';
+            // Remove /admin prefix since the subdomain rewrite handles it
+            newUrl.pathname = url.pathname.replace(/^\/admin/, '');
+            return NextResponse.redirect(newUrl);
+        } catch (e) {
+            return NextResponse.next();
+        }
     }
 
     // Redirect /status on main domain to status subdomain
@@ -49,9 +53,13 @@ export default async function middleware(request: NextRequest) {
 
         // Redirect /admin to / on admin subdomain to avoid double nesting
         if (url.pathname.startsWith('/admin')) {
-            const newUrl = new URL(request.url);
-            newUrl.pathname = url.pathname.replace(/^\/admin/, '') || '/';
-            return NextResponse.redirect(newUrl);
+            try {
+                const newUrl = new URL(request.url || "http://localhost:3000");
+                newUrl.pathname = url.pathname.replace(/^\/admin/, '') || '/';
+                return NextResponse.redirect(newUrl);
+            } catch (e) {
+                return NextResponse.next();
+            }
         }
 
         // Check for session
@@ -63,8 +71,13 @@ export default async function middleware(request: NextRequest) {
 
         if (!token) {
             // Redirect to login if not authenticated
-            const loginUrl = new URL('/login', request.url);
-            return NextResponse.redirect(loginUrl);
+            try {
+                const loginUrl = new URL('/login', request.url || "http://localhost:3000");
+                return NextResponse.redirect(loginUrl);
+            } catch (e) {
+                // Fallback for static generation where request.url might be missing or invalid
+                return NextResponse.redirect("http://localhost:3000/login");
+            }
         }
 
         url.pathname = `/admin${url.pathname}`;

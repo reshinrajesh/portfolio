@@ -7,6 +7,7 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 
 export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Blogs | Reshin Rajesh",

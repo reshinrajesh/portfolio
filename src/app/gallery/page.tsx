@@ -3,6 +3,7 @@ import Logo from "@/components/Logo";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { Folder } from "lucide-react";
+import Image from "next/image";
 
 export const metadata = {
     title: "Gallery | Reshin Rajesh",
@@ -105,9 +106,11 @@ export default async function GalleryPage({
                     <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
                         {images.map((image: any) => (
                             <div key={image.id} className="break-inside-avoid relative group rounded-xl overflow-hidden bg-secondary">
-                                <img
+                                <Image
                                     src={image.url}
                                     alt={image.name || "Gallery image"}
+                                    width={800}
+                                    height={1000}
                                     className="w-full h-auto transition-transform duration-700 group-hover:scale-105"
                                     loading="lazy"
                                 />

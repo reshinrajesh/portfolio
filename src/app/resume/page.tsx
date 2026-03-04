@@ -5,6 +5,7 @@ import { Globe, Printer, X } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 export default function ResumePage() {
     const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
@@ -63,7 +64,7 @@ export default function ResumePage() {
                     </div>
                     <div className="hidden sm:block print:hidden">
                         <div className="h-24 w-24 rounded-xl bg-gray-100 border overflow-hidden">
-                            <img src={RESUME_DATA.avatarUrl} alt={RESUME_DATA.name} className="object-cover w-full h-full" />
+                            <Image src={RESUME_DATA.avatarUrl} alt={RESUME_DATA.name} width={96} height={96} className="object-cover w-full h-full" />
                         </div>
                     </div>
                 </motion.div>

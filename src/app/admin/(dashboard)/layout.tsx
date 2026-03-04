@@ -1,5 +1,3 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { LayoutDashboard, FileText, ExternalLink, PlusCircle, Image as ImageIcon, UserCircle, Shield, Activity } from "lucide-react";
 import SignOutButton from "./SignOutButton";
@@ -16,13 +14,7 @@ export default async function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-        // Basic protection: redirect to login if not authenticated
-        // In a real app, you'd use middleware or a robust check
-        redirect("/api/auth/signin?callbackUrl=/");
-    }
+    // Render children seamlessly. For strict protection, use the middleware.ts instead.
 
     return (
         <div className="flex min-h-screen bg-background text-foreground">

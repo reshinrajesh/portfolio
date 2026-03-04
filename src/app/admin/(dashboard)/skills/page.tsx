@@ -1,5 +1,7 @@
 import SkillsManager from "@/components/admin/SkillsManager";
 
+export const dynamic = "force-dynamic";
+
 export default function SkillsPage() {
     return (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
