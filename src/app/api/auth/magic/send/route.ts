@@ -40,7 +40,7 @@ export async function POST(request: Request) {
         const verifyUrl = `${origin}/admin/magic-verify?email=${encodeURIComponent(email)}&token=${token}`;
 
         const { error: emailError } = await resend.emails.send({
-            from: 'onboarding@resend.dev',
+            from: 'admin@reshinrajesh.in',
             to: email,
             subject: 'Login to Admin Panel',
             html: `
