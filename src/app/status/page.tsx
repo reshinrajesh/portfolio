@@ -379,7 +379,9 @@ export default function StatusPage() {
                                                         <div className="absolute -left-[37px] top-1.5 w-3 h-3 rounded-full bg-primary border-2 border-black" />
                                                         <div className="flex items-center gap-2 mb-1">
                                                             <span className="text-xs font-bold text-primary uppercase tracking-tighter">{update.status}</span>
-                                                            <span className="text-[10px] text-zinc-500 font-mono">• {new Date(update.date).toLocaleString()}</span>
+                                                            {update.date && !isNaN(new Date(update.date).getTime()) && (
+                                                                <span className="text-[10px] text-zinc-500 font-mono">• {new Date(update.date).toLocaleString()}</span>
+                                                            )}
                                                         </div>
                                                         <p className="text-sm text-zinc-400 leading-snug">{update.message}</p>
                                                     </div>
