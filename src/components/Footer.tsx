@@ -1,8 +1,6 @@
 import Logo from "./Logo";
 import Link from "next/link";
 import { } from "lucide-react";
-import LastFmWidget from "./LastFmWidget";
-
 export default function Footer() {
     return (
         <footer className="py-8 bg-background border-t border-border mt-auto">
@@ -16,9 +14,6 @@ export default function Footer() {
                             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                             System Status
                         </Link>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <LastFmWidget />
                     </div>
                 </div>
             </div>
