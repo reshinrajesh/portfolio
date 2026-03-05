@@ -2,8 +2,42 @@ import { systemPrompt } from '@/lib/context';
 
 export const maxDuration = 30;
 
+// Simple in-memory rate limiting
+const ipRequestCount = new Map<string, { count: number; timestamp: number }>();
+const RATE_LIMIT = 5; // requests
+const TIME_WINDOW = 60 * 1000; // 1 minute
+
 export async function POST(req: Request) {
     try {
+        // --- Rate Limiting Logic ---
+        const ip = req.headers.get('x-forwarded-for') || 'unknown';
+        const now = Date.now();
+        const requestData = ipRequestCount.get(ip);
+
+        if (requestData) {
+            if (now - requestData.timestamp < TIME_WINDOW) {
+                if (requestData.count >= RATE_LIMIT) {
+                    return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again later." }), { status: 429 });
+                }
+                requestData.count += 1;
+            } else {
+                // Reset window
+                ipRequestCount.set(ip, { count: 1, timestamp: now });
+            }
+        } else {
+            ipRequestCount.set(ip, { count: 1, timestamp: now });
+        }
+
+        // Clean up old entries periodically (basic garbage collection to avoid memory leaks)
+        if (ipRequestCount.size > 1000) {
+            for (const [key, value] of ipRequestCount.entries()) {
+                if (now - value.timestamp > TIME_WINDOW) {
+                    ipRequestCount.delete(key);
+                }
+            }
+        }
+        // ---------------------------
+
         const { messages } = await req.json();
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;

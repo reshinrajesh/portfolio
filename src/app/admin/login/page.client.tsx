@@ -51,8 +51,12 @@ export default function LoginPageClient() {
                 setIsLoading(false);
                 setFailedAttempts(prev => prev + 1);
             } else {
-                const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
-                router.push(callbackUrl || "/admin");
+                let callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
+                // Mitigate Open Redirect: Ensure callback URL is relative and not protocol-relative
+                if (!callbackUrl || !callbackUrl.startsWith("/") || callbackUrl.startsWith("//")) {
+                    callbackUrl = "/admin";
+                }
+                router.push(callbackUrl);
             }
         } catch (error) {
             console.error("Login failed", error);
