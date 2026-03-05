@@ -11,6 +11,14 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Email is required" }, { status: 400 });
         }
 
+        const adminEmail = process.env.ADMIN_EMAIL;
+        if (!adminEmail) {
+            return NextResponse.json({ error: "Server misconfiguration: Admin email not set" }, { status: 500 });
+        }
+        if (email !== adminEmail) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+        }
+
         // 1. Generate Token
         const token = crypto.randomBytes(32).toString('hex');
         const expires = new Date(Date.now() + 1000 * 60 * 15); // 15 mins
@@ -33,7 +41,11 @@ export async function POST(request: Request) {
         }
 
         // 3. Send Email
-        const resend = new Resend('re_M9SkUfAR_Lzt3ZEnVTZoJuQ2hi1pLk14s'); // User provided key
+        const resendApiKey = process.env.RESEND_API_KEY;
+        if (!resendApiKey) {
+            return NextResponse.json({ error: "Server misconfiguration: Email provider not configured" }, { status: 500 });
+        }
+        const resend = new Resend(resendApiKey);
         // Construct Verify URL
         // Warning: Localhost issues if NEXT_PUBLIC_ORIGIN not set, default to request origin or hardcode for now
         const origin = process.env.NEXT_PUBLIC_ORIGIN || 'https://reshinrajesh.in'; // Fallback to live site
