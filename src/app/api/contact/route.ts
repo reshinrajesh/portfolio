@@ -26,23 +26,24 @@ export async function POST(request: Request) {
             from: 'Contact Form <onboarding@resend.dev>', // You should verify a domain in Resend to change this
             to: process.env.CONTACT_EMAIL || 'admin@reshinrajesh.in', // Using verified Resend email
             replyTo: email,
-            subject: `New Contact Form Submission: ${subject || 'No Subject'}`,
-            text: `
-Name: ${name}
-Email: ${email}
-Subject: ${subject || 'No Subject'}
-
-Message:
-${message}
-      `,
+            subject: `Contact Form: ${subject || 'New Message from Portfolio'}`,
+            text: `You have received a new message from your portfolio website's contact form.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject || 'None provided'}\n\nMessage:\n${message}\n\n---\nThis email was sent via the reshinrajesh.in contact form.`,
             html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject || 'No Subject'}</p>
-        <br/>
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br/>')}</p>
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #333;">New Contact Form Submission</h2>
+            <p style="color: #555;">You have received a new message from the contact form on your portfolio website.</p>
+            <hr style="border: 1px solid #eee; my-4" />
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+            <p><strong>Subject:</strong> ${subject || 'None provided'}</p>
+            <br/>
+            <p><strong>Message:</strong></p>
+            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px;">
+                <p style="white-space: pre-wrap;">${message.replace(/\n/g, '<br/>')}</p>
+            </div>
+            <br/>
+            <p style="font-size: 0.8em; color: #888;">This email was sent via the reshinrajesh.in contact form.</p>
+        </div>
       `,
         });
 
