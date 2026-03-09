@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
         const { data, error } = await resend.emails.send({
             from: 'Contact Form <onboarding@resend.dev>', // You should verify a domain in Resend to change this
-            to: process.env.CONTACT_EMAIL || 'reshinrajesh@gmail.com', // Assuming personal email based on domain
+            to: process.env.CONTACT_EMAIL || 'admin@reshinrajesh.in', // Using verified Resend email
             replyTo: email,
             subject: `New Contact Form Submission: ${subject || 'No Subject'}`,
             text: `
