@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
         const { data, error } = await resend.emails.send({
             from: 'Contact Form <no-reply@reshinrajesh.in>', // Use custom domain email
-            to: process.env.CONTACT_EMAIL || 'admin@reshinrajesh.in', // Using verified Resend email
+            to: process.env.CONTACT_EMAIL || 'reshin_rajesh@hotmail.com', // User's personal email
             replyTo: email,
             subject: `Contact Form: ${subject || 'New Message from Portfolio'}`,
             text: `You have received a new message from your portfolio website's contact form.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject || 'None provided'}\n\nMessage:\n${message}\n\n---\nThis email was sent via the reshinrajesh.in contact form.`,
