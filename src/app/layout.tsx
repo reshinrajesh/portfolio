@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic';
 
 const CommandPalette = dynamic(() => import("@/components/CommandPalette"));
 const SpotlightCursor = dynamic(() => import("@/components/SpotlightCursor"));
+const NoticeBox = dynamic(() => import("@/components/NoticeBox"), { ssr: false });
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -46,6 +47,7 @@ export default function RootLayout({
             {children}
             <SpotlightCursor />
             <CommandPalette />
+            <NoticeBox />
             <Analytics />
             <SpeedInsights />
           </VibeProvider>

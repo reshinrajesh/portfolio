@@ -1,0 +1,4 @@
+{
+  "statusCode": 400,
+  "message": "The associated domain with your API key is not verified. Please, create a new API key with full access or with a verified domain."
+}
