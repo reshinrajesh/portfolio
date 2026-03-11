@@ -20,6 +20,18 @@ export default function NoticeBox() {
     }
   }, []);
 
+  // Prevent background scrolling when dialog is open
+  useEffect(() => {
+    if (isVisible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isVisible]);
+
   const handleDismiss = () => {
     setIsVisible(false);
     sessionStorage.setItem('noticeDismissed', 'true');
@@ -28,25 +40,45 @@ export default function NoticeBox() {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="fixed bottom-6 right-6 z-50 max-w-sm w-full"
-        >
-          <div className="bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl rounded-2xl p-4 flex items-start gap-4 overflow-hidden relative">
-            <div className="absolute top-0 left-0 w-1 h-full bg-primary/80" />
-            
-            <div className="mt-1 bg-primary/10 p-2 rounded-full text-primary shrink-0">
-              <Info size={20} />
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+          {/* Backdrop overlay */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-background/60 backdrop-blur-md"
+            onClick={handleDismiss}
+          />
+          
+          {/* Dialog content */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="relative w-full max-w-lg bg-background border border-border/50 shadow-2xl rounded-2xl overflow-hidden flex flex-col max-h-[90vh]"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 border-b border-border/50 bg-secondary/30">
+              <h3 className="font-semibold text-foreground flex items-center gap-3 m-0 text-lg">
+                <div className="bg-primary/10 p-1.5 rounded-full text-primary">
+                  <Info size={20} />
+                </div>
+                Announcement 
+                <span className="text-xs px-2 py-0.5 rounded-full border border-primary/20 bg-primary/10 text-primary uppercase tracking-wider font-bold">Important</span>
+              </h3>
+              <button
+                onClick={handleDismiss}
+                className="text-muted-foreground hover:text-foreground hover:bg-secondary/80 p-2 rounded-full transition-colors flex-shrink-0"
+                aria-label="Close notice"
+              >
+                <X size={20} />
+              </button>
             </div>
             
-            <div className="flex-1 right-2 pr-4">
-              <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
-                Announcement <span className="text-xs px-2 py-0.5 rounded-full border border-primary/20 bg-primary/10 text-primary">Important Update</span>
-              </h3>
-              <div className="text-sm text-muted-foreground leading-relaxed space-y-3">
+            {/* Body */}
+            <div className="p-6 overflow-y-auto">
+              <div className="text-base text-muted-foreground leading-relaxed space-y-4">
                 <p>
                   Due to recent personal circumstances, I have decided to take a step back and will not be attending any shows or events for the time being.
                 </p>
@@ -56,22 +88,26 @@ export default function NoticeBox() {
                 <p>
                   Updates regarding future appearances and events will be shared via Instagram once things return to normal.
                 </p>
-                <p className="font-medium text-foreground pt-1">
-                  Thank you for your continued support.<br />
-                  <span className="italic">With Love, Res</span>
-                </p>
+                <div className="pt-2 mt-2">
+                  <p className="font-medium text-foreground text-lg">
+                    Thank you for your continued support.<br />
+                    <span className="italic">With Love, Res</span>
+                  </p>
+                </div>
               </div>
             </div>
             
-            <button
-              onClick={handleDismiss}
-              className="text-muted-foreground hover:text-foreground hover:bg-secondary/50 p-1.5 rounded-full transition-colors absolute top-2 right-2 shrink-0"
-              aria-label="Close notice"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        </motion.div>
+            {/* Footer */}
+            <div className="p-5 border-t border-border/50 bg-secondary/10 flex justify-end">
+              <button
+                onClick={handleDismiss}
+                className="px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all active:scale-95"
+              >
+                I Understand
+              </button>
+            </div>
+          </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
