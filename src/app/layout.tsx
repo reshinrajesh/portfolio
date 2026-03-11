@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 
 const CommandPalette = dynamic(() => import("@/components/CommandPalette"));
 const SpotlightCursor = dynamic(() => import("@/components/SpotlightCursor"));
-const NoticeBox = dynamic(() => import("@/components/NoticeBox"), { ssr: false });
+const NoticeBox = dynamic(() => import("@/components/NoticeBox"));
 
 const outfit = Outfit({
   variable: "--font-outfit",
