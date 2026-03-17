@@ -3,9 +3,7 @@
 import prisma from "@/lib/prisma";
 import { list, del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
-
-
-
+import * as Sentry from "@sentry/nextjs";
 
 interface PostData {
     title: string;
@@ -25,6 +23,7 @@ export async function createPost(post: PostData) {
             }
         });
     } catch (error) {
+        Sentry.captureException(error, { tags: { action: "createPost" }, extra: { title: post.title } });
         console.error("Error creating post:", error);
         throw new Error("Failed to create post");
     }
@@ -41,6 +40,7 @@ export async function updatePost(id: string, post: PostData) {
             data: { ...post }
         });
     } catch (error) {
+        Sentry.captureException(error, { tags: { action: "updatePost" }, extra: { postId: id } });
         console.error("Error updating post:", error);
         throw new Error("Failed to update post");
     }
@@ -56,6 +56,7 @@ export async function deletePost(id: string) {
             where: { id: id }
         });
     } catch (error) {
+        Sentry.captureException(error, { tags: { action: "deletePost" }, extra: { postId: id } });
         console.error("Error deleting post:", error);
         throw new Error("Failed to delete post");
     }
@@ -67,24 +68,22 @@ export async function deletePost(id: string) {
 
 export async function getMediaFiles() {
     try {
-        // Vercel Blob list
         const { blobs } = await list({
             prefix: 'blog-images/',
             limit: 100
         });
 
-        // Map to expected format
         const filesWithUrls = blobs.map((blob) => ({
             name: blob.pathname.replace('blog-images/', ''),
             publicUrl: blob.url,
             created_at: blob.uploadedAt.toISOString(),
             size: blob.size,
-            id: blob.url, // using URL as ID for easy deletion
+            id: blob.url,
         }));
 
-        // Sort by date descending
         return filesWithUrls.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     } catch (error) {
+        Sentry.captureException(error, { tags: { action: "getMediaFiles" } });
         console.error("Error fetching media from blob:", error);
         return [];
     }
@@ -96,6 +95,7 @@ export async function deleteMediaFile(url: string) {
         revalidatePath("/admin/media");
         return { success: true };
     } catch (error) {
+        Sentry.captureException(error, { tags: { action: "deleteMediaFile" }, extra: { url } });
         console.error("Error deleting file from blob:", error);
         throw new Error("Failed to delete file");
     }
@@ -115,6 +115,7 @@ export async function uploadMediaFile(formData: FormData) {
 
         return { publicUrl: blob.url };
     } catch (error) {
+        Sentry.captureException(error, { tags: { action: "uploadMediaFile" } });
         console.error('Error uploading to Vercel Blob:', error);
         throw new Error("Failed to upload file");
     }
@@ -127,6 +128,7 @@ export async function getBio() {
         });
         return data?.value || '';
     } catch (error) {
+        Sentry.captureException(error, { tags: { action: "getBio" } });
         console.error("Error fetching bio:", error);
         return '';
     }
@@ -140,6 +142,7 @@ export async function updateBio(content: string) {
             update: { value: content }
         });
     } catch (error) {
+        Sentry.captureException(error, { tags: { action: "updateBio" } });
         console.error("Error updating bio:", error);
         throw new Error("Failed to update bio");
     }
@@ -155,6 +158,7 @@ export async function incrementViewCount(id: string) {
             data: { view_count: { increment: 1 } }
         });
     } catch (error) {
+        Sentry.captureException(error, { tags: { action: "incrementViewCount" }, extra: { postId: id } });
         console.error("Error incrementing view count:", error);
     }
 }

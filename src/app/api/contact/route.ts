@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import * as Sentry from '@sentry/nextjs';
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
@@ -48,6 +49,7 @@ export async function POST(request: Request) {
         });
 
         if (error) {
+            Sentry.captureException(error, { tags: { route: 'contact', provider: 'resend' } });
             console.error('Resend error:', error);
             return NextResponse.json(
                 { error: 'Failed to send message' },
@@ -60,6 +62,7 @@ export async function POST(request: Request) {
             { status: 200 }
         );
     } catch (error) {
+        Sentry.captureException(error, { tags: { route: 'contact' } });
         console.error('Contact form API error:', error);
         return NextResponse.json(
             { error: 'Internal server error' },

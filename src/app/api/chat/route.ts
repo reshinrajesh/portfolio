@@ -1,4 +1,5 @@
 import { systemPrompt } from '@/lib/context';
+import * as Sentry from '@sentry/nextjs';
 
 export const maxDuration = 30;
 
@@ -42,6 +43,7 @@ export async function POST(req: Request) {
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
         if (!apiKey) {
+            Sentry.captureMessage('Missing GOOGLE_GENERATIVE_AI_API_KEY', { level: 'error', tags: { route: 'chat' } });
             console.error('Missing Google API Key');
             return new Response('Missing API Key', { status: 500 });
         }
@@ -66,6 +68,7 @@ export async function POST(req: Request) {
 
         if (!response.ok) {
             const errorText = await response.text();
+            Sentry.captureMessage(`Gemini API Error: ${response.status}`, { level: 'error', tags: { route: 'chat', provider: 'gemini' }, extra: { status: response.status, body: errorText } });
             console.error('Gemini API Error:', errorText);
             return new Response(JSON.stringify({ error: 'Failed to generate response from Gemini' }), { status: response.status });
         }
@@ -77,6 +80,7 @@ export async function POST(req: Request) {
             headers: { 'Content-Type': 'text/plain' }
         });
     } catch (error) {
+        Sentry.captureException(error, { tags: { route: 'chat' } });
         console.error('Chat API Error:', error);
         return new Response(JSON.stringify({ error: 'Failed to generate response' }), { status: 500 });
     }
