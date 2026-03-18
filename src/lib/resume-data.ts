@@ -12,7 +12,7 @@ export const RESUME_DATA = {
     avatarUrl: "https://github.com/reshinrajesh.png",
     personalWebsiteUrl: "https://reshinrajesh.in",
     contact: {
-        email: "reshinrajesh@gmail.com", // Placeholder
+        email: "connect@reshinrajesh.in",
         social: [
             {
                 name: "GitHub",

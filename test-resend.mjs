@@ -6,7 +6,7 @@ async function testEmail() {
     try {
         const { data, error } = await resend.emails.send({
             from: 'Contact Form <onboarding@resend.dev>',
-            to: 'reshinrajesh@gmail.com',
+            to: 'connect@reshinrajesh.in',
             subject: 'Test Email',
             html: '<p>Test email</p>',
         });

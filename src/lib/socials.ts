@@ -3,9 +3,9 @@ import { Github, Linkedin, Mail, Phone, MapPin, Instagram, Facebook, Twitter, Gh
 export const socials = [
     {
         name: "Email",
-        link: "mailto:mail@reshinrajesh.in",
+        link: "mailto:connect@reshinrajesh.in",
         icon: Mail,
-        display: "mail@reshinrajesh.in",
+        display: "connect@reshinrajesh.in",
     },
 
     {
