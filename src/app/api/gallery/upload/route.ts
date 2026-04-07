@@ -44,6 +44,7 @@ export async function POST(request: Request) {
             const image = await prisma.galleryImage.create({
                 data: {
                     url: blobUrl,
+                    file_path: fileName,
                     name: file.name,
                     album_id: albumId || null
                 }

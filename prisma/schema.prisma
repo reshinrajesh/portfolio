@@ -4,101 +4,127 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// NextAuth Tables (for Passkey & Magic Link)
 model User {
-  id                String    @id @default(uuid())
-  email             String?   @unique
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email             String          @unique
+  current_challenge String?
+  created_at        DateTime        @default(now()) @db.Timestamptz(6)
   name              String?
-  current_challenge String?   // Used for WebAuthn/Passkeys
+  emailVerified     DateTime?       @db.Timestamptz(6)
+  image             String?
+  authenticators    Authenticator[]
+
+  @@map("users")
 }
 
 model VerificationToken {
   identifier String
-  token      String   @unique
-  expires    DateTime
-  @@unique([identifier, token])
+  token      String
+  expires    DateTime @db.Timestamptz(6)
+
+  @@id([identifier, token])
+  @@map("verification_tokens")
 }
 
 model Authenticator {
-  credentialID         String  @id
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String  // Base64 stored
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
+  credentialid         String   @id
+  credentialpublickey  String
+  counter              Int      @default(0)
+  credentialdevicetype String
+  credentialbackedup   Boolean  @default(false)
   transports           String?
-  // User relation omitted for simplicity, can link if needed
+  user_id              String   @db.Uuid
+  created_at           DateTime @default(now()) @db.Timestamptz(6)
+  last_used_at         DateTime @default(now()) @db.Timestamptz(6)
+  users                User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("authenticators")
 }
 
-// Blog
 model Post {
-  id              String   @id @default(uuid())
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title           String
   content         String?
-  status          String   @default("Draft") // "Draft" | "Published"
-  tags            String[] @default([]) // Assuming Postgres string array mapping
+  status          String   @default("Draft")
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  tags            String[] @default([])
   seo_title       String?
   seo_description String?
-  view_count      Int      @default(0)
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  view_count      Int?     @default(0)
+
+  @@map("posts")
 }
 
-// Skills Gallery
 model Skill {
-  id         String   @id @default(uuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name       String
   icon       String
   color      String
-  order      Int      @default(0)
-  created_at DateTime @default(now())
+  order      Int?     @default(0)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("skills")
 }
 
-// Status History
 model StatusIncident {
-  id          String   @id @default(uuid())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String
   description String
-  status      String   // "Investigating", "Monitoring", "Resolved", "Completed"
-  date        DateTime @default(now())
-  updates     Json?    // Stores the array of updates
+  status      String
+  date        DateTime @default(now()) @db.Timestamptz(6)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updates     Json?    @default("[]")
+
+  @@map("status_incidents")
 }
 
-// Media / Gallery
 model Album {
-  id          String         @id @default(uuid())
-  title       String
-  description String?
-  created_at  DateTime       @default(now())
-  images      GalleryImage[]
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String
+  description    String?
+  cover_image_id String?        @db.Uuid
+  created_at     DateTime       @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  images         GalleryImage[]
+
+  @@map("albums")
 }
 
 model GalleryImage {
-  id         String   @id @default(uuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   url        String
-  name       String
-  created_at DateTime @default(now())
-  album_id   String?
-  album      Album?   @relation(fields: [album_id], references: [id], onDelete: SetNull)
+  file_path  String
+  name       String?
+  width      Int?
+  height     Int?
+  created_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  album_id   String?  @db.Uuid
+  album      Album?   @relation(fields: [album_id], references: [id], onUpdate: NoAction)
+
+  @@map("gallery_images")
 }
 
-// Utilities
 model SiteContent {
-  id         String   @id @default(uuid())
-  key        String   @unique
-  value      String
-  updated_at DateTime @default(now())
+  key        String   @id
+  value      String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("site_content")
 }
 
 model AccessLog {
-  id           String   @id @default(uuid())
-  created_at   DateTime @default(now())
-  status       String   // "SUCCESS" | "FAILURE"
+  id           BigInt   @id @default(autoincrement())
+  created_at   DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
   attempt_code String?
+  status       String?
   ip_address   String?
+  user_agent   String?
+
+  @@map("access_logs")
 }

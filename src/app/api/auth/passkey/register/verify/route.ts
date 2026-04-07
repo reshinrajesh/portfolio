@@ -45,13 +45,12 @@ export async function POST(request: Request) {
         try {
             await prisma.authenticator.create({
                 data: {
-                    userId: user.id,
-                    providerAccountId: credentialID, // Assuming passkey maps to this conceptually or isn't strictly required
-                    credentialID: credentialID,
-                    credentialPublicKey: Buffer.from(credentialPublicKey).toString('base64'),
+                    user_id: user.id,
+                    credentialid: credentialID,
+                    credentialpublickey: Buffer.from(credentialPublicKey).toString('base64'),
                     counter,
-                    credentialDeviceType,
-                    credentialBackedUp,
+                    credentialdevicetype: credentialDeviceType,
+                    credentialbackedup: credentialBackedUp,
                     transports: body.response.transports ? JSON.stringify(body.response.transports) : null,
                 }
             });

@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     }
 
     const authenticators = await prisma.authenticator.findMany({
-        where: { userId: user.id }
+        where: { user_id: user.id }
     });
 
     if (!authenticators || authenticators.length === 0) {
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     const options = await generateAuthenticationOptions({
         rpID,
         allowCredentials: authenticators.map((auth: any) => ({
-            id: auth.credentialID,
+            id: auth.credentialid,
             transports: auth.transports ? JSON.parse(auth.transports) : undefined,
         })),
     });

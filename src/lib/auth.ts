@@ -28,7 +28,12 @@ export const authOptions: NextAuthOptions = {
                         // Valid Token!
                         // cleanup
                         await prisma.verificationToken.delete({
-                            where: { token: credentials.token }
+                            where: { 
+                                identifier_token: {
+                                    identifier: credentials.email,
+                                    token: credentials.token
+                                }
+                            }
                         });
                         return { id: "1", name: "Admin", email: adminEmail };
                     }
@@ -50,7 +55,7 @@ export const authOptions: NextAuthOptions = {
                         if (!user || !user.current_challenge) return null;
 
                         const authenticator = await prisma.authenticator.findUnique({
-                            where: { credentialID: response.id }
+                            where: { credentialid: response.id }
                         });
 
                         if (!authenticator) return null;
@@ -64,8 +69,8 @@ export const authOptions: NextAuthOptions = {
                             expectedOrigin,
                             expectedRPID,
                             credential: {
-                                id: authenticator.credentialID,
-                                publicKey: new Uint8Array(Buffer.from(authenticator.credentialPublicKey, 'base64')),
+                                id: authenticator.credentialid,
+                                publicKey: new Uint8Array(Buffer.from(authenticator.credentialpublickey, 'base64')),
                                 counter: authenticator.counter,
                                 transports: authenticator.transports ? JSON.parse(authenticator.transports) : undefined,
                             }
@@ -73,7 +78,7 @@ export const authOptions: NextAuthOptions = {
 
                         if (verification.verified) {
                             await prisma.authenticator.update({
-                                where: { credentialID: authenticator.credentialID },
+                                where: { credentialid: authenticator.credentialid },
                                 data: { counter: verification.authenticationInfo.newCounter }
                             });
 

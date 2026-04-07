@@ -10,7 +10,7 @@ interface Skill {
     name: string;
     icon: string;
     color: string;
-    order: number;
+    order: number | null;
 }
 
 export default function SkillsManager() {
@@ -72,7 +72,7 @@ export default function SkillsManager() {
             name: skill.name,
             icon: skill.icon,
             color: skill.color,
-            order: skill.order
+            order: skill.order ?? 0
         });
         setEditingId(skill.id);
         setIsAdding(true);

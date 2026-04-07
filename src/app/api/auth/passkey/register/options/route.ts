@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 
         // Get user's existing authenticators to prevent re-registration
         const authenticators = await prisma.authenticator.findMany({
-            where: { userId: user.id }
+            where: { user_id: user.id }
         });
 
         const rpName = 'Reshin Portfolio Admin';
@@ -42,7 +42,7 @@ export async function GET(request: Request) {
             userName: user.email,
             // Don't prompt if they already have one registered
             excludeCredentials: authenticators?.map((auth: any) => ({
-                id: auth.credentialID,
+                id: auth.credentialid,
                 transports: auth.transports ? JSON.parse(auth.transports) : undefined,
             })),
             authenticatorSelection: {
