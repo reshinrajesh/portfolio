@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import * as Sentry from '@sentry/nextjs';
+import { createHulyIssue } from '@/lib/huly';
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
@@ -56,6 +57,12 @@ export async function POST(request: Request) {
                 { status: 500 }
             );
         }
+
+        // 3. Create Huly Task (Async, don't wait to respond to user)
+        createHulyIssue({ name, email, subject, message }).catch((hulyError) => {
+            console.error('Huly task creation error:', hulyError);
+            Sentry.captureException(hulyError, { tags: { route: 'contact', provider: 'huly' } });
+        });
 
         return NextResponse.json(
             { message: 'Message sent successfully' },
