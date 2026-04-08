@@ -89,10 +89,14 @@ export async function createHulyIssue({
 }
 
 /**
- * Updates the status of an existing Huly issue.
- * Used for auto-resolving alerts.
+ * Updates an existing Huly issue.
  */
-export async function updateHulyIssueStatus(issueId: string, status: string = 'DONE') {
+export async function updateHulyIssue(issueId: string, input: {
+  status?: string;
+  title?: string;
+  description?: string;
+  priority?: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
+}) {
   if (!issueId) return null;
 
   const token = await getSessionToken();
@@ -103,6 +107,7 @@ export async function updateHulyIssueStatus(issueId: string, status: string = 'D
       updateIssue(id: $id, input: $input) {
         issue {
           id
+          title
           status
         }
       }
@@ -111,9 +116,7 @@ export async function updateHulyIssueStatus(issueId: string, status: string = 'D
 
   const variables = {
     id: issueId,
-    input: {
-      status,
-    },
+    input,
   };
 
   try {
@@ -132,6 +135,13 @@ export async function updateHulyIssueStatus(issueId: string, status: string = 'D
     console.error(`Failed to update Huly issue ${issueId}:`, error);
     return null;
   }
+}
+
+/**
+ * Updates the status of an existing Huly issue.
+ */
+export async function updateHulyIssueStatus(issueId: string, status: string = 'DONE') {
+  return updateHulyIssue(issueId, { status });
 }
 
 /**

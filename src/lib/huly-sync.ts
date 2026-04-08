@@ -53,6 +53,39 @@ export async function performHulySync() {
     } catch (dbErr) {
         console.error('Error fetching unsynced incidents:', dbErr);
     }
+    // 4. Push Unsynced Local Blogs TO Huly
+    try {
+        const { data: unsyncedBlogs } = await supabaseAdmin
+            .from('posts')
+            .select('*')
+            .is('huly_id', null);
+
+        if (unsyncedBlogs && unsyncedBlogs.length > 0) {
+            for (const blog of unsyncedBlogs) {
+                try {
+                    const hulyIssue = await createHulyIssue({
+                        name: "Admin (Direct Sync)",
+                        email: "admin@reshinrajesh.in",
+                        subject: blog.title,
+                        message: blog.content,
+                        category: "TASK",
+                        labels: ["blog", "synced-from-local", blog.status.toLowerCase()]
+                    });
+
+                    if (hulyIssue) {
+                        await supabaseAdmin
+                            .from('posts')
+                            .update({ huly_id: hulyIssue.id })
+                            .eq('id', blog.id);
+                    }
+                } catch (pushErr) {
+                    console.error(`Failed to push blog ${blog.id} to Huly:`, pushErr);
+                }
+            }
+        }
+    } catch (dbErr) {
+        console.error('Error fetching unsynced blogs:', dbErr);
+    }
 
     // 1. Fetch Issues from Huly
     const hulyIssues = await getHulyIssues({ 

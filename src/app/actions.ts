@@ -5,6 +5,7 @@ import { list, del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
 import { performHulySync } from "@/lib/huly-sync";
+import { createHulyIssue, updateHulyIssue, deleteHulyIssue } from "@/lib/huly";
 
 interface PostData {
     title: string;
@@ -15,13 +16,34 @@ interface PostData {
     seo_description?: string;
 }
 
+
 export async function createPost(post: PostData) {
     try {
+        // 1. Create in Huly first
+        let hulyId = null;
+        try {
+            const hulyProjectId = process.env.HULY_BLOG_PROJECT_ID || process.env.HULY_PROJECT_ID;
+            const hulyIssue = await createHulyIssue({
+                name: "Admin",
+                email: "admin@reshinrajesh.in",
+                subject: post.title,
+                message: post.content,
+                category: "TASK",
+                labels: ["blog", post.status.toLowerCase()]
+            });
+            if (hulyIssue) {
+                hulyId = hulyIssue.id;
+            }
+        } catch (hulyErr) {
+            console.warn("Failed to create Huly issue for blog post:", hulyErr);
+        }
+
         const { error } = await supabase
             .from('posts')
             .insert({
                 ...post,
-                content: post.content || ""
+                content: post.content || "",
+                huly_id: hulyId
             });
             
         if (error) throw error;
@@ -38,6 +60,25 @@ export async function createPost(post: PostData) {
 
 export async function updatePost(id: string, post: PostData) {
     try {
+        // 1. Get current huly_id
+        const { data: existing } = await supabase
+            .from('posts')
+            .select('huly_id')
+            .eq('id', id)
+            .single();
+
+        if (existing?.huly_id) {
+            try {
+                await updateHulyIssue(existing.huly_id, {
+                    title: post.title,
+                    description: post.content,
+                    status: post.status === 'Published' ? 'DONE' : 'TODO'
+                });
+            } catch (hulyErr) {
+                console.warn("Failed to update Huly issue for blog post:", hulyErr);
+            }
+        }
+
         const { error } = await supabase
             .from('posts')
             .update({ ...post })
@@ -57,6 +98,21 @@ export async function updatePost(id: string, post: PostData) {
 
 export async function deletePost(id: string) {
     try {
+        // 1. Get huly_id before deleting
+        const { data: existing } = await supabase
+            .from('posts')
+            .select('huly_id')
+            .eq('id', id)
+            .single();
+
+        if (existing?.huly_id) {
+            try {
+                await deleteHulyIssue(existing.huly_id);
+            } catch (hulyErr) {
+                console.warn("Failed to delete Huly issue for blog post:", hulyErr);
+            }
+        }
+
         const { error } = await supabase
             .from('posts')
             .delete()
