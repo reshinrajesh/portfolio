@@ -243,7 +243,7 @@ export async function incrementViewCount(id: string) {
 
 export async function syncHulyAction() {
     try {
-        const results = await performHulySync();
+        const results = await performHulySync({ mode: 'push-only' });
         
         return { success: true, data: { results } };
     } catch (error: any) {

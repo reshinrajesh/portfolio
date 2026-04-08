@@ -112,7 +112,7 @@ export default function StatusClient({ initialIncidents }: { initialIncidents: I
                         className="flex items-center gap-2 bg-secondary text-secondary-foreground border border-border px-4 py-2 rounded-lg hover:bg-secondary/80 transition-all font-medium disabled:opacity-50"
                     >
                         <RefreshCw size={18} className={isSyncing ? "animate-spin" : ""} />
-                        {isSyncing ? "Syncing..." : "Sync from Huly"}
+                        {isSyncing ? "Syncing..." : "Sync to Huly"}
                     </button>
                     <button
                         onClick={() => setIsAdding(!isAdding)}
