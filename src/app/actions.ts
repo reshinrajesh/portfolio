@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { list, del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
+import { performHulySync } from "@/lib/huly-sync";
 
 interface PostData {
     title: string;
@@ -183,26 +184,12 @@ export async function incrementViewCount(id: string) {
     }
 }
 
+
 export async function syncHulyAction() {
     try {
-        const origin = process.env.NEXT_PUBLIC_ORIGIN || 'http://localhost:3000';
-        const response = await fetch(`${origin}/api/cron/sync-huly`, {
-            headers: {
-                'Authorization': `Bearer ${process.env.CRON_SECRET}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Sync failed: ${response.statusText}`);
-        }
-
-        const data = await response.json();
+        const results = await performHulySync();
         
-        revalidatePath("/admin");
-        revalidatePath("/blogs");
-        revalidatePath("/");
-        
-        return { success: true, data };
+        return { success: true, data: { results } };
     } catch (error: any) {
         console.error("Huly Sync Action Error:", error);
         return { success: false, error: error.message };

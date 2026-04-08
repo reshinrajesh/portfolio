@@ -12,6 +12,7 @@ interface Incident {
     description: string;
     status: string;
     date: string;
+    huly_id?: string;
     updates?: { id: string, status: string, message: string, date: string }[];
 }
 
@@ -21,6 +22,7 @@ export default function StatusClient({ initialIncidents }: { initialIncidents: I
     const [expandedIncidentId, setExpandedIncidentId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
+    const [hulyUrl] = useState(process.env.NEXT_PUBLIC_HULY_URL || 'https://huly.reshinrajesh.in');
 
     const handleSync = async () => {
         setIsSyncing(true);
@@ -219,6 +221,18 @@ export default function StatusClient({ initialIncidents }: { initialIncidents: I
                                                 }`}>
                                                 {incident.status}
                                             </span>
+                                            {incident.huly_id && (
+                                                <a 
+                                                    href={`${hulyUrl}/issue/${incident.huly_id}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 text-[10px] font-bold uppercase tracking-wider hover:bg-blue-500/20 transition-colors"
+                                                    title="View in Huly"
+                                                >
+                                                    <RefreshCw size={10} />
+                                                    Synced
+                                                </a>
+                                            )}
                                         </div>
                                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                             <span className="flex items-center gap-1">
