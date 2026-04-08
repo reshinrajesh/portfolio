@@ -59,7 +59,7 @@ export async function POST(request: Request) {
         }
 
         // 3. Create Huly Task (Async, don't wait to respond to user)
-        createHulyIssue({ name, email, subject, message }).catch((hulyError) => {
+        createHulyIssue({ name, email, subject, message, category: 'LEAD' }).catch((hulyError) => {
             console.error('Huly task creation error:', hulyError);
             Sentry.captureException(hulyError, { tags: { route: 'contact', provider: 'huly' } });
         });

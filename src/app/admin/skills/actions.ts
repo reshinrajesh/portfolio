@@ -1,13 +1,16 @@
 "use server";
 
-import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 
 export async function getSkills() {
     try {
-        const skills = await prisma.skill.findMany({
-            orderBy: { order: 'asc' }
-        });
+        const { data: skills, error } = await supabase
+            .from('skills')
+            .select('*')
+            .order('order', { ascending: true });
+            
+        if (error) throw error;
         return skills;
     } catch (error) {
         console.error("Error fetching skills:", error);
@@ -17,9 +20,11 @@ export async function getSkills() {
 
 export async function addSkill(skillData: { name: string, icon: string, color: string, order: number }) {
     try {
-        await prisma.skill.create({
-            data: skillData
-        });
+        const { error } = await supabase
+            .from('skills')
+            .insert(skillData);
+            
+        if (error) throw error;
         revalidatePath('/'); // Revalidate where skills might be shown
         return { success: true };
     } catch (error: any) {
@@ -30,10 +35,12 @@ export async function addSkill(skillData: { name: string, icon: string, color: s
 
 export async function updateSkill(id: string, skillData: { name: string, icon: string, color: string, order: number }) {
     try {
-        await prisma.skill.update({
-            where: { id },
-            data: skillData
-        });
+        const { error } = await supabase
+            .from('skills')
+            .update(skillData)
+            .eq('id', id);
+            
+        if (error) throw error;
         revalidatePath('/');
         return { success: true };
     } catch (error: any) {
@@ -44,9 +51,12 @@ export async function updateSkill(id: string, skillData: { name: string, icon: s
 
 export async function deleteSkill(id: string) {
     try {
-        await prisma.skill.delete({
-            where: { id }
-        });
+        const { error } = await supabase
+            .from('skills')
+            .delete()
+            .eq('id', id);
+            
+        if (error) throw error;
         revalidatePath('/');
         return { success: true };
     } catch (error: any) {

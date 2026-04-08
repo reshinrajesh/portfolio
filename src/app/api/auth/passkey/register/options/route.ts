@@ -1,6 +1,6 @@
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { supabaseAdmin } from '@/lib/supabase';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
@@ -12,25 +12,33 @@ export async function GET(request: Request) {
         }
 
         // Ensure user exists in our specific users table
-        let user: any = await prisma.user.findUnique({
-            where: { email: session.user.email }
-        });
+        const { data: user, error: fetchError } = await supabaseAdmin
+            .from('users')
+            .select('*')
+            .eq('email', session.user.email)
+            .single();
 
-        if (!user) {
-            try {
-                user = await prisma.user.create({
-                    data: { email: session.user.email }
-                });
-            } catch (insertError: any) {
+        let currentUser = user;
+
+        if (fetchError || !user) {
+            const { data: newUser, error: insertError } = await supabaseAdmin
+                .from('users')
+                .insert({ email: session.user.email })
+                .select()
+                .single();
+
+            if (insertError) {
                 console.error("Insert Error:", insertError);
                 return NextResponse.json({ error: `Insert Failed: ${insertError.message}` }, { status: 500 });
             }
+            currentUser = newUser;
         }
 
         // Get user's existing authenticators to prevent re-registration
-        const authenticators = await prisma.authenticator.findMany({
-            where: { user_id: user.id }
-        });
+        const { data: authenticators } = await supabaseAdmin
+            .from('authenticators')
+            .select('*')
+            .eq('user_id', currentUser.id);
 
         const rpName = 'Reshin Portfolio Admin';
         const rpID = process.env.NEXT_PUBLIC_RP_ID || 'localhost';
@@ -38,8 +46,8 @@ export async function GET(request: Request) {
         const options = await generateRegistrationOptions({
             rpName,
             rpID,
-            userID: new Uint8Array(Buffer.from(user.id)),
-            userName: user.email,
+            userID: new Uint8Array(Buffer.from(currentUser.id)),
+            userName: currentUser.email,
             // Don't prompt if they already have one registered
             excludeCredentials: authenticators?.map((auth: any) => ({
                 id: auth.credentialid,
@@ -53,12 +61,12 @@ export async function GET(request: Request) {
         });
 
         // Save challenge to DB
-        try {
-            await prisma.user.update({
-                where: { id: user.id },
-                data: { current_challenge: options.challenge }
-            });
-        } catch (updateError: any) {
+        const { error: updateError } = await supabaseAdmin
+            .from('users')
+            .update({ current_challenge: options.challenge })
+            .eq('id', currentUser.id);
+
+        if (updateError) {
             return NextResponse.json({ error: `Challenge Save Error: ${updateError.message}` }, { status: 500 });
         }
 

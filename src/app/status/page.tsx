@@ -40,6 +40,14 @@ const INITIAL_SERVICES: ServiceStatus[] = [
         icon: <Layers size={18} />,
         uptime: "100%"
     },
+    {
+        id: "huly",
+        name: "Huly Platform",
+        status: "operational",
+        category: "Apps",
+        icon: <Activity size={18} />,
+        uptime: "99.5%"
+    },
     // Infrastructure
     {
         id: "security",
@@ -100,8 +108,8 @@ export default function StatusPage() {
                 if (data.services) {
                     setServices(prev => prev.map(s => {
                         const newStatus = data.services[s.id];
-                        // Only update if we have a valid status for this service ID
-                        if (newStatus && (newStatus === "operational" || newStatus === "degraded")) {
+                        // Allow updating to any valid status provided by the API
+                        if (newStatus) {
                             return { ...s, status: newStatus };
                         }
                         return s;

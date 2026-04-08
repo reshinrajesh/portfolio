@@ -20,38 +20,25 @@ export async function createHulyIssue({
   email,
   subject,
   message,
+  category = 'LEAD',
 }: {
   name: string;
   email: string;
   subject?: string;
   message: string;
+  category?: 'LEAD' | 'ALERT' | 'TASK';
 }) {
   if (!HULY_EMAIL || !HULY_PASSWORD || !HULY_WORKSPACE_ID) {
     console.warn('Huly integration is not fully configured (missing credentials). Skipping task creation.');
     return null;
   }
 
-  // 1. Perform Login if we don't have a token yet
-  if (!sessionToken) {
-    try {
-      const loginRes = await fetch(`${HULY_INSTANCE_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: HULY_EMAIL,
-          password: HULY_PASSWORD,
-          workspace: HULY_WORKSPACE_ID,
-        }),
-      });
-      const loginData = await loginRes.json();
-      sessionToken = loginData.token;
-    } catch (error) {
-      console.error('Huly login failed:', error);
-      return null;
-    }
-  }
+  const token = await getSessionToken();
+  if (!token) return null;
 
-  // 2. Create the Issue
+  const priority = category === 'ALERT' ? 'HIGH' : 'NORMAL';
+  const titlePrefix = category === 'ALERT' ? '🚨 [ALERT]' : `[${category}]`;
+
   const query = `
     mutation CreateIssue($input: CreateIssueInput!) {
       createIssue(input: $input) {
@@ -65,10 +52,11 @@ export async function createHulyIssue({
 
   const variables = {
     input: {
-      title: `[Contact] ${name}: ${subject || 'New Message'}`,
-      description: `**From:** ${name} (${email})\n\n**Message:**\n${message}`,
+      title: `${titlePrefix} ${name}: ${subject || 'New Submission'}`,
+      description: `**Source:** Portfolio Website\n**Category:** ${category}\n**User:** ${name} (${email})\n\n---\n\n${message}`,
       projectId: HULY_PROJECT_ID,
       status: 'TODO',
+      priority,
     },
   };
 
@@ -77,7 +65,7 @@ export async function createHulyIssue({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${sessionToken}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ query, variables }),
     });
@@ -86,6 +74,77 @@ export async function createHulyIssue({
     return result.data?.createIssue?.issue || null;
   } catch (error) {
     console.error('Failed to create Huly issue:', error);
+    return null;
+  }
+}
+
+/**
+ * Updates the status of an existing Huly issue.
+ * Used for auto-resolving alerts.
+ */
+export async function updateHulyIssueStatus(issueId: string, status: string = 'DONE') {
+  if (!issueId) return null;
+
+  const token = await getSessionToken();
+  if (!token) return null;
+
+  const query = `
+    mutation UpdateIssue($id: ID!, $input: UpdateIssueInput!) {
+      updateIssue(id: $id, input: $input) {
+        issue {
+          id
+          status
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    id: issueId,
+    input: {
+      status,
+    },
+  };
+
+  try {
+    const response = await fetch(`${HULY_INSTANCE_URL}/api/graphql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+
+    const result = await response.json();
+    return result.data?.updateIssue?.issue || null;
+  } catch (error) {
+    console.error(`Failed to update Huly issue ${issueId}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Internal helper to manage session tokens
+ */
+async function getSessionToken() {
+  if (sessionToken) return sessionToken;
+
+  try {
+    const loginRes = await fetch(`${HULY_INSTANCE_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: HULY_EMAIL,
+        password: HULY_PASSWORD,
+        workspace: HULY_WORKSPACE_ID,
+      }),
+    });
+    const loginData = await loginRes.json();
+    sessionToken = loginData.token;
+    return sessionToken;
+  } catch (error) {
+    console.error('Huly login failed:', error);
     return null;
   }
 }

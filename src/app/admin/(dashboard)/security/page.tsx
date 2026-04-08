@@ -1,8 +1,14 @@
-import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { Terminal, Shield, Lock, Unlock, AlertTriangle } from "lucide-react";
 import { PasskeyManager } from "@/components/admin/PasskeyManager";
 
-import { AccessLog } from "@prisma/client";
+interface AccessLog {
+    id: string;
+    created_at: string;
+    status: string;
+    attempt_code?: string | null;
+    ip_address?: string | null;
+}
 
 export const revalidate = 0; // Disable cache for logs
 
@@ -10,16 +16,20 @@ export default async function SecurityPage() {
     let logs: AccessLog[] | null = null;
     let error = false;
     try {
-        logs = await prisma.accessLog.findMany({
-            orderBy: { created_at: 'desc' },
-            take: 50
-        });
+        const { data, error: fetchError } = await supabase
+            .from('access_logs')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(50);
+
+        if (fetchError) throw fetchError;
+        logs = data as AccessLog[];
     } catch (e) {
         error = true;
     }
 
     if (error) {
-        return <div className="text-red-500 font-mono">ERROR: CONNECTION_FAILED</div>;
+        return <div className="text-red-500 font-mono text-center py-20">ERROR: CONNECTION_FAILED_TO_SUPABASE</div>;
     }
 
     // Calculate metrics

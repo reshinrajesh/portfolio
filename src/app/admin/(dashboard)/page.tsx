@@ -1,12 +1,13 @@
-import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import DashboardClient from "./DashboardClient";
 
 export const revalidate = 0; // Disable caching for admin panel
 
 export default async function AdminDashboard() {
-    const posts = await prisma.post.findMany({
-        orderBy: { created_at: 'desc' }
-    }) as any[];
+    const { data: posts } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false });
 
     return (
         <div>

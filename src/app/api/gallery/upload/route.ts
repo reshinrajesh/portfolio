@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 import { put, del } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
@@ -40,22 +40,25 @@ export async function POST(request: Request) {
         }
 
         // Insert into database
-        try {
-            const image = await prisma.galleryImage.create({
-                data: {
-                    url: blobUrl,
-                    file_path: fileName,
-                    name: file.name,
-                    album_id: albumId || null
-                }
-            });
-            return NextResponse.json(image);
-        } catch (dbError) {
+        const { data: image, error: dbError } = await supabase
+            .from('gallery_images')
+            .insert({
+                url: blobUrl,
+                file_path: fileName,
+                name: file.name,
+                album_id: albumId || null
+            })
+            .select()
+            .single();
+
+        if (dbError) {
             console.error('Database insert error:', dbError);
             // Cleanup uploaded file if DB insert fails
-            await del(blobUrl);
+            if (blobUrl) await del(blobUrl);
             return NextResponse.json({ error: 'Failed to save image metadata' }, { status: 500 });
         }
+
+        return NextResponse.json(image);
 
     } catch (error) {
         console.error('Upload handler error:', error);

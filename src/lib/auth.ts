@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "@/lib/prisma";
+import { supabaseAdmin } from "@/lib/supabase";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -17,24 +17,21 @@ export const authOptions: NextAuthOptions = {
 
                 // 1. Magic Link Flow (Token based)
                 if (credentials?.email && credentials?.token) {
-                    const tokenData = await prisma.verificationToken.findFirst({
-                        where: {
-                            identifier: credentials.email,
-                            token: credentials.token
-                        }
-                    });
+                    const { data: tokenData } = await supabaseAdmin
+                        .from('verification_tokens')
+                        .select()
+                        .eq('identifier', credentials.email)
+                        .eq('token', credentials.token)
+                        .single();
 
                     if (tokenData && new Date(tokenData.expires) > new Date()) {
                         // Valid Token!
                         // cleanup
-                        await prisma.verificationToken.delete({
-                            where: { 
-                                identifier_token: {
-                                    identifier: credentials.email,
-                                    token: credentials.token
-                                }
-                            }
-                        });
+                        await supabaseAdmin
+                            .from('verification_tokens')
+                            .delete()
+                            .eq('identifier', credentials.email)
+                            .eq('token', credentials.token);
                         return { id: "1", name: "Admin", email: adminEmail };
                     }
 
@@ -48,15 +45,19 @@ export const authOptions: NextAuthOptions = {
                         const response = JSON.parse(credentials.password);
                         const { verifyAuthenticationResponse } = await import('@simplewebauthn/server');
 
-                        const user = await prisma.user.findUnique({
-                            where: { email: credentials.email }
-                        });
+                        const { data: user } = await supabaseAdmin
+                            .from('users')
+                            .select()
+                            .eq('email', credentials.email)
+                            .single();
 
                         if (!user || !user.current_challenge) return null;
 
-                        const authenticator = await prisma.authenticator.findUnique({
-                            where: { credentialid: response.id }
-                        });
+                        const { data: authenticator } = await supabaseAdmin
+                            .from('authenticators')
+                            .select()
+                            .eq('credentialid', response.id)
+                            .single();
 
                         if (!authenticator) return null;
 
@@ -77,15 +78,15 @@ export const authOptions: NextAuthOptions = {
                         });
 
                         if (verification.verified) {
-                            await prisma.authenticator.update({
-                                where: { credentialid: authenticator.credentialid },
-                                data: { counter: verification.authenticationInfo.newCounter }
-                            });
+                            await supabaseAdmin
+                                .from('authenticators')
+                                .update({ counter: verification.authenticationInfo.newCounter })
+                                .eq('credentialid', authenticator.credentialid);
 
-                            await prisma.user.update({
-                                where: { id: user.id },
-                                data: { current_challenge: null }
-                            });
+                            await supabaseAdmin
+                                .from('users')
+                                .update({ current_challenge: null })
+                                .eq('id', user.id);
 
                             return { id: "1", name: "Admin", email: adminEmail };
                         }

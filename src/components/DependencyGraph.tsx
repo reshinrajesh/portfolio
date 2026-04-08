@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Server, Database, Globe, Layers, Wifi, Shield, ArrowRight } from "lucide-react";
+import { Server, Database, Globe, Layers, Wifi, Shield, ArrowRight, Activity } from "lucide-react";
 import React from 'react';
 
 // Define the node structure
@@ -22,19 +22,19 @@ interface GraphEdge {
 const NODES: GraphNode[] = [
     { id: 'client', label: 'User Client', icon: <Globe size={20} />, status: 'operational', x: 10, y: 50 },
     { id: 'cdn', label: 'Edge CDN', icon: <Wifi size={20} />, status: 'operational', x: 30, y: 50 },
-    { id: 'frontend', label: 'Frontend App', icon: <Layers size={20} />, status: 'operational', x: 50, y: 30 },
+    { id: 'frontend', label: 'Main Site', icon: <Layers size={20} />, status: 'operational', x: 50, y: 30 },
     { id: 'api', label: 'API Gateway', icon: <Server size={20} />, status: 'operational', x: 50, y: 70 },
-    { id: 'auth', label: 'Auth Service', icon: <Shield size={20} />, status: 'operational', x: 70, y: 85 },
-    { id: 'db', label: 'Primary DB', icon: <Database size={20} />, status: 'operational', x: 80, y: 60 },
+    { id: 'huly', label: 'Huly Platform', icon: <Activity size={20} />, status: 'operational', x: 70, y: 30 },
+    { id: 'db', label: 'Primary DB', icon: <Database size={20} />, status: 'operational', x: 85, y: 65 },
 ];
 
 const EDGES: GraphEdge[] = [
     { from: 'client', to: 'cdn' },
     { from: 'cdn', to: 'frontend' },
-    { from: 'cdn', to: 'api' }, // Direct API calls
-    { from: 'frontend', to: 'api' },
+    { from: 'cdn', to: 'api' },
+    { from: 'frontend', to: 'huly' },
     { from: 'api', to: 'db' },
-    { from: 'api', to: 'auth' },
+    { from: 'huly', to: 'db' },
 ];
 
 export default function DependencyGraph({ serviceStatus }: { serviceStatus?: any }) {
@@ -50,10 +50,22 @@ export default function DependencyGraph({ serviceStatus }: { serviceStatus?: any
 
     // Helper to get edge color based on source node status
     const getEdgeColor = (sourceId: string) => {
-        // In a real app, this would come from props `serviceStatus`
-        // For now, assume operational
-        return '#22c55e'; // Green
+        if (!serviceStatus) return '#22c55e';
+        const nodeStatus = serviceStatus[sourceId] || 'operational';
+        return nodeStatus === 'outage' ? '#ef4444' : '#22c55e';
     };
+
+    // Map initial nodes to live status if available
+    const liveNodes = NODES.map(node => {
+        if (serviceStatus && serviceStatus[node.id]) {
+            return { ...node, status: serviceStatus[node.id] };
+        }
+        // Specific mapping for some nodes if IDs don't match exactly
+        if (node.id === 'frontend' && serviceStatus?.main) return { ...node, status: serviceStatus.main };
+        if (node.id === 'db' && serviceStatus?.db) return { ...node, status: serviceStatus.db };
+        
+        return node;
+    });
 
     return (
         <div className="w-full h-[400px] bg-zinc-900/40 backdrop-blur-md rounded-3xl border border-white/5 relative overflow-hidden">
@@ -66,16 +78,14 @@ export default function DependencyGraph({ serviceStatus }: { serviceStatus?: any
             <h3 className="absolute top-6 left-6 text-xs font-bold text-zinc-500 uppercase tracking-widest z-10">System Architecture</h3>
 
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                {/* Re-doing the packet animation properly with Framer Motion is hard inside SVG `line`. 
-                     Let's use a simpler clear SVG definition with viewbox. */}
             </svg>
 
-            {/* SVG Overlay for Connections with ViewBox for consistent coords */}
+            {/* SVG Overlay for Connections */}
             <div className="absolute inset-0 w-full h-full">
                 <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full pointer-events-none">
                     {EDGES.map((edge, i) => {
-                        const source = NODES.find(n => n.id === edge.from)!;
-                        const target = NODES.find(n => n.id === edge.to)!;
+                        const source = liveNodes.find(n => n.id === edge.from)!;
+                        const target = liveNodes.find(n => n.id === edge.to)!;
                         return (
                             <React.Fragment key={i}>
                                 <line
@@ -86,7 +96,7 @@ export default function DependencyGraph({ serviceStatus }: { serviceStatus?: any
                                 <motion.circle r="1" fill={getEdgeColor(edge.from)}>
                                     <animateMotion
                                         dur={`${1.5 + (i * 0.2)}s`}
-                                        repeatCount="indefinite" // "indefinite"
+                                        repeatCount="indefinite"
                                         path={`M${source.x},${source.y} L${target.x},${target.y}`}
                                     />
                                 </motion.circle>
@@ -97,7 +107,7 @@ export default function DependencyGraph({ serviceStatus }: { serviceStatus?: any
             </div>
 
             {/* Nodes */}
-            {NODES.map((node, index) => (
+            {liveNodes.map((node, index) => (
                 <motion.div
                     key={node.id}
                     className={`absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 group cursor-pointer`}

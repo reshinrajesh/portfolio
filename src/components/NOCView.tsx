@@ -10,7 +10,7 @@ import { Clock, Activity, Shield, Server, Globe, Terminal, AlertTriangle } from 
 export default function NOCView({ services, incidents }: { services: any[], incidents: any[] }) {
     const [logs, setLogs] = useState<string[]>([]);
 
-    // Simulate real-time logs
+    // Simulate real-time logs with actual status injection
     useEffect(() => {
         const fakeLogs = [
             "[INFO] Health check passed for API Gateway (latency: 45ms)",
@@ -23,14 +23,29 @@ export default function NOCView({ services, incidents }: { services: any[], inci
             "[INFO] Load Balancer re-routing traffic",
         ];
 
+        const outageLogs = [
+            "[ERROR] Connection refused: Huly platform origin (521)",
+            "[ERROR] Huly sync failed: GraphQL timeout",
+            "[CRITICAL] App service 'huly' heartbeat missing",
+        ];
+
         const interval = setInterval(() => {
-            const randomLog = fakeLogs[Math.floor(Math.random() * fakeLogs.length)];
+            const hulyStatus = services.find(s => s.id === 'huly')?.status;
+            let randomLog;
+            
+            // If Huly has an outage, 40% chance of showing an error log
+            if (hulyStatus === 'outage' && Math.random() < 0.4) {
+                randomLog = outageLogs[Math.floor(Math.random() * outageLogs.length)];
+            } else {
+                randomLog = fakeLogs[Math.floor(Math.random() * fakeLogs.length)];
+            }
+
             const timestamp = new Date().toISOString().split('T')[1].slice(0, 8);
             setLogs(prev => [`${timestamp} ${randomLog}`, ...prev].slice(0, 20));
         }, 2000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [services]);
 
     const ClockWidget = ({ timezone, label }: { timezone: string, label: string }) => {
         const [time, setTime] = useState("");
@@ -62,9 +77,11 @@ export default function NOCView({ services, incidents }: { services: any[], inci
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        show: { opacity: 1, y: 0 }
+        hidden: { opacity: 0, x: -20 },
+        show: { opacity: 1, x: 0 }
     };
+
+    const allOperational = services.every(s => s.status === 'operational');
 
     return (
         <motion.div
@@ -75,13 +92,13 @@ export default function NOCView({ services, incidents }: { services: any[], inci
         >
             {/* Top Bar - Clocks & Summary */}
             <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                <div className="col-span-2 md:col-span-2 lg:col-span-1 bg-primary/10 border border-primary/20 p-4 rounded-xl flex items-center gap-4">
-                    <div className="p-3 bg-primary/20 rounded-full animate-pulse">
-                        <Activity className="text-primary" size={24} />
+                <div className={`col-span-2 md:col-span-2 lg:col-span-1 border p-4 rounded-xl flex items-center gap-4 transition-colors ${allOperational ? 'bg-primary/10 border-primary/20' : 'bg-red-500/10 border-red-500/20'}`}>
+                    <div className={`p-3 rounded-full animate-pulse ${allOperational ? 'bg-primary/20' : 'bg-red-500/20'}`}>
+                        <Activity className={allOperational ? 'text-primary' : 'text-red-500'} size={24} />
                     </div>
                     <div>
-                        <h1 className="font-bold text-lg text-primary tracking-tighter">NOC LIVE</h1>
-                        <p className="text-[10px] text-primary/70 uppercase">System Nominal</p>
+                        <h1 className={`font-bold text-lg tracking-tighter ${allOperational ? 'text-primary' : 'text-red-500'}`}>NOC LIVE</h1>
+                        <p className={`text-[10px] uppercase ${allOperational ? 'text-primary/70' : 'text-red-500/70'}`}>{allOperational ? 'System Nominal' : 'Alert: Issues Detected'}</p>
                     </div>
                 </div>
 
@@ -92,7 +109,9 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                 <div className="col-span-2 lg:col-span-2 bg-zinc-900/50 border border-white/5 rounded-xl p-4 flex items-center justify-between">
                     <div>
                         <span className="text-[10px] text-zinc-500 uppercase">Active Incidents</span>
-                        <div className="text-2xl font-bold text-white">{incidents.length}</div>
+                        <div className={`text-2xl font-bold ${incidents.filter(i => i.status !== 'Resolved').length > 0 ? 'text-red-500' : 'text-white'}`}>
+                            {incidents.filter(i => i.status !== 'Resolved').length}
+                        </div>
                     </div>
                     <div className="h-full w-px bg-white/5 mx-4"></div>
                     <div>
@@ -112,7 +131,7 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                 {/* Left Column: Graph & Services */}
                 <motion.div variants={itemVariants} className="lg:col-span-1 flex flex-col gap-4 min-h-0">
                     <div className="flex-1 bg-zinc-900/30 border border-white/5 rounded-3xl p-6 backdrop-blur-sm flex flex-col relative overflow-hidden">
-                        <DependencyGraph serviceStatus={services} />
+                        <DependencyGraph serviceStatus={services.reduce((acc, s) => ({ ...acc, [s.id]: s.status }), {})} />
                     </div>
                 </motion.div>
 
@@ -139,7 +158,7 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                 {/* Right Column: Logs, Deployments & Raw Metrics */}
                 <motion.div variants={itemVariants} className="lg:col-span-1 flex flex-col gap-4 min-h-0">
                     {/* Live Logs Terminal */}
-                    <div className="h-[200px] bg-black border border-zinc-800 rounded-3xl p-4 font-mono text-xs overflow-hidden flex flex-col shrink-0">
+                    <div className="h-[201px] bg-black border border-zinc-800 rounded-3xl p-4 font-mono text-xs overflow-hidden flex flex-col shrink-0">
                         <div className="flex items-center gap-2 mb-2 pb-2 border-b border-zinc-900">
                             <Terminal size={14} className="text-zinc-500" />
                             <span className="text-zinc-500 uppercase tracking-widest">System Events</span>
@@ -152,7 +171,7 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                                             key={i}
                                             initial={{ opacity: 0, x: -10 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            className={`truncate ${log.includes('WARN') ? 'text-yellow-500' : log.includes('ERROR') ? 'text-red-500' : 'text-zinc-400'}`}
+                                            className={`truncate ${log.includes('WARN') ? 'text-yellow-500' : (log.includes('ERROR') || log.includes('CRITICAL')) ? 'text-red-500' : 'text-zinc-400'}`}
                                         >
                                             <span className="text-zinc-600 mr-2">{log.split(' ')[0]}</span>
                                             {log.substring(9)}
@@ -166,7 +185,7 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                     </div>
 
                     {/* Deployment Stream */}
-                    <div className="flex-1 min-h-[250px] shrink-0">
+                    <div className="flex-1 min-h-[171px] shrink-0">
                         <DeploymentStream />
                     </div>
 
@@ -177,13 +196,17 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                             {services.map(service => (
                                 <div key={service.id} className="flex items-center justify-between p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                                     <div className="flex items-center gap-3">
-                                        <span className="font-bold text-zinc-300">{service.name}</span>
+                                        <span className={`font-bold ${service.status === 'operational' ? 'text-zinc-300' : service.status === 'outage' ? 'text-red-400' : 'text-yellow-400'}`}>
+                                            {service.name}
+                                        </span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <div className="w-16 md:w-24 h-1 bg-zinc-800 rounded-full overflow-hidden">
-                                            <div className="h-full bg-green-500 w-[99%]"></div>
+                                            <div className={`h-full transition-all duration-500 ${service.status === 'operational' ? 'bg-green-500 w-[99%]' : service.status === 'outage' ? 'bg-red-500 w-[5%]' : 'bg-yellow-500 w-[70%]'}`}></div>
                                         </div>
-                                        <span className="text-green-400 font-mono text-[10px]">{service.uptime}</span>
+                                        <span className={`font-mono text-[10px] ${service.status === 'operational' ? 'text-green-400' : service.status === 'outage' ? 'text-red-400' : 'text-yellow-400'}`}>
+                                            {service.status === 'operational' ? service.uptime : service.status.toUpperCase()}
+                                        </span>
                                     </div>
                                 </div>
                             ))}

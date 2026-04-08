@@ -1,6 +1,6 @@
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(request: Request) {
     const { email } = await request.json();
@@ -9,17 +9,20 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Email required' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
-        where: { email: email }
-    });
+    const { data: user, error: fetchUserError } = await supabaseAdmin
+        .from('users')
+        .select('*')
+        .eq('email', email)
+        .single();
 
-    if (!user) {
+    if (fetchUserError || !user) {
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const authenticators = await prisma.authenticator.findMany({
-        where: { user_id: user.id }
-    });
+    const { data: authenticators } = await supabaseAdmin
+        .from('authenticators')
+        .select('*')
+        .eq('user_id', user.id);
 
     if (!authenticators || authenticators.length === 0) {
         return NextResponse.json({ error: 'No passkeys registered' }, { status: 400 });
@@ -36,10 +39,10 @@ export async function POST(request: Request) {
     });
 
     // Save challenge
-    await prisma.user.update({
-        where: { id: user.id },
-        data: { current_challenge: options.challenge }
-    });
+    await supabaseAdmin
+        .from('users')
+        .update({ current_challenge: options.challenge })
+        .eq('id', user.id);
 
     return NextResponse.json(options);
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { supabaseAdmin } from '@/lib/supabase';
 import { Resend } from 'resend';
 import crypto from 'crypto';
 
@@ -25,17 +25,20 @@ export async function POST(request: Request) {
 
         // 2. Save to DB (Clean up old tokens first)
         try {
-            await prisma.verificationToken.deleteMany({
-                where: { identifier: email }
-            });
+            await supabaseAdmin
+                .from('verification_tokens')
+                .delete()
+                .eq('identifier', email);
 
-            await prisma.verificationToken.create({
-                data: {
+            const { error: insertError } = await supabaseAdmin
+                .from('verification_tokens')
+                .insert({
                     identifier: email,
                     token: token,
-                    expires: expires
-                }
-            });
+                    expires: expires.toISOString()
+                });
+
+            if (insertError) throw insertError;
         } catch (dbError: any) {
             throw new Error("Database error: " + dbError.message);
         }

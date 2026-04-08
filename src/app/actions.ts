@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { list, del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
@@ -16,12 +16,14 @@ interface PostData {
 
 export async function createPost(post: PostData) {
     try {
-        await prisma.post.create({
-            data: {
+        const { error } = await supabase
+            .from('posts')
+            .insert({
                 ...post,
                 content: post.content || ""
-            }
-        });
+            });
+            
+        if (error) throw error;
     } catch (error) {
         Sentry.captureException(error, { tags: { action: "createPost" }, extra: { title: post.title } });
         console.error("Error creating post:", error);
@@ -35,10 +37,12 @@ export async function createPost(post: PostData) {
 
 export async function updatePost(id: string, post: PostData) {
     try {
-        await prisma.post.update({
-            where: { id: id },
-            data: { ...post }
-        });
+        const { error } = await supabase
+            .from('posts')
+            .update({ ...post })
+            .eq('id', id);
+            
+        if (error) throw error;
     } catch (error) {
         Sentry.captureException(error, { tags: { action: "updatePost" }, extra: { postId: id } });
         console.error("Error updating post:", error);
@@ -52,9 +56,12 @@ export async function updatePost(id: string, post: PostData) {
 
 export async function deletePost(id: string) {
     try {
-        await prisma.post.delete({
-            where: { id: id }
-        });
+        const { error } = await supabase
+            .from('posts')
+            .delete()
+            .eq('id', id);
+            
+        if (error) throw error;
     } catch (error) {
         Sentry.captureException(error, { tags: { action: "deletePost" }, extra: { postId: id } });
         console.error("Error deleting post:", error);
@@ -123,9 +130,13 @@ export async function uploadMediaFile(formData: FormData) {
 
 export async function getBio() {
     try {
-        const data = await prisma.siteContent.findUnique({
-            where: { key: 'bio' }
-        });
+        const { data, error } = await supabase
+            .from('site_content')
+            .select('value')
+            .eq('key', 'bio')
+            .single();
+            
+        if (error && error.code !== 'PGRST116') throw error; // PGRST116 is not found
         return data?.value || '';
     } catch (error) {
         Sentry.captureException(error, { tags: { action: "getBio" } });
@@ -136,11 +147,11 @@ export async function getBio() {
 
 export async function updateBio(content: string) {
     try {
-        await prisma.siteContent.upsert({
-            where: { key: 'bio' },
-            create: { key: 'bio', value: content },
-            update: { value: content }
-        });
+        const { error } = await supabase
+            .from('site_content')
+            .upsert({ key: 'bio', value: content });
+            
+        if (error) throw error;
     } catch (error) {
         Sentry.captureException(error, { tags: { action: "updateBio" } });
         console.error("Error updating bio:", error);
@@ -153,10 +164,19 @@ export async function updateBio(content: string) {
 
 export async function incrementViewCount(id: string) {
     try {
-        await prisma.post.update({
-            where: { id: id },
-            data: { view_count: { increment: 1 } }
-        });
+        // Fetch current view count
+        const { data, error: fetchError } = await supabase
+            .from('posts')
+            .select('view_count')
+            .eq('id', id)
+            .single();
+            
+        if (fetchError) throw fetchError;
+        
+        await supabase
+            .from('posts')
+            .update({ view_count: (data?.view_count || 0) + 1 })
+            .eq('id', id);
     } catch (error) {
         Sentry.captureException(error, { tags: { action: "incrementViewCount" }, extra: { postId: id } });
         console.error("Error incrementing view count:", error);

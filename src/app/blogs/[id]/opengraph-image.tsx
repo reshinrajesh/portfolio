@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export const alt = 'Blog Post | Reshin Rajesh'
 export const size = {
@@ -9,13 +9,14 @@ export const size = {
 
 export const contentType = 'image/png'
 
-export default async function Image({ params }: { params: { id: string } }) {
+export default async function Image({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
 
-    const post = await prisma.post.findUnique({
-        where: { id: id },
-        select: { title: true, content: true, updated_at: true }
-    });
+    const { data: post } = await supabase
+        .from('posts')
+        .select('title, content, updated_at')
+        .eq('id', id)
+        .single();
 
     if (!post) {
         return new ImageResponse(

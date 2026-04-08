@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 import { del } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
@@ -9,11 +9,18 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const albumId = searchParams.get('album_id');
 
-        const images = await prisma.galleryImage.findMany({
-            where: albumId ? { album_id: albumId } : undefined,
-            orderBy: { created_at: 'desc' },
-        });
+        let query = supabase
+            .from('gallery_images')
+            .select('*')
+            .order('created_at', { ascending: false });
 
+        if (albumId) {
+            query = query.eq('album_id', albumId);
+        }
+
+        const { data: images, error } = await query;
+
+        if (error) throw error;
         return NextResponse.json(images);
 
     } catch (error) {
@@ -35,11 +42,13 @@ export async function DELETE(request: Request) {
             return NextResponse.json({ error: 'Missing image ID' }, { status: 400 });
         }
 
-        const image = await prisma.galleryImage.findUnique({
-            where: { id: id }
-        });
+        const { data: image, error: fetchError } = await supabase
+            .from('gallery_images')
+            .select('*')
+            .eq('id', id)
+            .single();
 
-        if (!image) {
+        if (fetchError || !image) {
             return NextResponse.json({ error: 'Image not found' }, { status: 404 });
         }
 
@@ -52,12 +61,13 @@ export async function DELETE(request: Request) {
         }
 
         // Delete from Database
-        try {
-            await prisma.galleryImage.delete({
-                where: { id: id }
-            });
-        } catch (dbError) {
-            return NextResponse.json({ error: 'Failed to deletion image record' }, { status: 500 });
+        const { error: deleteError } = await supabase
+            .from('gallery_images')
+            .delete()
+            .eq('id', id);
+
+        if (deleteError) {
+            return NextResponse.json({ error: 'Failed to delete image record' }, { status: 500 });
         }
 
         return NextResponse.json({ success: true });

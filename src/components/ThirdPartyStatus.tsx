@@ -22,15 +22,29 @@ export default function ThirdPartyStatus() {
         SERVICES.forEach(async (service) => {
             try {
                 const res = await fetch(service.statusUrl);
-                const data = await res.json();
-                setStatuses(prev => ({
-                    ...prev,
-                    [service.name]: data.status.description || "Operational"
-                }));
+                const contentType = res.headers.get("content-type");
+
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await res.json();
+                    setStatuses(prev => ({
+                        ...prev,
+                        [service.name]: data.status.description || "Operational"
+                    }));
+                } else {
+                    // Handle non-JSON responses (like Huly or Cloudflare errors)
+                    if (res.ok) {
+                        setStatuses(prev => ({ ...prev, [service.name]: "Operational" }));
+                    } else if (res.status === 521 || res.status === 502 || res.status === 504) {
+                        setStatuses(prev => ({ ...prev, [service.name]: "Outage" }));
+                    } else {
+                        setStatuses(prev => ({ ...prev, [service.name]: "Issues" }));
+                    }
+                }
             } catch (error) {
+                console.error(`Failed to fetch status for ${service.name}:`, error);
                 setStatuses(prev => ({
                     ...prev,
-                    [service.name]: "Unknown"
+                    [service.name]: "Outage"
                 }));
             }
         });
@@ -51,6 +65,8 @@ export default function ThirdPartyStatus() {
                                 <span className="text-zinc-500 flex items-center gap-1"><Loader2 size={12} className="animate-spin" /> Checking...</span>
                             ) : statuses[service.name] === "All Systems Operational" || statuses[service.name] === "Operational" ? (
                                 <span className="text-green-400 flex items-center gap-1"><CheckCircle size={12} /> Operational</span>
+                            ) : statuses[service.name] === "Outage" || statuses[service.name] === "Major Outage" ? (
+                                <span className="text-red-400 flex items-center gap-1"><XCircle size={12} /> Outage</span>
                             ) : statuses[service.name] === "Unknown" ? (
                                 <span className="text-zinc-500">Unknown</span>
                             ) : (

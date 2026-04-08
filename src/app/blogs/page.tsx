@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import BlogNavbar from "@/components/BlogNavbar";
 import BlogCard from "@/components/blog/BlogCard";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -15,10 +15,11 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogsPage() {
-    const posts = await prisma.post.findMany({
-        where: { status: "Published" },
-        orderBy: { created_at: "desc" }
-    });
+    const { data: posts } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('status', 'Published')
+        .order('created_at', { ascending: false });
 
     const headersList = await headers();
     const domain = headersList.get('host') || '';
