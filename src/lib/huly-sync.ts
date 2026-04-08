@@ -10,12 +10,18 @@ export async function performHulySync() {
         throw new Error('Huly Project ID not configured');
     }
 
+    const syncResults = {
+        blogs: { processed: 0, created: 0, updated: 0, pushed: 0 },
+        skills: { processed: 0, created: 0, updated: 0, pushed: 0 },
+        incidents: { processed: 0, created: 0, updated: 0, pushed: 0 }
+    };
+
     // 3. Push Unsynced Local Incidents TO Huly
     try {
         const { data: unsyncedIncidents } = await supabaseAdmin
             .from('status_incidents')
             .select('*')
-            .is('huly_id', null);
+            .or('huly_id.is.null,huly_id.eq.""');
 
         if (unsyncedIncidents && unsyncedIncidents.length > 0) {
             for (const localInc of unsyncedIncidents) {
@@ -34,6 +40,8 @@ export async function performHulySync() {
                             .from('status_incidents')
                             .update({ huly_id: hulyIssue.id })
                             .eq('id', localInc.id);
+                        
+                        syncResults.incidents.pushed++;
                         
                         // Also sync any existing local updates as comments
                         if (localInc.updates && localInc.updates.length > 0) {
@@ -58,7 +66,7 @@ export async function performHulySync() {
         const { data: unsyncedBlogs } = await supabaseAdmin
             .from('posts')
             .select('*')
-            .is('huly_id', null);
+            .or('huly_id.is.null,huly_id.eq.""');
 
         if (unsyncedBlogs && unsyncedBlogs.length > 0) {
             for (const blog of unsyncedBlogs) {
@@ -77,6 +85,8 @@ export async function performHulySync() {
                             .from('posts')
                             .update({ huly_id: hulyIssue.id })
                             .eq('id', blog.id);
+                        
+                        syncResults.blogs.pushed++;
                     }
                 } catch (pushErr) {
                     console.error(`Failed to push blog ${blog.id} to Huly:`, pushErr);
@@ -87,17 +97,53 @@ export async function performHulySync() {
         console.error('Error fetching unsynced blogs:', dbErr);
     }
 
+    // 5. Push Unsynced Local Skills TO Huly
+    try {
+        const { data: unsyncedSkills } = await supabaseAdmin
+            .from('skills')
+            .select('*')
+            .or('huly_id.is.null,huly_id.eq.""');
+
+        if (unsyncedSkills && unsyncedSkills.length > 0) {
+            for (const skill of unsyncedSkills) {
+                try {
+                    const hulyIssue = await createHulyIssue({
+                        name: "Admin",
+                        email: "admin@reshinrajesh.in",
+                        subject: skill.name,
+                        message: `Skill: ${skill.name}`,
+                        category: "TASK",
+                        labels: [
+                            "skill", 
+                            "synced-from-local",
+                            `icon:${skill.icon || 'Code'}`,
+                            `color:${skill.color || '#3b82f6'}`,
+                            `order:${skill.order || 0}`
+                        ]
+                    });
+
+                    if (hulyIssue) {
+                        await supabaseAdmin
+                            .from('skills')
+                            .update({ huly_id: hulyIssue.id })
+                            .eq('id', skill.id);
+                        
+                        syncResults.skills.pushed++;
+                    }
+                } catch (pushErr) {
+                    console.error(`Failed to push skill ${skill.id} to Huly:`, pushErr);
+                }
+            }
+        }
+    } catch (dbErr) {
+        console.error('Error fetching unsynced skills:', dbErr);
+    }
+
     // 1. Fetch Issues from Huly
     const hulyIssues = await getHulyIssues({ 
         projectId: hulyProjectId,
         limit: 50 
     });
-
-    const syncResults = {
-        blogs: { processed: 0, created: 0, updated: 0 },
-        skills: { processed: 0, created: 0, updated: 0 },
-        incidents: { processed: 0, created: 0, updated: 0 }
-    };
 
     // 2. Sync Items
     for (const issue of hulyIssues) {

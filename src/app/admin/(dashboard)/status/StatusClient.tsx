@@ -29,7 +29,11 @@ export default function StatusClient({ initialIncidents }: { initialIncidents: I
         try {
             const result = await syncHulyAction();
             if (result.success) {
-                alert(`Sync successful! Updated status history with ${result.data?.results?.incidents?.processed || 0} incidents from Huly.`);
+                const res = result.data?.results;
+                const pushMsg = `Pushed: ${res?.incidents?.pushed || 0} incidents, ${res?.blogs?.pushed || 0} blogs, ${res?.skills?.pushed || 0} skills.`;
+                const pullMsg = `Pulled/Updated: ${res?.incidents?.updated || 0} incidents, ${res?.blogs?.updated || 0} blogs, ${res?.skills?.updated || 0} skills.`;
+                
+                alert(`Sync Successful!\n\n${pushMsg}\n${pullMsg}`);
                 window.location.reload(); // Refresh to show new incidents
             } else {
                 alert(`Sync failed: ${result.error}`);
