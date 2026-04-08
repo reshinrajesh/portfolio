@@ -125,6 +125,72 @@ export async function updateHulyIssueStatus(issueId: string, status: string = 'D
 }
 
 /**
+ * Lists issues from a specific project.
+ * Used for syncing content (Blogs, Skills, etc.)
+ */
+export async function getHulyIssues({
+  projectId,
+  status,
+  limit = 20,
+}: {
+  projectId?: string;
+  status?: string;
+  limit?: number;
+}) {
+  const targetProjectId = projectId || HULY_PROJECT_ID;
+  if (!HULY_EMAIL || !HULY_PASSWORD || !HULY_WORKSPACE_ID || !targetProjectId) {
+    return [];
+  }
+
+  const token = await getSessionToken();
+  if (!token) return [];
+
+  const query = `
+    query GetIssues($filter: IssueFilter!, $limit: Int) {
+      issues(filter: $filter, limit: $limit) {
+        id
+        identifier
+        title
+        description
+        status
+        priority
+        created_at
+        updated_at
+        labels {
+          id
+          name
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    filter: {
+      projectId: targetProjectId,
+      ...(status ? { status } : {}),
+    },
+    limit,
+  };
+
+  try {
+    const response = await fetch(`${HULY_INSTANCE_URL}/api/graphql`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+
+    const result = await response.json();
+    return result.data?.issues || [];
+  } catch (error) {
+    console.error('Failed to fetch Huly issues:', error);
+    return [];
+  }
+}
+
+/**
  * Internal helper to manage session tokens
  */
 async function getSessionToken() {

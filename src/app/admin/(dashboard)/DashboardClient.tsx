@@ -15,11 +15,29 @@ interface Post {
 }
 
 import BarChart from "@/components/ui/BarChart";
-import { Eye } from "lucide-react";
+import { Eye, RefreshCw } from "lucide-react";
+import { syncHulyAction } from "@/app/actions";
 
 export default function DashboardClient({ posts }: { posts: Post[] }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState<'All' | 'Published' | 'Draft'>("All");
+    const [isSyncing, setIsSyncing] = useState(false);
+
+    const handleSync = async () => {
+        setIsSyncing(true);
+        try {
+            const result = await syncHulyAction();
+            if (result.success) {
+                alert(`Sync successful! Processed: ${result.data?.results?.blogs?.processed || 0} blogs, ${result.data?.results?.skills?.processed || 0} skills.`);
+            } else {
+                alert(`Sync failed: ${result.error}`);
+            }
+        } catch (err) {
+            alert(`Error: ${err}`);
+        } finally {
+            setIsSyncing(false);
+        }
+    };
 
     const filteredPosts = posts.filter(post => {
         const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -115,6 +133,16 @@ export default function DashboardClient({ posts }: { posts: Post[] }) {
                             </div>
                             <span className="text-sm font-medium">Manage Skills</span>
                         </Link>
+                        <button
+                            onClick={handleSync}
+                            disabled={isSyncing}
+                            className="w-full flex items-center gap-3 p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors group disabled:opacity-50"
+                        >
+                            <div className={`p-2 bg-blue-500/10 rounded-full text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors ${isSyncing ? 'animate-spin' : ''}`}>
+                                <RefreshCw size={18} />
+                            </div>
+                            <span className="text-sm font-medium">{isSyncing ? 'Syncing...' : 'Sync from Huly'}</span>
+                        </button>
                     </div>
                 </div>
             </div>
