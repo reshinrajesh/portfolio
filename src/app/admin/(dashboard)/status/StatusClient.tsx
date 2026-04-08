@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, AlertCircle, CheckCircle2, RefreshCw, Calendar, MessageSquare } from "lucide-react";
+import { Plus, Trash2, AlertCircle, CheckCircle2, RefreshCw, Calendar, MessageSquare, ListRestart } from "lucide-react";
 import { addIncident, deleteIncident } from "@/app/status/actions";
+import { syncHulyAction } from "@/app/actions";
 
 interface Incident {
     id: string;
@@ -19,6 +20,24 @@ export default function StatusClient({ initialIncidents }: { initialIncidents: I
     const [isAdding, setIsAdding] = useState(false);
     const [expandedIncidentId, setExpandedIncidentId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
+
+    const handleSync = async () => {
+        setIsSyncing(true);
+        try {
+            const result = await syncHulyAction();
+            if (result.success) {
+                alert(`Sync successful! Updated status history with ${result.data?.results?.incidents?.processed || 0} incidents from Huly.`);
+                window.location.reload(); // Refresh to show new incidents
+            } else {
+                alert(`Sync failed: ${result.error}`);
+            }
+        } catch (err) {
+            alert(`Error: ${err}`);
+        } finally {
+            setIsSyncing(false);
+        }
+    };
 
     const [formData, setFormData] = useState({
         title: "",
@@ -80,13 +99,23 @@ export default function StatusClient({ initialIncidents }: { initialIncidents: I
                     <h1 className="text-3xl font-bold tracking-tight">Incident Management</h1>
                     <p className="text-muted-foreground mt-1">Manage system history and announcements.</p>
                 </div>
-                <button
-                    onClick={() => setIsAdding(!isAdding)}
-                    className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20 font-medium"
-                >
-                    <Plus size={18} />
-                    {isAdding ? "Cancel" : "Post Incident"}
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={handleSync}
+                        disabled={isSyncing}
+                        className="flex items-center gap-2 bg-secondary text-secondary-foreground border border-border px-4 py-2 rounded-lg hover:bg-secondary/80 transition-all font-medium disabled:opacity-50"
+                    >
+                        <RefreshCw size={18} className={isSyncing ? "animate-spin" : ""} />
+                        {isSyncing ? "Syncing..." : "Sync from Huly"}
+                    </button>
+                    <button
+                        onClick={() => setIsAdding(!isAdding)}
+                        className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20 font-medium"
+                    >
+                        <Plus size={18} />
+                        {isAdding ? "Cancel" : "Post Incident"}
+                    </button>
+                </div>
             </div>
 
             <AnimatePresence>
