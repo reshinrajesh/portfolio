@@ -80,15 +80,15 @@ export async function GET(request: Request) {
                 status: "investigating",
                 date: new Date().toISOString(),
                 updates: [],
-                huly_issue_id: hulyTask?.id
+                huly_id: hulyTask?.id
             });
             results.db_action = "incident_created_with_huly";
         } catch (e) { console.error("Failed to create DB incident:", e); }
     } else if (!isDbDown && dbIncident) {
         try {
             // Auto-Resolve Huly Task
-            if (dbIncident.huly_issue_id) {
-                await updateHulyIssueStatus(dbIncident.huly_issue_id, 'DONE').catch(e => console.error("Huly resolve error:", e));
+            if (dbIncident.huly_id) {
+                await updateHulyIssueStatus(dbIncident.huly_id, 'DONE').catch(e => console.error("Huly resolve error:", e));
             }
 
             await supabaseAdmin.from('status_incidents').update({
@@ -123,15 +123,15 @@ export async function GET(request: Request) {
                 status: "investigating",
                 date: new Date().toISOString(),
                 updates: [],
-                huly_issue_id: hulyTask?.id
+                huly_id: hulyTask?.id
             });
             results.huly_action = "incident_created_with_huly";
         } catch (e) { console.error("Failed to create Huly incident:", e); }
     } else if (!isHulyDown && hulyIncident) {
         try {
             // Auto-Resolve Huly Task
-            if (hulyIncident.huly_issue_id) {
-                await updateHulyIssueStatus(hulyIncident.huly_issue_id, 'DONE').catch(e => console.error("Huly resolve error:", e));
+            if (hulyIncident.huly_id) {
+                await updateHulyIssueStatus(hulyIncident.huly_id, 'DONE').catch(e => console.error("Huly resolve error:", e));
             }
 
             await supabaseAdmin.from('status_incidents').update({
