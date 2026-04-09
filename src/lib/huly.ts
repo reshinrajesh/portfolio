@@ -22,6 +22,7 @@ export async function createHulyIssue({
   message,
   category = 'LEAD',
   labels = [],
+  projectId,
 }: {
   name: string;
   email: string;
@@ -29,6 +30,7 @@ export async function createHulyIssue({
   message: string;
   category?: 'LEAD' | 'ALERT' | 'TASK' | 'INCIDENT';
   labels?: string[];
+  projectId?: string;
 }) {
   if (!HULY_EMAIL || !HULY_PASSWORD || !HULY_WORKSPACE_ID) {
     console.warn('Huly integration is not fully configured (missing credentials). Skipping task creation.');
@@ -59,7 +61,7 @@ export async function createHulyIssue({
     input: {
       title: `${titlePrefix} ${name || 'System'}: ${subject || 'New Submission'}`,
       description: `**Source:** Portfolio Website\n**Category:** ${category}\n**User:** ${name || 'Admin'} (${email || 'admin@reshinrajesh.in'})\n\n---\n\n${message}`,
-      projectId: HULY_PROJECT_ID,
+      projectId: projectId || HULY_PROJECT_ID,
       status: 'TODO',
       priority,
       // Note: Huly GraphQL for labels might require label IDs, but sometimes names work if input structure allows.

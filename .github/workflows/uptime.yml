@@ -10,5 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Status Endpoint
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          curl -i -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" https://reshinrajesh.in/api/cron/check-status
+          curl -i -H "Authorization: Bearer $CRON_SECRET" https://reshinrajesh.in/api/cron/check-status

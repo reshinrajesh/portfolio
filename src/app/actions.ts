@@ -29,7 +29,8 @@ export async function createPost(post: PostData) {
                 subject: post.title,
                 message: post.content,
                 category: "TASK",
-                labels: ["blog", post.status.toLowerCase()]
+                labels: ["blog", post.status.toLowerCase()],
+                projectId: hulyProjectId
             });
             if (hulyIssue) {
                 hulyId = hulyIssue.id;
