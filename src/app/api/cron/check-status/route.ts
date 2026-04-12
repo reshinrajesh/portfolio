@@ -27,20 +27,6 @@ export async function GET(request: Request) {
         dbErrorDetails = e.message || String(e);
     }
 
-    // 2. Check Huly (External)
-    const HULY_URL = process.env.HULY_INSTANCE_URL || 'https://huly.reshinrajesh.in';
-    try {
-        const hulyRes = await fetch(HULY_URL, { signal: AbortSignal.timeout(5000) });
-        if (!hulyRes.ok && hulyRes.status >= 500) {
-            isHulyDown = true;
-            hulyErrorDetails = `Huly returned status ${hulyRes.status}`;
-        }
-    } catch (e: any) {
-        console.error("Cron Health check error (Huly):", e);
-        isHulyDown = true;
-        hulyErrorDetails = e.message || String(e);
-    }
-
     // 3. Fetch active incidents to manage them
     let activeIncidents: any[] = [];
     try {
@@ -58,9 +44,8 @@ export async function GET(request: Request) {
     }
 
     const dbIncident = activeIncidents.find(i => i.title.includes("Database"));
-    const hulyIncident = activeIncidents.find(i => i.title.includes("Huly"));
 
-    const results: any = { db: isDbDown ? "down" : "up", huly: isHulyDown ? "down" : "up" };
+    const results: any = { db: isDbDown ? "down" : "up" };
 
     // 4. Manage DB Incidents
     if (isDbDown && !dbIncident) {
@@ -105,51 +90,8 @@ export async function GET(request: Request) {
         } catch (e) { console.error("Failed to resolve DB incident:", e); }
     }
 
-    // 5. Manage Huly Incidents
-    if (isHulyDown && !hulyIncident) {
-        try {
-            // Create Huly Task for Platform outage
-            const hulyTask = await createHulyIssue({
-                name: "System Monitor",
-                email: "noreply@reshinrajesh.in",
-                subject: "ALERT: Huly Platform Connectivity Issue",
-                message: `Automated monitoring has detected a Huly platform outage.\n\nError Details: ${hulyErrorDetails}`,
-                category: 'ALERT'
-            });
-
-            await supabaseAdmin.from('status_incidents').insert({
-                title: "Huly Platform Connectivity Issues",
-                description: "We are investigating reports of connectivity issues with our Huly instance. Users may experience timeouts or 521 errors.",
-                status: "investigating",
-                date: new Date().toISOString(),
-                updates: [],
-                huly_id: hulyTask?.id
-            });
-            results.huly_action = "incident_created_with_huly";
-        } catch (e) { console.error("Failed to create Huly incident:", e); }
-    } else if (!isHulyDown && hulyIncident) {
-        try {
-            // Auto-Resolve Huly Task
-            if (hulyIncident.huly_id) {
-                await updateHulyIssueStatus(hulyIncident.huly_id, 'DONE').catch(e => console.error("Huly resolve error:", e));
-            }
-
-            await supabaseAdmin.from('status_incidents').update({
-                status: "resolved",
-                updates: [...(hulyIncident.updates || []), {
-                    id: crypto.randomUUID(),
-                    status: "resolved",
-                    message: "Connectivity to the Huly platform has been restored. All services are operational.",
-                    date: new Date().toISOString()
-                }]
-            }).eq('id', hulyIncident.id);
-            
-            results.huly_action = "incident_resolved";
-        } catch (e) { console.error("Failed to resolve Huly incident:", e); }
-    }
-
     return NextResponse.json({
-        status: (isDbDown || isHulyDown) ? "down" : "up",
+        status: isDbDown ? "down" : "up",
         results
     });
 }

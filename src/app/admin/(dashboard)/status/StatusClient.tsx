@@ -22,7 +22,7 @@ export default function StatusClient({ initialIncidents }: { initialIncidents: I
     const [expandedIncidentId, setExpandedIncidentId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
-    const [hulyUrl] = useState(process.env.NEXT_PUBLIC_HULY_URL || 'https://huly.reshinrajesh.in');
+    const [hulyUrl] = useState(process.env.NEXT_PUBLIC_HULY_URL || '');
 
     const handleSync = async () => {
         setIsSyncing(true);

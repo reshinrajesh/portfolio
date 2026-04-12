@@ -6,7 +6,7 @@
  * we use direct fetch calls to the Huly GraphQL API.
  */
 
-const HULY_INSTANCE_URL = process.env.HULY_INSTANCE_URL || 'https://huly.reshinrajesh.in';
+const HULY_INSTANCE_URL = process.env.HULY_INSTANCE_URL || '';
 const HULY_EMAIL = process.env.HULY_EMAIL;
 const HULY_PASSWORD = process.env.HULY_PASSWORD;
 const HULY_WORKSPACE_ID = process.env.HULY_WORKSPACE_ID;
