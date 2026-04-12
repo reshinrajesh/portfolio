@@ -89,7 +89,7 @@ export default function ProfileEditor({ initialContent }: { initialContent: stri
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-lg font-medium">Bio Content</h2>
-                    <p className="text-sm text-muted-foreground">This content matches your bio.reshinrajesh.in page.</p>
+                    <p className="text-sm text-muted-foreground">This content is displayed on your personal bio page.</p>
                 </div>
                 <button
                     onClick={handleSave}
