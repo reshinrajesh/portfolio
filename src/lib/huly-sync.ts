@@ -6,11 +6,12 @@ import { revalidatePath } from 'next/cache';
 export async function performHulySync(options: { mode?: 'push-only' | 'pull-only' | 'both' } = {}) {
     const { mode = 'both' } = options;
     const mainProjectId = process.env.HULY_PROJECT_ID;
-    const blogProjectId = process.env.HULY_BLOG_PROJECT_ID || mainProjectId;
-    
+
     if (!mainProjectId) {
         throw new Error('Huly Project ID not configured');
     }
+
+    const blogProjectId = process.env.HULY_BLOG_PROJECT_ID || mainProjectId;
 
     const syncResults = {
         blogs: { processed: 0, created: 0, updated: 0, pushed: 0 },
@@ -151,8 +152,10 @@ export async function performHulySync(options: { mode?: 'push-only' | 'pull-only
     // --- PULL STEPS (Skip if push-only) ---
     if (mode === 'both' || mode === 'pull-only') {
         // We need to pull from BOTH projects
-        const projectIdsToSync = [mainProjectId];
-        if (blogProjectId !== mainProjectId) projectIdsToSync.push(blogProjectId);
+        const projectIdsToSync: string[] = [mainProjectId];
+        if (blogProjectId && blogProjectId !== mainProjectId) {
+            projectIdsToSync.push(blogProjectId);
+        }
 
         for (const targetPid of projectIdsToSync) {
             const hulyIssues = await getHulyIssues({ 
