@@ -7,7 +7,8 @@ export async function GET() {
     const status = {
         main: "operational",
         blog: "operational",
-        security: "operational"
+        security: "operational",
+        sentry: "operational"
     };
 
     // 1. Check Database (Supabase)
@@ -19,8 +20,18 @@ export async function GET() {
         status.blog = "degraded";
     }
 
+    // 2. Check Sentry (Self-hosted)
+    try {
+        const sentryRes = await fetch("https://sentry.reshinrajesh.in", { signal: AbortSignal.timeout(3000) });
+        if (!sentryRes.ok && sentryRes.status >= 500) {
+            status.sentry = "degraded";
+        }
+    } catch (e) {
+        status.sentry = "outage";
+    }
+
     return NextResponse.json({
-        status: (status.blog === "degraded") ? "degraded" : "ok",
+        status: (status.blog === "degraded" || status.sentry === "outage") ? "degraded" : "ok",
         timestamp: new Date().toISOString(),
         services: status
     });

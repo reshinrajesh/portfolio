@@ -14,8 +14,8 @@ export async function GET(request: Request) {
 
     let isDbDown = false;
     let dbErrorDetails = "";
-    let isHulyDown = false;
-    let hulyErrorDetails = "";
+    let isSentryDown = false;
+    let sentryErrorDetails = "";
 
     // 1. Check Database (Supabase)
     try {
@@ -25,6 +25,19 @@ export async function GET(request: Request) {
         console.error("Cron Health check error (DB):", e);
         isDbDown = true;
         dbErrorDetails = e.message || String(e);
+    }
+
+    // 2. Check Sentry (Self-hosted)
+    try {
+        const sentryRes = await fetch("https://sentry.reshinrajesh.in", { signal: AbortSignal.timeout(5000) });
+        if (!sentryRes.ok && sentryRes.status >= 500) {
+            isSentryDown = true;
+            sentryErrorDetails = `Sentry returned status ${sentryRes.status}`;
+        }
+    } catch (e: any) {
+        console.error("Cron Health check error (Sentry):", e);
+        isSentryDown = true;
+        sentryErrorDetails = e.message || String(e);
     }
 
     // 3. Fetch active incidents to manage them
@@ -44,8 +57,9 @@ export async function GET(request: Request) {
     }
 
     const dbIncident = activeIncidents.find(i => i.title.includes("Database"));
+    const sentryIncident = activeIncidents.find(i => i.title.includes("Sentry"));
 
-    const results: any = { db: isDbDown ? "down" : "up" };
+    const results: any = { db: isDbDown ? "down" : "up", sentry: isSentryDown ? "down" : "up" };
 
     // 4. Manage DB Incidents
     if (isDbDown && !dbIncident) {
@@ -90,8 +104,51 @@ export async function GET(request: Request) {
         } catch (e) { console.error("Failed to resolve DB incident:", e); }
     }
 
+    // 5. Manage Sentry Incidents
+    if (isSentryDown && !sentryIncident) {
+        try {
+            // Create Huly Task for Sentry outage
+            const hulyTask = await createHulyIssue({
+                name: "System Monitor",
+                email: "noreply@reshinrajesh.in",
+                subject: "ALERT: Sentry Platform Connectivity Issue",
+                message: `Automated monitoring has detected a Sentry platform outage.\n\nError Details: ${sentryErrorDetails}`,
+                category: 'ALERT'
+            });
+
+            await supabaseAdmin.from('status_incidents').insert({
+                title: "Sentry Instance Connectivity Issues",
+                description: "We are investigating reports of connectivity issues with our self-hosted Sentry instance. Error tracking may be delayed.",
+                status: "investigating",
+                date: new Date().toISOString(),
+                updates: [],
+                huly_id: hulyTask?.id
+            });
+            results.sentry_action = "incident_created_with_huly";
+        } catch (e) { console.error("Failed to create Sentry incident:", e); }
+    } else if (!isSentryDown && sentryIncident) {
+        try {
+            // Auto-Resolve Huly Task
+            if (sentryIncident.huly_id) {
+                await updateHulyIssueStatus(sentryIncident.huly_id, 'DONE').catch(e => console.error("Huly resolve error:", e));
+            }
+
+            await supabaseAdmin.from('status_incidents').update({
+                status: "resolved",
+                updates: [...(sentryIncident.updates || []), {
+                    id: crypto.randomUUID(),
+                    status: "resolved",
+                    message: "Connectivity to the self-hosted Sentry platform has been restored. Systems are operational.",
+                    date: new Date().toISOString()
+                }]
+            }).eq('id', sentryIncident.id);
+            
+            results.sentry_action = "incident_resolved";
+        } catch (e) { console.error("Failed to resolve Sentry incident:", e); }
+    }
+
     return NextResponse.json({
-        status: isDbDown ? "down" : "up",
+        status: (isDbDown || isSentryDown) ? "down" : "up",
         results
     });
 }
