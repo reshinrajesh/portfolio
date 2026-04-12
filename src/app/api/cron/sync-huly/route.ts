@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { performHulySync } from '@/lib/huly-sync';
-import * as Sentry from '@sentry/nextjs';
+
 
 export async function GET(request: Request) {
     const authHeader = request.headers.get('authorization');
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 
     } catch (error: any) {
         console.error('Huly Sync Error:', error);
-        Sentry.captureException(error);
+
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

@@ -1,6 +1,6 @@
 import { supabaseAdmin } from './supabase';
 import { getHulyIssues, getHulyComments, createHulyIssue } from './huly';
-import * as Sentry from '@sentry/nextjs';
+
 import { revalidatePath } from 'next/cache';
 
 export async function performHulySync(options: { mode?: 'push-only' | 'pull-only' | 'both' } = {}) {
@@ -285,7 +285,7 @@ export async function performHulySync(options: { mode?: 'push-only' | 'pull-only
                     }
                 } catch (err) {
                     console.error(`Error syncing issue ${issue.id} from project ${targetPid}:`, err);
-                    Sentry.captureException(err, { extra: { huly_id: issue.id, projectId: targetPid } });
+
                 }
             }
         }

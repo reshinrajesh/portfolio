@@ -3,7 +3,7 @@
 import { supabase } from "@/lib/supabase";
 import { list, del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
-import * as Sentry from "@sentry/nextjs";
+
 import { performHulySync } from "@/lib/huly-sync";
 import { createHulyIssue, updateHulyIssue, deleteHulyIssue } from "@/lib/huly";
 
@@ -49,7 +49,7 @@ export async function createPost(post: PostData) {
             
         if (error) throw error;
     } catch (error) {
-        Sentry.captureException(error, { tags: { action: "createPost" }, extra: { title: post.title } });
+
         console.error("Error creating post:", error);
         throw new Error("Failed to create post");
     }
@@ -87,7 +87,7 @@ export async function updatePost(id: string, post: PostData) {
             
         if (error) throw error;
     } catch (error) {
-        Sentry.captureException(error, { tags: { action: "updatePost" }, extra: { postId: id } });
+
         console.error("Error updating post:", error);
         throw new Error("Failed to update post");
     }
@@ -121,7 +121,7 @@ export async function deletePost(id: string) {
             
         if (error) throw error;
     } catch (error) {
-        Sentry.captureException(error, { tags: { action: "deletePost" }, extra: { postId: id } });
+
         console.error("Error deleting post:", error);
         throw new Error("Failed to delete post");
     }
@@ -148,7 +148,7 @@ export async function getMediaFiles() {
 
         return filesWithUrls.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     } catch (error) {
-        Sentry.captureException(error, { tags: { action: "getMediaFiles" } });
+
         console.error("Error fetching media from blob:", error);
         return [];
     }
@@ -160,7 +160,7 @@ export async function deleteMediaFile(url: string) {
         revalidatePath("/admin/media");
         return { success: true };
     } catch (error) {
-        Sentry.captureException(error, { tags: { action: "deleteMediaFile" }, extra: { url } });
+
         console.error("Error deleting file from blob:", error);
         throw new Error("Failed to delete file");
     }
@@ -180,7 +180,7 @@ export async function uploadMediaFile(formData: FormData) {
 
         return { publicUrl: blob.url };
     } catch (error) {
-        Sentry.captureException(error, { tags: { action: "uploadMediaFile" } });
+
         console.error('Error uploading to Vercel Blob:', error);
         throw new Error("Failed to upload file");
     }
@@ -197,7 +197,7 @@ export async function getBio() {
         if (error && error.code !== 'PGRST116') throw error; // PGRST116 is not found
         return data?.value || '';
     } catch (error) {
-        Sentry.captureException(error, { tags: { action: "getBio" } });
+
         console.error("Error fetching bio:", error);
         return '';
     }
@@ -211,7 +211,7 @@ export async function updateBio(content: string) {
             
         if (error) throw error;
     } catch (error) {
-        Sentry.captureException(error, { tags: { action: "updateBio" } });
+
         console.error("Error updating bio:", error);
         throw new Error("Failed to update bio");
     }
@@ -236,7 +236,7 @@ export async function incrementViewCount(id: string) {
             .update({ view_count: (data?.view_count || 0) + 1 })
             .eq('id', id);
     } catch (error) {
-        Sentry.captureException(error, { tags: { action: "incrementViewCount" }, extra: { postId: id } });
+
         console.error("Error incrementing view count:", error);
     }
 }

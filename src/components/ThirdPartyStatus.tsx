@@ -11,8 +11,7 @@ interface Service {
 
 const SERVICES: Service[] = [
     { name: "GitHub", url: "https://www.githubstatus.com/", statusUrl: "https://www.githubstatus.com/api/v2/status.json" },
-    { name: "Vercel", url: "https://www.vercel-status.com/", statusUrl: "https://www.vercel-status.com/api/v2/status.json" },
-    { name: "Sentry", url: "https://sentry.reshinrajesh.in", statusUrl: "https://sentry.reshinrajesh.in" }
+    { name: "Vercel", url: "https://www.vercel-status.com/", statusUrl: "https://www.vercel-status.com/api/v2/status.json" }
 ];
 
 export default function ThirdPartyStatus() {
