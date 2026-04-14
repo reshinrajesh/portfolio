@@ -1,38 +1,44 @@
-import { RESUME_DATA } from "@/lib/resume-data";
-import { projects } from "@/lib/projects";
+import { supabase } from "@/lib/supabase";
 
-// Helper to format projects
-const projectList = projects
-   .map(
-      (p) =>
-         `- ${p.title}: ${p.description} (Stack: ${p.tags.join(", ")})`
-   )
-   .join("\n");
+export async function getPortfolioContext() {
+   // Fetch from DB instead of static
+   const [projectsRes, workRes, eduRes, contentRes] = await Promise.all([
+      supabase.from('projects').select('*').order('order'),
+      supabase.from('resume_work').select('*').order('order'),
+      supabase.from('resume_education').select('*').order('order'),
+      supabase.from('site_content').select('*')
+   ]);
 
-// Helper to format experience
-const workList = RESUME_DATA.work
-   .map(
-      (w) =>
-         `- ${w.title} at ${w.company} (${w.start} - ${w.end}): ${w.description}`
-   )
-   .join("\n");
+   const projects = projectsRes.data || [];
+   const work = workRes.data || [];
+   const education = eduRes.data || [];
+   const siteContent = contentRes.data || [];
 
-// Helper to format education
-const educationList = RESUME_DATA.education
-   .map(
-      (e) =>
-         `- ${e.degree} from ${e.school} (${e.start} - ${e.end})`
-   )
-   .join("\n");
+   const getVal = (key: string, fallback: string) => siteContent.find((c: any) => c.key === key)?.value || fallback;
 
-export const portfolioContext = `
+   const about = getVal('about', '');
+   const summary = getVal('summary', '');
+
+   const projectList = projects.map(
+      (p: any) => `- ${p.title}: ${p.description} (Stack: ${(p.tags || []).join(", ")})`
+   ).join("\n");
+
+   const workList = work.map(
+      (w: any) => `- ${w.title} at ${w.company} (${w.start_date} - ${w.end_date}): ${w.description}`
+   ).join("\n");
+
+   const educationList = education.map(
+      (e: any) => `- ${e.degree} from ${e.school} (${e.start_date} - ${e.end_date})`
+   ).join("\n");
+
+   const portfolioContext = `
 ABOUT RESHIN RAJESH:
-${RESUME_DATA.summary}
+${summary}
 
 Bio:
-- Name: ${RESUME_DATA.name}
-- Location: ${RESUME_DATA.location}
-- About: ${RESUME_DATA.about}
+- Name: Reshin Rajesh
+- Location: Kerala, India
+- About: ${about}
 
 WORK EXPERIENCE:
 ${workList}
@@ -40,22 +46,21 @@ ${workList}
 EDUCATION:
 ${educationList}
 
-SKILLS:
-${RESUME_DATA.skills.join(", ")}
-
 PROJECTS:
 ${projectList}
 
 CONTACT & SOCIALS:
-${RESUME_DATA.contact.social.map((s) => `- ${s.name}: ${s.url}`).join("\n")}
-- Email: ${RESUME_DATA.contact.email}
+- GitHub: https://github.com/reshinrajesh
+- LinkedIn: https://linkedin.com/in/reshinrajesh
+- Website: https://reshinrajesh.in
+- Email: connect@reshinrajesh.in
 
 PHILOSOPHY:
 Reshin believes in simplicity, clarity, and authenticity. 
 He treats his portfolio as a playground for experiments and a reflection of his learning journey.
 `;
 
-export const systemPrompt = `
+   return `
 You are "Res.AI", a helpful and friendly AI assistant for Reshin Rajesh's portfolio website.
 Your goal is to answer questions about Reshin, his skills, projects, and background based ONLY on the provided context.
 
@@ -68,3 +73,4 @@ Traits:
 Context:
 ${portfolioContext}
 `;
+}

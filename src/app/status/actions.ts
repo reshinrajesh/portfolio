@@ -39,6 +39,11 @@ export async function addIncident(formData: { title: string, description: string
             });
             if (hulyIssue) {
                 hulyId = hulyIssue.id;
+                // Sync the initial status if it's not the default
+                if (formData.status !== 'Investigating') {
+                    const hulyStatus = formData.status === 'Resolved' || formData.status === 'Completed' ? 'DONE' : 'IN_PROGRESS';
+                    await updateHulyIssueStatus(hulyId, hulyStatus);
+                }
             }
         } catch (hulyErr) {
             console.warn("Failed to create Huly issue, proceeding with local only:", hulyErr);

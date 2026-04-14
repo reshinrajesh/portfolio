@@ -54,7 +54,8 @@ export async function GET(request: Request) {
                 email: "noreply@reshinrajesh.in",
                 subject: "CRITICAL: Database Connection Failure",
                 message: `Automated monitoring has detected a database outage.\n\nError Details: ${dbErrorDetails}`,
-                category: 'ALERT'
+                category: 'ALERT',
+                labels: ["incident", "alert", "auto-generated"]
             });
 
             await supabaseAdmin.from('status_incidents').insert({

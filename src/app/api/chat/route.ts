@@ -1,4 +1,4 @@
-import { systemPrompt } from '@/lib/context';
+import { getPortfolioContext } from '@/lib/context';
 
 
 export const maxDuration = 30;
@@ -47,6 +47,8 @@ export async function POST(req: Request) {
             console.error('Missing Google API Key');
             return new Response('Missing API Key', { status: 500 });
         }
+
+        const systemPrompt = await getPortfolioContext();
 
         // Extract system message and user/model history
         const sysMsg = messages.find((m: any) => m.role === 'system')?.content || systemPrompt;

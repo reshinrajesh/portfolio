@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { projects } from "@/lib/projects";
+import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
-    return projects.map((project) => ({
+    const { data: projects } = await supabase.from('projects').select('slug');
+    if (!projects) return [];
+    return projects.map((project: any) => ({
         id: project.slug,
     }));
 }
@@ -15,7 +17,13 @@ export default async function ProjectDetail({
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-    const project = projects.find((p) => p.slug === id);
+    
+    // Fetch project
+    const { data: project } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('slug', id)
+        .single();
 
     if (!project) {
         notFound();
@@ -41,7 +49,7 @@ export default async function ProjectDetail({
                     {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-8">
-                    {project.tags.map(tag => (
+                    {(project.tags || []).map((tag: string) => (
                         <span key={tag} className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
                             {tag}
                         </span>

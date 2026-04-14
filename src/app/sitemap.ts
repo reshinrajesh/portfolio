@@ -1,10 +1,12 @@
 import { MetadataRoute } from 'next';
-import { projects } from '@/lib/projects';
+import { supabase } from '@/lib/supabase';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://reshinrajesh.in';
 
-    const projectUrls = projects.map((project) => ({
+    const { data: projects } = await supabase.from('projects').select('slug');
+
+    const projectUrls = (projects || []).map((project: any) => ({
         url: `${baseUrl}/projects/${project.slug}`,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,

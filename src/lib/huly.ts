@@ -45,6 +45,7 @@ export async function createHulyIssue({
 
   // Merge provided labels with default category label
   const finalLabels = [...new Set([...labels, category.toLowerCase()])];
+  const labelsStr = finalLabels.map(l => `[LABEL: ${l}]`).join(' ');
 
   const query = `
     mutation CreateIssue($input: CreateIssueInput!) {
@@ -60,12 +61,10 @@ export async function createHulyIssue({
   const variables = {
     input: {
       title: `${titlePrefix} ${name || 'System'}: ${subject || 'New Submission'}`,
-      description: `**Source:** Portfolio Website\n**Category:** ${category}\n**User:** ${name || 'Admin'} (${email || 'admin@reshinrajesh.in'})\n\n---\n\n${message}`,
+      description: `**Source:** Portfolio Website\n**Category:** ${category}\n**User:** ${name || 'Admin'} (${email || 'admin@reshinrajesh.in'})\n\n${labelsStr}\n\n---\n\n${message}`,
       projectId: projectId || HULY_PROJECT_ID,
       status: 'TODO',
       priority,
-      // Note: Huly GraphQL for labels might require label IDs, but sometimes names work if input structure allows.
-      // For now, we'll stick to the title/description mapping as we know that works.
     },
   };
 
