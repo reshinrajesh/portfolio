@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, FileText, ExternalLink, PlusCircle, Image as ImageIcon, UserCircle, Shield, Activity } from "lucide-react";
+import { LayoutDashboard, FileText, ExternalLink, PlusCircle, Image as ImageIcon, UserCircle, Shield, Activity, BarChart3 } from "lucide-react";
 import SignOutButton from "./SignOutButton";
 import Logo from "@/components/Logo";
 import AutoLogout from "@/components/admin/AutoLogout";
@@ -66,6 +66,13 @@ export default async function AdminLayout({
                     >
                         <Activity size={20} className="group-hover:text-primary transition-colors" />
                         <span>System Status</span>
+                    </Link>
+                    <Link
+                        href="/monitoring"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-500/10 hover:text-emerald-500 transition-all text-muted-foreground hover:translate-x-1 group"
+                    >
+                        <BarChart3 size={20} className="group-hover:text-emerald-500 transition-colors" />
+                        <span>Monitoring</span>
                     </Link>
                     <Link
                         href="https://blogs.reshinrajesh.in"

@@ -2,12 +2,15 @@
 
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import StatusGlobe from "./StatusGlobe";
 import DependencyGraph from "./DependencyGraph";
 import DeploymentStream from "./DeploymentStream";
 import { Clock, Activity, Shield, Server, Globe, Terminal, AlertTriangle } from "lucide-react";
 
 export default function NOCView({ services, incidents }: { services: any[], incidents: any[] }) {
+    const { data: session } = useSession();
+    const isAdmin = !!session;
     const [logs, setLogs] = useState<string[]>([]);
 
     // Simulate real-time logs with actual status injection
@@ -185,9 +188,23 @@ export default function NOCView({ services, incidents }: { services: any[], inci
                     </div>
 
                     {/* Deployment Stream */}
-                    <div className="flex-1 min-h-[171px] shrink-0">
-                        <DeploymentStream />
-                    </div>
+                    {!isAdmin ? (
+                        <div className="flex-1 min-h-[171px] shrink-0">
+                            <DeploymentStream />
+                        </div>
+                    ) : (
+                        <div className="flex-1 min-h-[171px] shrink-0 bg-black border border-zinc-800 rounded-3xl overflow-hidden relative">
+                            <div className="absolute top-2 left-2 z-10 flex items-center gap-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10">
+                                <Activity size={10} className="text-emerald-500" />
+                                <span className="text-[8px] text-zinc-400 font-bold uppercase tracking-widest">Live Grafana Stream</span>
+                            </div>
+                            <iframe
+                                src="https://grafana.reshinrajesh.in?kiosk"
+                                className="w-full h-full border-none opacity-80"
+                                title="Grafana NOC Metrics"
+                            />
+                        </div>
+                    )}
 
                     {/* Service Matrix */}
                     <div className=" bg-zinc-900/30 border border-white/5 rounded-3xl p-4 overflow-y-auto shrink-0 max-h-[300px]">
