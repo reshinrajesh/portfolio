@@ -4,6 +4,7 @@ import { Calendar, User, ArrowLeft, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
 import { estimateReadingTime } from "@/lib/utils";
+import { propertyUrl } from "@/lib/navigation";
 import ScrollProgress from "@/components/ScrollProgress";
 import ShareButtons from "@/components/ShareButtons";
 import ViewCounter from "@/components/blog/ViewCounter";
@@ -31,14 +32,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         };
     }
 
+    const canonical = propertyUrl("blogs", `/${id}`);
+
     return {
         title: post.seo_title || `${post.title} | Reshin Rajesh`,
         description: post.seo_description || `Read ${post.title} by Reshin Rajesh.`,
+        // The apex serves /blogs/[id] as well, so without this the same post is
+        // reachable on two origins and competes with itself in search.
+        alternates: { canonical },
         openGraph: {
             title: post.seo_title || post.title,
             description: post.seo_description || `Read ${post.title} by Reshin Rajesh.`,
             type: 'article',
-            url: `https://blogs.reshinrajesh.in/${id}`,
+            url: canonical,
             images: [
                 {
                     url: 'https://reshinrajesh.in/opengraph-image.png', // Fallback to main site OG

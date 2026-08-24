@@ -68,7 +68,7 @@ export default async function GalleryPage({
                     <div className="mb-12 overflow-x-auto pb-4">
                         <div className="flex justify-center gap-4 min-w-max px-4">
                             <Link
-                                href="/gallery"
+                                href="/"
                                 className={`px-5 py-2 rounded-full border transition-all flex items-center gap-2 whitespace-nowrap
                                     ${!albumId
                                         ? 'bg-primary text-primary-foreground border-primary'
@@ -97,7 +97,7 @@ export default async function GalleryPage({
                     <div className="text-center py-20 text-muted-foreground">
                         <p>{albumId ? `No images in ${activeAlbum?.title || 'this album'} yet.` : 'No images uploaded yet.'}</p>
                         {albumId && (
-                            <Link href="/gallery" className="text-primary hover:underline mt-2 inline-block">
+                            <Link href="/" className="text-primary hover:underline mt-2 inline-block">
                                 View all photos
                             </Link>
                         )}

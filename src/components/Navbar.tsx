@@ -8,18 +8,11 @@ import { cn } from "@/lib/utils";
 import Logo from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 import VibeToggle from "./VibeToggle";
+import { primaryNav, type PropertyId } from "@/lib/navigation";
 
 
-const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/#about" },
-    { name: "Projects", href: "/#projects" },
-    { name: "Gallery", href: "https://gallery.reshinrajesh.in" },
-    { name: "Blogs", href: "https://blogs.reshinrajesh.in" },
-    { name: "Contact", href: "/#contact" },
-];
-
-export default function Navbar() {
+export default function Navbar({ property = "www" }: { property?: PropertyId }) {
+    const navLinks = primaryNav(property);
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -52,7 +45,7 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => (
                         <motion.div
-                            key={link.name}
+                            key={link.label}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
@@ -60,7 +53,7 @@ export default function Navbar() {
                                 href={link.href}
                                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                             >
-                                {link.name}
+                                {link.label}
                             </Link>
                         </motion.div>
                     ))}
@@ -93,7 +86,7 @@ export default function Navbar() {
                     >
                         {navLinks.map((link) => (
                             <motion.div
-                                key={link.name}
+                                key={link.label}
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <Link
@@ -101,7 +94,7 @@ export default function Navbar() {
                                     onClick={() => setIsOpen(false)}
                                     className="text-lg font-medium text-muted-foreground hover:text-foreground hover:pl-2 transition-all block py-3"
                                 >
-                                    {link.name}
+                                    {link.label}
                                 </Link>
                             </motion.div>
                         ))}
