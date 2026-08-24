@@ -1,6 +1,7 @@
 import ResumeClient from "./ResumeClient";
 import { supabase } from "@/lib/supabase";
 import { getSkills } from "@/app/admin/skills/actions";
+import { getProjects } from "@/lib/projects";
 
 export const metadata = {
     title: "Resume | Reshin Rajesh",
@@ -17,10 +18,10 @@ const FALLBACK_SKILLS = [
 
 export default async function ResumePage() {
     // Parallel fetching
-    const [wRes, eRes, pRes, aRes, sRes, managedSkills] = await Promise.all([
+    const [wRes, eRes, projects, aRes, sRes, managedSkills] = await Promise.all([
         supabase.from('resume_work').select('*').order('order', { ascending: true }),
         supabase.from('resume_education').select('*').order('order', { ascending: true }),
-        supabase.from('projects').select('*').order('order', { ascending: true }),
+        getProjects(),
         supabase.from('site_content').select('value').eq('key', 'about').single(),
         supabase.from('site_content').select('value').eq('key', 'summary').single(),
         getSkills()
@@ -63,7 +64,7 @@ export default async function ResumePage() {
         skills: (managedSkills ?? []).length > 0
             ? (managedSkills as { name: string }[]).map((skill) => skill.name)
             : FALLBACK_SKILLS,
-        projects: (pRes.data || []).map((p: any) => ({
+        projects: projects.map((p) => ({
             title: p.title,
             techStack: p.tags || [],
             description: p.description,

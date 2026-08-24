@@ -1,13 +1,46 @@
 import { supabase } from "@/lib/supabase";
 
 /**
- * Shape of a row in the `projects` table.
+ * A row exactly as Postgres stores it.
  *
- * Everything below `description` is case-study material added by
- * scripts/add-project-case-study-fields.sql. All of it is nullable, and the
- * detail page renders only the parts that are filled in — so a project with
- * nothing but a title and a description still produces a coherent page, and
- * the site keeps working before the migration is run.
+ * The link columns are `demolink` / `repolink`, not the camelCase the rest of
+ * the app uses: they were created as unquoted identifiers, which Postgres folds
+ * to lower case. Reading `row.demoLink` therefore always yielded undefined, so
+ * the demo and source buttons never rendered anywhere on the site.
+ *
+ * Normalise once, here, rather than making every call site remember.
+ */
+interface ProjectRow {
+    id: string;
+    slug: string;
+    title: string;
+    description: string;
+    tags: string[] | null;
+    image: string | null;
+    demolink: string | null;
+    repolink: string | null;
+    order: number | null;
+
+    summary?: string | null;
+    role?: string | null;
+    year?: string | null;
+    status?: string | null;
+    problem?: string | null;
+    approach?: string | null;
+    outcome?: string | null;
+    highlights?: string[] | null;
+    content?: string | null;
+    gallery?: string[] | null;
+}
+
+/**
+ * The app-facing shape.
+ *
+ * Everything below `order` is case-study material added by
+ * scripts/add-project-case-study-fields.sql. All of it is optional, and the
+ * detail page renders only what is filled in — so a project with nothing but a
+ * title and a description still produces a coherent page, and the site keeps
+ * working before the migration is run.
  */
 export interface Project {
     id: string;
@@ -32,6 +65,22 @@ export interface Project {
     gallery?: string[] | null;
 }
 
+/** Column names as they exist in Postgres. Use these when writing rows. */
+export const PROJECT_COLUMNS = {
+    demoLink: "demolink",
+    repoLink: "repolink",
+} as const;
+
+function normalize(row: ProjectRow): Project {
+    const { demolink, repolink, ...rest } = row;
+
+    return {
+        ...rest,
+        demoLink: demolink ?? null,
+        repoLink: repolink ?? null,
+    };
+}
+
 /** True when the row carries enough to render as a case study rather than a card. */
 export function hasCaseStudy(project: Project): boolean {
     return Boolean(
@@ -54,7 +103,7 @@ export async function getProjects(): Promise<Project[]> {
         .select("*")
         .order("order", { ascending: true });
 
-    return (data as Project[] | null) ?? [];
+    return ((data as ProjectRow[] | null) ?? []).map(normalize);
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
@@ -64,7 +113,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         .eq("slug", slug)
         .single();
 
-    return (data as Project | null) ?? null;
+    return data ? normalize(data as ProjectRow) : null;
 }
 
 export interface AdjacentProjects {

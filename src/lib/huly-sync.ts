@@ -164,8 +164,8 @@ export async function performHulySync(options: { mode?: 'push-only' | 'pull-only
                         const labels = [
                             "project", 
                             "synced-from-local",
-                            `demo:${project.demoLink || ''}`,
-                            `repo:${project.repoLink || ''}`,
+                            `demo:${project.demolink || ''}`,
+                            `repo:${project.repolink || ''}`,
                             `image:${project.image || ''}`,
                             `order:${project.order || 0}`,
                             ...tagLabels
@@ -450,8 +450,11 @@ export async function performHulySync(options: { mode?: 'push-only' | 'pull-only
                             title: issue.title,
                             description: issue.description || '',
                             tags,
-                            "demoLink": demoLink,
-                            "repoLink": repoLink,
+                            // Postgres folded these to lower case; writing the
+                            // camelCase names named columns that do not exist, so
+                            // every project upsert from Huly failed silently.
+                            demolink: demoLink,
+                            repolink: repoLink,
                             image,
                             order: orderLabel,
                             slug,

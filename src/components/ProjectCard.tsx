@@ -5,15 +5,11 @@ import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
-export interface Project {
-    title: string;
-    description: string;
-    tags: string[];
-    image?: string;
-    slug?: string;
-    demoLink?: string;
-    repoLink?: string;
-}
+import type { Project } from "@/lib/projects";
+
+// The canonical shape lives with the queries, so the row normalisation and the
+// component that renders it cannot drift apart.
+export type { Project };
 
 export default function ProjectCard({
     title,

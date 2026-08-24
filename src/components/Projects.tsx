@@ -1,11 +1,8 @@
-import { supabase } from "@/lib/supabase";
 import ProjectsClient from "./ProjectsClient";
+import { getProjects } from "@/lib/projects";
 
 export default async function Projects() {
-    const { data: projects } = await supabase
-        .from('projects')
-        .select('*')
-        .order('order', { ascending: true });
+    const projects = await getProjects();
 
-    return <ProjectsClient projects={projects || []} />;
+    return <ProjectsClient projects={projects} />;
 }
