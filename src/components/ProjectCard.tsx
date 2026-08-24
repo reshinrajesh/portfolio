@@ -1,75 +1,116 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
+import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
-interface ProjectCardProps {
+export interface Project {
     title: string;
     description: string;
     tags: string[];
-    image: string;
+    image?: string;
+    slug?: string;
     demoLink?: string;
     repoLink?: string;
-    index: number;
 }
 
-export default function ProjectCard({ title, description, tags, image, demoLink, repoLink, index }: ProjectCardProps) {
+export default function ProjectCard({
+    title,
+    description,
+    tags,
+    image,
+    slug,
+    demoLink,
+    repoLink,
+    index,
+}: Project & { index: number }) {
+    // The /projects/[slug] case studies existed but nothing ever linked to them.
+    const caseStudy = slug ? `/projects/${slug}` : null;
+
     return (
-        <motion.div
+        <motion.article
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
-            className="group rounded-2xl bg-card border border-border overflow-hidden hover:border-primary/50 transition-colors flex flex-col h-full"
+            className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-primary/50"
         >
             <div className="relative h-48 overflow-hidden bg-muted">
-                {/* Placeholder for real image */}
-                <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 group-hover:scale-105 transition-transform duration-300">
-                    {image ? (
-                        <Image
-                            src={image}
-                            alt={title}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                    ) : (
-                        <div className="flex items-center justify-center w-full h-full text-muted-foreground">
-                            No Image
-                        </div>
-                    )}
-                </div>
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                    {demoLink && (
-                        <Link href={demoLink} target="_blank" className="p-3 bg-background rounded-full hover:text-primary transition-colors" title="View Demo">
-                            <ExternalLink size={20} />
-                        </Link>
-                    )}
-                    {repoLink && (
-                        <Link href={repoLink} target="_blank" className="p-3 bg-background rounded-full hover:text-primary transition-colors" title="View Code">
-                            <Github size={20} />
-                        </Link>
-                    )}
-                </div>
+                {image ? (
+                    <Image
+                        src={image}
+                        alt=""
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                ) : (
+                    <div className="flex h-full w-full items-center justify-center text-sm text-muted-foreground">
+                        No image yet
+                    </div>
+                )}
+
+                {(demoLink || repoLink) && (
+                    <div className="absolute inset-0 flex items-center justify-center gap-4 bg-overlay opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                        {demoLink && (
+                            <Link
+                                href={demoLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="rounded-full bg-background p-3 transition-colors hover:text-primary"
+                                aria-label={`Open the live demo of ${title}`}
+                            >
+                                <ExternalLink size={20} aria-hidden="true" />
+                            </Link>
+                        )}
+                        {repoLink && (
+                            <Link
+                                href={repoLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="rounded-full bg-background p-3 transition-colors hover:text-primary"
+                                aria-label={`View the source code for ${title}`}
+                            >
+                                <Github size={20} aria-hidden="true" />
+                            </Link>
+                        )}
+                    </div>
+                )}
             </div>
 
-            <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{title}</h3>
-                <p className="text-muted-foreground mb-4 text-sm leading-relaxed flex-grow">
+            <div className="flex flex-grow flex-col p-6">
+                <h3 className="mb-2 text-xl font-bold transition-colors group-hover:text-primary">
+                    {caseStudy ? (
+                        <Link href={caseStudy} className="hover:underline">
+                            {title}
+                        </Link>
+                    ) : (
+                        title
+                    )}
+                </h3>
+
+                <p className="mb-4 flex-grow text-sm leading-relaxed text-muted-foreground">
                     {description}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mt-auto">
-                    {tags.map((tag) => (
-                        <span key={tag} className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">
+                <div className="mt-auto flex flex-wrap items-center gap-2">
+                    {tags?.map((tag) => (
+                        <span
+                            key={tag}
+                            className="rounded-full bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"
+                        >
                             {tag}
                         </span>
                     ))}
+                    {caseStudy && (
+                        <span className="ml-auto flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors group-hover:text-primary">
+                            Read more
+                            <ArrowUpRight size={14} aria-hidden="true" />
+                        </span>
+                    )}
                 </div>
             </div>
-        </motion.div>
+        </motion.article>
     );
 }

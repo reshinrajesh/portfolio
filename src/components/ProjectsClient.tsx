@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ProjectCard from "./ProjectCard";
+import ProjectCard, { type Project } from "./ProjectCard";
 
-export default function ProjectsClient({ projects }: { projects: any[] }) {
+export default function ProjectsClient({ projects }: { projects: Project[] }) {
     return (
         <section id="projects" className="py-16 md:py-24">
             <div className="container mx-auto px-6">
@@ -12,7 +12,7 @@ export default function ProjectsClient({ projects }: { projects: any[] }) {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-3xl md:text-5xl font-bold mb-4"
+                        className="text-title mb-4"
                     >
                         Featured Projects
                     </motion.h2>
@@ -23,13 +23,13 @@ export default function ProjectsClient({ projects }: { projects: any[] }) {
                         transition={{ delay: 0.1 }}
                         className="text-muted-foreground max-w-2xl"
                     >
-                        A selection of my recent work and academic projects.
+                        Things I have built, and what I learned building them.
                     </motion.p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6 md:gap-8">
                     {projects.map((project, index) => (
-                        <ProjectCard key={index} {...project} index={index} />
+                        <ProjectCard key={project.slug ?? project.title} {...project} index={index} />
                     ))}
                 </div>
             </div>

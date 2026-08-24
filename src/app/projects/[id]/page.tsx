@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -36,16 +37,26 @@ export default async function ProjectDetail({
                 Back to Projects
             </Link>
             <div className="max-w-4xl mx-auto">
-                <h1 className="text-4xl font-bold mb-4">{project.title}</h1>
+                <h1 className="text-title mb-4">{project.title}</h1>
                 <div className="mb-6">
-                    <div className="relative w-full h-64 md:h-96 rounded-xl overflow-hidden mb-6">
-                        {/* In a real app, use Next.js Image component here with project.image */}
-                        <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground">
-                            Project Image Placeholder
-                        </div>
+                    <div className="relative mb-6 h-64 w-full overflow-hidden rounded-xl bg-muted md:h-96">
+                        {project.image ? (
+                            <Image
+                                src={project.image}
+                                alt=""
+                                fill
+                                priority
+                                className="object-cover"
+                                sizes="(max-width: 896px) 100vw, 896px"
+                            />
+                        ) : (
+                            <div className="flex h-full w-full items-center justify-center text-sm text-muted-foreground">
+                                No image yet
+                            </div>
+                        )}
                     </div>
                 </div>
-                <p className="text-muted-foreground mb-6">
+                <p className="text-lead mb-6 text-muted-foreground">
                     {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-8">

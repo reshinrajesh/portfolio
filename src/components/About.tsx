@@ -15,11 +15,11 @@ export default function About() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-3xl md:text-5xl font-bold mb-6">
+                        <h2 className="text-title mb-6">
                             About Me
                         </h2>
-                        <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
-                            I am a Computer Science graduate (`B.Tech`) from <strong>Srinivas University</strong> with a Diploma in Cloud Computing. My journey includes hands-on experience as a Full Stack Web Developer Intern, where I honed my skills in responsive design and database integration.
+                        <p className="text-lead mb-6 text-muted-foreground">
+                            I am a Computer Science graduate (B.Tech) from <strong>Srinivas University</strong>, with a Diploma in Cloud Computing. I cut my teeth as a Full Stack Web Developer intern, building responsive interfaces and the database layer behind them.
                         </p>
 
                         <motion.div
@@ -28,7 +28,7 @@ export default function About() {
                             viewport={{ once: true }}
                             transition={{ delay: 0.2 }}
                         >
-                            <h3 className="text-2xl font-semibold mb-12 text-center">My Journey</h3>
+                            <h3 className="text-heading mb-12 text-center">My Journey</h3>
                             <Timeline />
                         </motion.div>
                     </motion.div>

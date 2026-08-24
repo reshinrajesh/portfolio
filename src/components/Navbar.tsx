@@ -24,13 +24,13 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => {
-            const isScrolled = window.scrollY > 20;
-            if (isScrolled !== scrolled) {
-                setScrolled(isScrolled);
-            }
-        };
-        window.addEventListener("scroll", handleScroll);
+        // Reads window directly rather than closing over `scrolled`, which with
+        // an empty dep array stayed frozen at its first-render value forever.
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+
+        handleScroll();
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
@@ -39,7 +39,7 @@ export default function Navbar() {
             className={cn(
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-300 animate-slide-down",
                 scrolled
-                    ? "bg-background/80 backdrop-blur-md border-b border-white/10 py-4"
+                    ? "bg-background/80 backdrop-blur-md border-b border-hairline py-4"
                     : "bg-transparent py-6"
             )}
         >
@@ -89,7 +89,7 @@ export default function Navbar() {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-white/10 p-6 md:hidden flex flex-col gap-4 shadow-2xl"
+                        className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-hairline p-6 md:hidden flex flex-col gap-4 shadow-2xl"
                     >
                         {navLinks.map((link) => (
                             <motion.div
@@ -106,7 +106,7 @@ export default function Navbar() {
                             </motion.div>
                         ))}
 
-                        <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
+                        <div className="mt-4 flex items-center justify-between border-t border-hairline pt-4">
                             <span className="text-muted-foreground">Settings</span>
                             <div className="flex items-center gap-2">
                                 <VibeToggle />

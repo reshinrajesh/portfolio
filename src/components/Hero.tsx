@@ -6,86 +6,66 @@ import Link from "next/link";
 
 export default function Hero() {
     return (
-        <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-            {/* Background Elements */}
-            <div className="absolute inset-0 z-0">
+        <section className="relative flex min-h-screen items-center overflow-hidden pt-20">
+            <div className="absolute inset-0 z-0" aria-hidden="true">
                 <motion.div
-                    animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                    className="absolute top-20 right-10 w-96 h-96 bg-primary/20 rounded-full blur-[128px]"
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-20 right-10 h-96 w-96 rounded-full bg-primary/20 blur-[128px]"
                 />
                 <motion.div
-                    animate={{
-                        scale: [1, 1.1, 1],
-                        opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{
-                        duration: 6,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 1
-                    }}
-                    className="absolute bottom-20 left-10 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px]"
+                    animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                    className="absolute bottom-20 left-10 h-64 w-64 rounded-full bg-accent-alt/20 blur-[100px]"
                 />
             </div>
 
-            <div className="container mx-auto px-6 relative z-10">
+            <div className="relative z-10 container mx-auto px-6">
                 <div className="max-w-3xl">
+                    <p className="animate-fade-up text-eyebrow mb-6 uppercase text-muted-foreground">
+                        Full Stack Developer &middot; Kerala, India
+                    </p>
 
-
-                    <h1
-                        className="text-4xl md:text-7xl font-bold tracking-tight mb-6 leading-tight animate-fade-up delay-100"
-                    >
-                        Hi, I'm <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">
+                    <h1 className="animate-fade-up delay-100 text-display mb-6">
+                        Hi, I&apos;m{" "}
+                        <span className="bg-gradient-to-r from-primary to-accent-alt bg-clip-text text-transparent">
                             Reshin Rajesh.
                         </span>
                     </h1>
 
-                    <p
-                        className="text-xl text-muted-foreground mb-8 text-black dark:text-gray-300 animate-fade-up delay-200"
-                    >
-                        Crafting code during the day, chasing concerts and sunsets by night.
-                        <br className="hidden md:block" />
-                        A Full Stack Developer living life 50% in the terminal and 50% on the road.
+                    <p className="animate-fade-up delay-200 text-lead mb-8 max-w-xl text-muted-foreground">
+                        I build for the web by day and chase concerts and sunsets by night.
+                        Half my life happens in a terminal, the other half on the road.
                     </p>
 
-                    <div
-                        className="flex flex-wrap gap-4 animate-fade-up delay-300"
-                    >
+                    <div className="animate-fade-up delay-300 flex flex-wrap gap-4">
                         <Link
                             href="#projects"
-                            className="bg-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+                            className="flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-primary-foreground transition-opacity hover:opacity-90"
                         >
-                            View Projects <ArrowRight size={18} />
+                            View Projects <ArrowRight size={18} aria-hidden="true" />
                         </Link>
                         <Link
                             href="https://blogs.reshinrajesh.in"
                             target="_blank"
-                            className="bg-secondary text-secondary-foreground border border-border px-8 py-3 rounded-full font-medium hover:bg-secondary/80 transition-colors flex items-center gap-2"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 rounded-full border border-border bg-secondary px-8 py-3 font-medium text-secondary-foreground transition-colors hover:bg-secondary/80"
                         >
-                            Visit My Blogs <ExternalLink size={18} />
+                            Read the Blog <ExternalLink size={18} aria-hidden="true" />
                         </Link>
                     </div>
                 </div>
             </div>
 
-            {/* Scroll Indicator */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+                className="absolute bottom-10 left-1/2 -translate-x-1/2"
+                aria-hidden="true"
             >
-                <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-primary to-transparent" />
+                <div className="h-16 w-px bg-gradient-to-b from-transparent via-primary to-transparent" />
             </motion.div>
-        </section >
+        </section>
     );
 }

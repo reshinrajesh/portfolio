@@ -6,8 +6,8 @@ import Events from "@/components/Events";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 
+// Published posts change rarely; ISR keeps the list cheap to serve.
 export const revalidate = 60;
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Blogs | Reshin Rajesh",
@@ -34,10 +34,10 @@ export default async function BlogsPage() {
 
             <div className="container mx-auto px-6 py-32">
                 <header className="mb-16 text-center max-w-2xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 pb-2">
+                    <h1 className="text-title mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text pb-2 text-transparent">
                         Latest Writings
                     </h1>
-                    <p className="text-lg text-muted-foreground">
+                    <p className="text-lead text-muted-foreground">
                         99% Life Stories, 1% Tech Content. Here's what I've been experiencing.
                     </p>
                 </header>

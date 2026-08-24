@@ -31,9 +31,44 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
 
+  /* Semantic tokens the components used to fake with palette literals.
+     Every theme below defines all of them, so cyberpunk and coffee finally
+     render as themselves instead of as dark mode with a tint. */
+  --color-accent-alt: var(--accent-alt);
+  --color-hairline: var(--hairline);
+  --color-overlay: var(--overlay);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-on-media: var(--on-media);
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+  /* Fluid type scale. Sizes were previously ad hoc per component
+     (text-4xl md:text-7xl here, text-3xl md:text-5xl there). */
+  --text-display: clamp(2.75rem, 1.5rem + 5.5vw, 5rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.035em;
+  --text-display--font-weight: 700;
+
+  --text-title: clamp(2rem, 1.25rem + 3vw, 3.25rem);
+  --text-title--line-height: 1.08;
+  --text-title--letter-spacing: -0.025em;
+  --text-title--font-weight: 700;
+
+  --text-heading: clamp(1.5rem, 1.15rem + 1.4vw, 2rem);
+  --text-heading--line-height: 1.2;
+  --text-heading--letter-spacing: -0.015em;
+  --text-heading--font-weight: 600;
+
+  --text-lead: clamp(1.125rem, 1.05rem + 0.4vw, 1.3rem);
+  --text-lead--line-height: 1.6;
+
+  --text-eyebrow: 0.6875rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.18em;
+  --text-eyebrow--font-weight: 800;
 }
 
 :root {
@@ -68,6 +103,13 @@
   --ring: #2563eb;
 
   --radius: 0.5rem;
+
+  --accent-alt: #7c3aed;
+  --hairline: rgb(10 10 10 / 0.08);
+  --overlay: rgb(255 255 255 / 0.82);
+  --success: #059669;
+  --warning: #d97706;
+  --on-media: #ffffff;
 }
 
 .dark {
@@ -100,6 +142,13 @@
   --border: #262626;
   --input: #262626;
   --ring: #3b82f6;
+
+  --accent-alt: #a78bfa;
+  --hairline: rgb(255 255 255 / 0.10);
+  --overlay: rgb(10 10 10 / 0.78);
+  --success: #34d399;
+  --warning: #fbbf24;
+  --on-media: #ffffff;
 }
 
 [data-theme="cyberpunk"],
@@ -133,6 +182,13 @@
   --border: #333333;
   --input: #333333;
   --ring: #ff00ff;
+
+  --accent-alt: #00ffff;
+  --hairline: rgb(255 0 255 / 0.22);
+  --overlay: rgb(0 0 0 / 0.85);
+  --success: #00ff9f;
+  --warning: #ffe600;
+  --on-media: #fff0f5;
 }
 
 [data-theme="coffee"],
@@ -167,10 +223,43 @@
   --border: #5c4d3e;
   --input: #5c4d3e;
   --ring: #d4a373;
+
+  --accent-alt: #b5835a;
+  --hairline: rgb(230 218 206 / 0.14);
+  --overlay: rgb(44 36 27 / 0.85);
+  --success: #8fae74;
+  --warning: #e0a458;
+  --on-media: #f6efe7;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* The site leans on motion heavily (blob drifts, scroll reveals, pulses).
+   Honour the OS-level request to stop it. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-fade-up,
+  .animate-fade-in {
+    opacity: 1;
+  }
+
+  .animate-slide-down {
+    transform: none;
+  }
 }
 
 body {
