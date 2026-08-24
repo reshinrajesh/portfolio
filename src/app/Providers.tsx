@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
+import FaroInitializer from "@/components/FaroInitializer";
 import { useEffect, useState } from "react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -21,6 +22,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                     disableTransitionOnChange
                     themes={["light", "dark", "cyberpunk", "coffee"]}
                 >
+                    <FaroInitializer />
                     {children}
                 </ThemeProvider>
             </SessionProvider>
