@@ -26,28 +26,28 @@ export default function BrowserPing() {
     };
 
     return (
-        <div className="p-6 rounded-2xl border border-white/5 bg-zinc-900/40 backdrop-blur-md">
+        <div className="p-6 rounded-2xl border border-console-fg/5 bg-console-panel/40 backdrop-blur-md">
             <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                <div className="p-2 rounded-lg bg-console-info/10 text-console-info">
                     <Wifi size={20} />
                 </div>
                 <div>
                     <h3 className="font-bold text-sm">Browser Ping</h3>
-                    <p className="text-xs text-zinc-500">Check connectivity from your device</p>
+                    <p className="text-xs text-console-dim">Check connectivity from your device</p>
                 </div>
             </div>
 
-            <div className="flex items-center justify-between bg-black/20 rounded-xl p-3 border border-white/5">
-                <div className="text-sm font-mono text-zinc-300">
+            <div className="flex items-center justify-between bg-console/20 rounded-xl p-3 border border-console-fg/5">
+                <div className="text-sm font-mono text-console-muted">
                     {status === "idle" && "Ready to check"}
                     {status === "pinging" && "Pinging..."}
-                    {status === "success" && <span className="text-green-400">{latency}ms</span>}
-                    {status === "error" && <span className="text-red-400">Connection Failed</span>}
+                    {status === "success" && <span className="text-console-ok">{latency}ms</span>}
+                    {status === "error" && <span className="text-console-down">Connection Failed</span>}
                 </div>
                 <button
                     onClick={ping}
                     disabled={status === "pinging"}
-                    className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-bold transition-colors disabled:opacity-50"
+                    className="px-3 py-1.5 rounded-lg bg-console-fg/5 hover:bg-console-fg/10 text-xs font-bold transition-colors disabled:opacity-50"
                 >
                     {status === "pinging" ? "..." : "Check Now"}
                 </button>

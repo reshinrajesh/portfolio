@@ -55,23 +55,23 @@ export default function DeploymentStream() {
 
     const getIcon = (type: DeploymentEvent['type']) => {
         switch (type) {
-            case 'deploy': return <Rocket size={14} className="text-purple-400" />;
-            case 'pr': return <GitPullRequest size={14} className="text-blue-400" />;
-            case 'commit': return <GitCommit size={14} className="text-zinc-400" />;
+            case 'deploy': return <Rocket size={14} className="text-console-accent" />;
+            case 'pr': return <GitPullRequest size={14} className="text-console-info" />;
+            case 'commit': return <GitCommit size={14} className="text-console-muted" />;
         }
     };
 
     return (
-        <div className="h-full bg-zinc-900/30 border border-white/5 rounded-3xl p-4 flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/5">
-                <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+        <div className="h-full bg-console-panel/30 border border-console-fg/5 rounded-3xl p-4 flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between mb-4 pb-2 border-b border-console-fg/5">
+                <h3 className="text-xs font-bold text-console-dim uppercase tracking-widest flex items-center gap-2">
                     <Rocket size={14} />
                     Deployment Stream
                 </h3>
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-console-ok/10 text-console-ok border border-console-ok/20 text-[10px] font-bold">
                     <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-console-ok opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-console-ok"></span>
                     </span>
                     LIVE
                 </div>
@@ -84,32 +84,32 @@ export default function DeploymentStream() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         layout
-                        className="p-3 bg-black/40 border border-white/5 rounded-xl group hover:bg-white/5 transition-colors"
+                        className="p-3 bg-console/40 border border-console-fg/5 rounded-xl group hover:bg-console-fg/5 transition-colors"
                     >
                         <div className="flex items-start gap-3">
-                            <div className="mt-0.5 p-1.5 bg-white/5 rounded-lg border border-white/5 group-hover:border-white/20 transition-colors">
+                            <div className="mt-0.5 p-1.5 bg-console-fg/5 rounded-lg border border-console-fg/5 group-hover:border-console-fg/20 transition-colors">
                                 {getIcon(event.type)}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between mb-0.5">
-                                    <span className={`text-[10px] font-black uppercase tracking-wider ${event.type === 'deploy' ? 'text-purple-400' : 'text-zinc-500'
+                                    <span className={`text-[10px] font-black uppercase tracking-wider ${event.type === 'deploy' ? 'text-console-accent' : 'text-console-dim'
                                         }`}>
                                         {event.type}
                                     </span>
-                                    <span className="text-[10px] text-zinc-600 font-mono">
+                                    <span className="text-[10px] text-console-dim font-mono">
                                         {event.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
-                                <p className="text-xs text-zinc-300 font-medium truncate leading-relaxed">
+                                <p className="text-xs text-console-muted font-medium truncate leading-relaxed">
                                     {event.message}
                                 </p>
                                 <div className="flex items-center gap-2 mt-1.5">
-                                    <div className="w-4 h-4 rounded-full bg-indigo-500/20 border border-indigo-500/50 flex items-center justify-center text-[8px] text-indigo-300 font-bold">
+                                    <div className="w-4 h-4 rounded-full bg-console-accent/20 border border-console-accent/50 flex items-center justify-center text-[8px] text-console-accent font-bold">
                                         RR
                                     </div>
-                                    <span className="text-[10px] text-zinc-500">{event.author}</span>
+                                    <span className="text-[10px] text-console-dim">{event.author}</span>
                                     {event.status === 'success' && (
-                                        <CheckCircle size={10} className="text-green-500 ml-auto opacity-50" />
+                                        <CheckCircle size={10} className="text-console-ok ml-auto opacity-50" />
                                     )}
                                 </div>
                             </div>

@@ -44,19 +44,19 @@ export default function UptimeChart({ days = 90, uptime = "99.9%" }: UptimeChart
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: i * 0.005, duration: 0.2 }}
                                 className={`w-3 h-3 rounded-[2px] transition-all duration-200 cursor-help ${isHovered ? "scale-125 z-10" : "scale-100 z-0"
-                                    } ${status === 1 ? "bg-emerald-500/20 hover:bg-emerald-400" :
-                                        status === 2 ? "bg-yellow-500 hover:bg-yellow-400" :
-                                            "bg-red-500 hover:bg-red-400"
+                                    } ${status === 1 ? "bg-console-ok/20 hover:bg-console-ok" :
+                                        status === 2 ? "bg-console-warn hover:bg-console-warn" :
+                                            "bg-console-down hover:bg-console-down"
                                     } ${isHovered && status === 1 ? "shadow-[0_0_10px_rgba(52,211,153,0.5)]" : ""}`}
                             />
                             {/* Tooltip */}
                             {isHovered && (
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-zinc-800 text-xs text-white rounded opacity-100 transition-opacity z-50 font-mono border border-white/10 shadow-xl pointer-events-none">
-                                    <span className={status === 1 ? "text-emerald-400" : status === 2 ? "text-yellow-400" : "text-red-400"}>
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-console-raise text-xs text-console-fg rounded opacity-100 transition-opacity z-50 font-mono border border-console-fg/10 shadow-xl pointer-events-none">
+                                    <span className={status === 1 ? "text-console-ok" : status === 2 ? "text-console-warn" : "text-console-down"}>
                                         {status === 1 ? "Operational" : status === 2 ? "Degraded" : "Outage"}
                                     </span>
-                                    <span className="mx-1 text-zinc-500">|</span>
-                                    <span className="text-zinc-400">
+                                    <span className="mx-1 text-console-dim">|</span>
+                                    <span className="text-console-muted">
                                         {date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                     </span>
                                     {/* Arrow */}
@@ -68,12 +68,12 @@ export default function UptimeChart({ days = 90, uptime = "99.9%" }: UptimeChart
                 })}
             </div>
 
-            <div className="flex justify-between items-center text-[10px] text-zinc-500 font-mono mt-3 uppercase tracking-wider">
+            <div className="flex justify-between items-center text-[10px] text-console-dim font-mono mt-3 uppercase tracking-wider">
                 <span>{days} days ago</span>
                 <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-[2px] bg-emerald-500/20" /> Operational</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-[2px] bg-yellow-500" /> Degraded</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-[2px] bg-red-500" /> Outage</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-[2px] bg-console-ok/20" /> Operational</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-[2px] bg-console-warn" /> Degraded</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-[2px] bg-console-down" /> Outage</span>
                 </div>
                 <span>Today</span>
             </div>

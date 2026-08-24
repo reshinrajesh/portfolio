@@ -6,8 +6,10 @@ import Events from "@/components/Events";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 
-// Published posts change rarely; ISR keeps the list cheap to serve.
-export const revalidate = 60;
+// This page reads the request host to decide whether it is being served from
+// the blogs. subdomain, so it cannot be prerendered. It previously declared
+// `revalidate = 60` alongside this, which force-dynamic silently voided.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Blogs | Reshin Rajesh",

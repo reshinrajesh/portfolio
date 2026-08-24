@@ -69,6 +69,22 @@
   --text-eyebrow--line-height: 1;
   --text-eyebrow--letter-spacing: 0.18em;
   --text-eyebrow--font-weight: 800;
+
+  /* Console palette. The status and NOC surfaces are deliberately always dark
+     - they pin bg-black at the root regardless of theme, the way a real wall
+     display would. These tokens are therefore fixed rather than themed: the
+     point is that coffee theme must NOT turn the NOC beige. */
+  --color-console: var(--console);
+  --color-console-panel: var(--console-panel);
+  --color-console-raise: var(--console-raise);
+  --color-console-fg: var(--console-fg);
+  --color-console-muted: var(--console-muted);
+  --color-console-dim: var(--console-dim);
+  --color-console-ok: var(--console-ok);
+  --color-console-warn: var(--console-warn);
+  --color-console-down: var(--console-down);
+  --color-console-info: var(--console-info);
+  --color-console-accent: var(--console-accent);
 }
 
 :root {
@@ -230,6 +246,21 @@
   --success: #8fae74;
   --warning: #e0a458;
   --on-media: #f6efe7;
+}
+
+/* Console surface: intentionally theme-independent (see @theme note). */
+:root {
+  --console: #000000;
+  --console-panel: #18181b;
+  --console-raise: #27272a;
+  --console-fg: #ffffff;
+  --console-muted: #a1a1aa;
+  --console-dim: #71717a;
+  --console-ok: #22c55e;
+  --console-warn: #eab308;
+  --console-down: #ef4444;
+  --console-info: #3b82f6;
+  --console-accent: #a78bfa;
 }
 
 html {
