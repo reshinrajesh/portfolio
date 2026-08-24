@@ -50,7 +50,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
     };
 
     return (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 md:bottom-auto md:top-1/2 md:-translate-y-1/2 z-40 bg-background/80 backdrop-blur-md border border-white/10 p-2 rounded-full flex md:flex-col gap-2 shadow-xl">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 md:bottom-auto md:top-1/2 md:-translate-y-1/2 z-40 bg-background/80 backdrop-blur-md border border-hairline p-2 rounded-full flex md:flex-col gap-2 shadow-xl">
             <ShareButton
                 icon={Twitter}
                 label="Share on X"
@@ -61,20 +61,20 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
                 icon={Linkedin}
                 label="Share on LinkedIn"
                 onClick={() => handleShare("linkedin")}
-                color="hover:text-blue-600"
+                color="hover:text-primary"
             />
             <ShareButton
                 icon={MessageCircle}
                 label="Share on WhatsApp"
                 onClick={() => handleShare("whatsapp")}
-                color="hover:text-green-500"
+                color="hover:text-success"
             />
             <div className="w-[1px] md:w-full h-full md:h-[1px] bg-border mx-1 md:my-1" />
             <ShareButton
                 icon={Link2}
                 label="Copy Link"
                 onClick={copyToClipboard}
-                color={copied ? "text-green-500" : "hover:text-primary"}
+                color={copied ? "text-success" : "hover:text-primary"}
             />
         </div>
     );

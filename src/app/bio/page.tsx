@@ -12,7 +12,7 @@ export default async function BioPage() {
         <div className="w-full max-w-md mx-auto flex flex-col items-center gap-8 px-6 py-12">
             {/* Header */}
             <div className="text-center">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-purple-600 mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-primary/20">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent-alt mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-primary-foreground shadow-lg shadow-primary/20">
                     RR
                 </div>
                 <h1 className="text-2xl font-bold mb-2">Reshin Rajesh</h1>

@@ -68,17 +68,17 @@ export default function Timeline() {
 
                 // Determine icon and color based on type
                 let icon = <Briefcase size={16} />;
-                let colorClass = "bg-blue-500/20 text-blue-400";
+                let colorClass = "bg-cat-journey/20 text-cat-journey";
 
                 if (item.type === 'education') {
                     icon = <GraduationCap size={16} />;
-                    colorClass = "bg-green-500/20 text-green-400";
+                    colorClass = "bg-cat-launch/20 text-cat-launch";
                 } else if (item.type === 'travel') {
                     icon = <Plane size={16} />;
-                    colorClass = "bg-orange-500/20 text-orange-400";
+                    colorClass = "bg-cat-travel/20 text-cat-travel";
                 } else if (item.type === 'concert') {
                     icon = <Music size={16} />;
-                    colorClass = "bg-pink-500/20 text-pink-400";
+                    colorClass = "bg-cat-music/20 text-cat-music";
                 }
 
                 return (
@@ -96,18 +96,18 @@ export default function Timeline() {
 
                         {/* Center Dot */}
                         <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 w-10 h-10 rounded-full bg-background border-4 border-primary/20 flex items-center justify-center z-10 shadow-[0_0_20px_rgba(168,85,247,0.3)]">
-                            <div className={`w-3 h-3 rounded-full animate-pulse ${item.type === 'travel' || item.type === 'concert' ? 'bg-orange-500' : 'bg-primary'
+                            <div className={`w-3 h-3 rounded-full animate-pulse ${item.type === 'travel' || item.type === 'concert' ? 'bg-cat-travel' : 'bg-primary'
                                 }`} />
                         </div>
 
                         {/* Content Card */}
                         <div className="w-[calc(100%-60px)] md:w-5/12 pl-4 md:pl-0 ml-12 md:ml-0">
                             <div className={`relative p-6 border rounded-2xl backdrop-blur-sm transition-colors group ${item.type === 'travel' || item.type === 'concert'
-                                ? 'bg-orange-500/5 border-orange-500/10 hover:border-orange-500/30'
+                                ? 'bg-cat-travel/5 border-cat-travel/10 hover:border-cat-travel/30'
                                 : 'bg-secondary/10 border-secondary/20 hover:border-primary/30'
                                 }`}>
                                 {/* Icon Badge */}
-                                <div className={`absolute -top-4 ${isEven ? "md:-right-4 left-4 md:left-auto" : "md:-left-4 left-4"} w-8 h-8 rounded-lg ${colorClass} flex items-center justify-center border border-white/5`}>
+                                <div className={`absolute -top-4 ${isEven ? "md:-right-4 left-4 md:left-auto" : "md:-left-4 left-4"} w-8 h-8 rounded-lg ${colorClass} flex items-center justify-center border border-foreground/5`}>
                                     {icon}
                                 </div>
 

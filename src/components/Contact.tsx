@@ -78,7 +78,7 @@ export default function Contact() {
                         >
                             {status === "success" ? (
                                 <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12">
-                                    <div className="w-16 h-16 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center">
+                                    <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center">
                                         <CheckCircle2 size={32} />
                                     </div>
                                     <h3 className="text-2xl font-bold">Message Sent!</h3>

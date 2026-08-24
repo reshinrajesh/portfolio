@@ -51,11 +51,11 @@ export default async function BlogsPage() {
                         ))}
                     </div>
                 ) : (
-                    <div className="text-center py-20 bg-gradient-to-br from-purple-500/5 to-pink-500/5 rounded-3xl border border-dashed border-purple-500/20">
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/10 flex items-center justify-center">
+                    <div className="text-center py-20 bg-gradient-to-br from-cat-story/5 to-cat-music/5 rounded-3xl border border-dashed border-cat-story/20">
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-cat-story/10 flex items-center justify-center">
                             <span className="text-2xl">✍️</span>
                         </div>
-                        <h3 className="text-2xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+                        <h3 className="text-2xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-cat-story to-cat-music">
                             Coming Soon
                         </h3>
                         <p className="text-muted-foreground max-w-sm mx-auto">

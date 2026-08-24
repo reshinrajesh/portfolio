@@ -111,7 +111,7 @@ export default function CommandPalette() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setOpen(false)}
-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            className="absolute inset-0 bg-overlay backdrop-blur-sm"
                         />
 
                         <motion.div

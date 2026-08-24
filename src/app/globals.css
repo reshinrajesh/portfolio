@@ -85,6 +85,31 @@
   --color-console-down: var(--console-down);
   --color-console-info: var(--console-info);
   --color-console-accent: var(--console-accent);
+
+  /* Paper palette. The resume is a print document: it must stay black-on-white
+     whatever theme the site is in, or it prints wrong. Fixed, like the console. */
+  --color-paper: var(--paper);
+  --color-paper-ink: var(--paper-ink);
+  --color-paper-muted: var(--paper-muted);
+  --color-paper-dim: var(--paper-dim);
+  --color-paper-line: var(--paper-line);
+  --color-paper-wash: var(--paper-wash);
+  --color-paper-chip: var(--paper-chip);
+  --color-paper-chip-strong: var(--paper-chip-strong);
+  --color-paper-link: var(--paper-link);
+
+  /* Categorical accents. Timeline entries, event types and travel markers were
+     colour-coded with raw palette values, so a coffee-themed page still showed
+     hot pink. These are themed; the names say what they mean. */
+  --color-cat-journey: var(--cat-journey);
+  --color-cat-launch: var(--cat-launch);
+  --color-cat-travel: var(--cat-travel);
+  --color-cat-music: var(--cat-music);
+  --color-cat-story: var(--cat-story);
+
+  /* Fixed dark scrim for text laid over photography, where legibility depends
+     on the image beneath rather than on the theme. */
+  --color-scrim: var(--scrim);
 }
 
 :root {
@@ -121,6 +146,11 @@
   --radius: 0.5rem;
 
   --accent-alt: #7c3aed;
+  --cat-journey: #2563eb;
+  --cat-launch: #059669;
+  --cat-travel: #ea580c;
+  --cat-music: #db2777;
+  --cat-story: #7c3aed;
   --hairline: rgb(10 10 10 / 0.08);
   --overlay: rgb(255 255 255 / 0.82);
   --success: #059669;
@@ -160,6 +190,11 @@
   --ring: #3b82f6;
 
   --accent-alt: #a78bfa;
+  --cat-journey: #60a5fa;
+  --cat-launch: #34d399;
+  --cat-travel: #fb923c;
+  --cat-music: #f472b6;
+  --cat-story: #a78bfa;
   --hairline: rgb(255 255 255 / 0.10);
   --overlay: rgb(10 10 10 / 0.78);
   --success: #34d399;
@@ -200,6 +235,11 @@
   --ring: #ff00ff;
 
   --accent-alt: #00ffff;
+  --cat-journey: #00e5ff;
+  --cat-launch: #00ff9f;
+  --cat-travel: #ff8a00;
+  --cat-music: #ff00ff;
+  --cat-story: #b14aff;
   --hairline: rgb(255 0 255 / 0.22);
   --overlay: rgb(0 0 0 / 0.85);
   --success: #00ff9f;
@@ -241,6 +281,11 @@
   --ring: #d4a373;
 
   --accent-alt: #b5835a;
+  --cat-journey: #9bb0b8;
+  --cat-launch: #8fae74;
+  --cat-travel: #e0a458;
+  --cat-music: #cf9a8f;
+  --cat-story: #b3a1c7;
   --hairline: rgb(230 218 206 / 0.14);
   --overlay: rgb(44 36 27 / 0.85);
   --success: #8fae74;
@@ -261,6 +306,18 @@
   --console-down: #ef4444;
   --console-info: #3b82f6;
   --console-accent: #a78bfa;
+
+  --paper: #ffffff;
+  --paper-ink: #0a0a0a;
+  --paper-muted: #4b5563;
+  --paper-dim: #6b7280;
+  --paper-line: #0a0a0a;
+  --paper-wash: #f9fafb;
+  --paper-chip: #f3f4f6;
+  --paper-chip-strong: #e5e7eb;
+  --paper-link: #2563eb;
+
+  --scrim: #000000;
 }
 
 html {

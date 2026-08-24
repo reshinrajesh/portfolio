@@ -40,17 +40,17 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
                 initial="hidden"
                 animate="visible"
                 variants={containerVariants}
-                className="mx-auto w-full max-w-2xl bg-white text-black print:text-black space-y-8 print:space-y-4"
+                className="mx-auto w-full max-w-2xl bg-paper text-paper-ink print:text-paper-ink space-y-8 print:space-y-4"
             >
 
                 {/* Header */}
                 <motion.div variants={itemVariants} className="flex items-center justify-between">
                     <div className="space-y-2">
                         <h1 className="text-3xl font-bold">{RESUME_DATA.name}</h1>
-                        <p className="text-pretty max-w-md text-sm text-gray-600 font-mono">
+                        <p className="text-pretty max-w-md text-sm text-paper-muted font-mono">
                             {RESUME_DATA.summary}
                         </p>
-                        <div className="flex items-center gap-x-3 text-sm text-gray-500 font-mono print:text-[10px]">
+                        <div className="flex items-center gap-x-3 text-sm text-paper-dim font-mono print:text-[10px]">
                             <p className="flex items-center gap-x-1">
                                 <Globe className="h-3 w-3" />
                                 {RESUME_DATA.location}
@@ -62,7 +62,7 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
                         </div>
                     </div>
                     <div className="hidden sm:block print:hidden">
-                        <div className="h-24 w-24 rounded-xl bg-gray-100 border overflow-hidden">
+                        <div className="h-24 w-24 rounded-xl bg-paper-chip border overflow-hidden">
                             <Image src={RESUME_DATA.avatarUrl} alt={RESUME_DATA.name} width={96} height={96} className="object-cover w-full h-full" />
                         </div>
                     </div>
@@ -70,15 +70,15 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
 
                 {/* About */}
                 <motion.section variants={itemVariants}>
-                    <h2 className="text-xl font-bold mb-2 border-b border-black/20">About</h2>
-                    <p className="text-sm text-gray-700 text-pretty">
+                    <h2 className="text-xl font-bold mb-2 border-b border-paper-line/20">About</h2>
+                    <p className="text-sm text-paper-muted text-pretty">
                         {RESUME_DATA.about}
                     </p>
                 </motion.section>
 
                 {/* Work Experience */}
                 <motion.section variants={itemVariants}>
-                    <h2 className="text-xl font-bold mb-4 border-b border-black/20">Work Experience</h2>
+                    <h2 className="text-xl font-bold mb-4 border-b border-paper-line/20">Work Experience</h2>
                     <div className="space-y-6 print:space-y-4">
                     {RESUME_DATA.work.map((work: any) => {
                             // Simple heuristic: does description or title contain the skill?
@@ -91,15 +91,15 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
                                 >
                                     <div className="flex items-center justify-between">
                                         <h3 className="font-semibold">{work.company}</h3>
-                                        <span className="text-sm text-gray-500 tabular-nums">
+                                        <span className="text-sm text-paper-dim tabular-nums">
                                             {work.start} - {work.end}
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between text-sm mb-1">
                                         <p className="">{work.title}</p>
-                                        <span className="text-xs text-black/50 print:hidden">{work.badges.join(", ")}</span>
+                                        <span className="text-xs text-paper-ink/50 print:hidden">{work.badges.join(", ")}</span>
                                     </div>
-                                    <p className="text-xs text-gray-600 text-pretty">
+                                    <p className="text-xs text-paper-muted text-pretty">
                                         {work.description}
                                     </p>
                                 </motion.div>
@@ -110,13 +110,13 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
 
                 {/* Education */}
                 <motion.section variants={itemVariants}>
-                    <h2 className="text-xl font-bold mb-4 border-b border-black/20">Education</h2>
+                    <h2 className="text-xl font-bold mb-4 border-b border-paper-line/20">Education</h2>
                     <div className="space-y-4">
                         {RESUME_DATA.education.map((edu: any) => (
                             <div key={edu.school} className="break-inside-avoid">
                                 <div className="flex items-center justify-between">
                                     <h3 className="font-semibold">{edu.school}</h3>
-                                    <span className="text-sm text-gray-500 tabular-nums">
+                                    <span className="text-sm text-paper-dim tabular-nums">
                                         {edu.start} - {edu.end}
                                     </span>
                                 </div>
@@ -128,7 +128,7 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
 
                 {/* Skills */}
                 <motion.section variants={itemVariants}>
-                    <h2 className="text-xl font-bold mb-4 border-b border-black/20">Skills</h2>
+                    <h2 className="text-xl font-bold mb-4 border-b border-paper-line/20">Skills</h2>
                     <div className="flex flex-wrap gap-1">
                         {RESUME_DATA.skills.map((skill: string) => {
                             const isSelected = selectedSkill === skill;
@@ -138,10 +138,10 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
                                     onClick={() => setSelectedSkill(isSelected ? null : skill)}
                                     className={`
                     px-2 py-0.5 rounded-md text-[10px] uppercase font-bold transition-all
-                    print:bg-transparent print:text-black print:border print:border-black/50
+                    print:bg-transparent print:text-paper-ink print:border print:border-paper-line/50
                     ${isSelected
-                                            ? 'bg-black text-white scale-110 ring-2 ring-offset-2 ring-black'
-                                            : 'bg-black/80 text-white hover:bg-black/60 hover:scale-105'}
+                                            ? 'bg-paper-ink text-paper scale-110 ring-2 ring-offset-2 ring-paper-ink'
+                                            : 'bg-paper-ink/80 text-paper hover:bg-paper-ink/60 hover:scale-105'}
                     ${selectedSkill && !isSelected ? 'opacity-40' : 'opacity-100'}
                 `}
                                 >
@@ -159,7 +159,7 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
                                 className="mt-2 text-xs text-muted-foreground flex items-center gap-2 print:hidden"
                             >
                                 <span>Highlighting usage of <strong>{selectedSkill}</strong></span>
-                                <button onClick={() => setSelectedSkill(null)} className="hover:text-black">
+                                <button onClick={() => setSelectedSkill(null)} className="hover:text-paper-ink">
                                     <X size={12} />
                                 </button>
                             </motion.div>
@@ -169,7 +169,7 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
 
                 {/* Projects */}
                 <motion.section variants={itemVariants} className="print:break-inside-avoid">
-                    <h2 className="text-xl font-bold mb-4 border-b border-black/20">Projects</h2>
+                    <h2 className="text-xl font-bold mb-4 border-b border-paper-line/20">Projects</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 print:grid-cols-2">
                         {RESUME_DATA.projects.map((project: any) => {
                             const isActive = isRelated(project.techStack) || isRelated(project.description) || isRelated(project.title);
@@ -178,22 +178,22 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
                                 <motion.div
                                     key={project.title}
                                     className={`
-                    p-3 border border-gray-200 rounded-lg space-y-1 bg-gray-50/50 
-                    print:border-black/50 print:bg-transparent transition-all duration-300
+                    p-3 border border-paper-chip-strong rounded-lg space-y-1 bg-paper-wash/50 
+                    print:border-paper-line/50 print:bg-transparent transition-all duration-300
                     ${!isActive ? 'opacity-30 grayscale print:opacity-100 print:grayscale-0' : 'opacity-100'}
                 `}
                                 >
                                     <div className="flex items-center justify-between">
                                         <h3 className="font-semibold text-sm underline decoration-1 underline-offset-2">
-                                            <a href={project.link.href} target="_blank" className="hover:text-blue-600">{project.title}</a>
+                                            <a href={project.link.href} target="_blank" className="hover:text-paper-link">{project.title}</a>
                                         </h3>
                                         <div className="flex gap-1">
                                             {project.techStack.slice(0, 3).map((tech: string) => (
-                                                <span key={tech} className="text-[8px] px-1 bg-gray-200 rounded print:hidden">{tech}</span>
+                                                <span key={tech} className="text-[8px] px-1 bg-paper-chip-strong rounded print:hidden">{tech}</span>
                                             ))}
                                         </div>
                                     </div>
-                                    <p className="text-xs text-gray-600">{project.description}</p>
+                                    <p className="text-xs text-paper-muted">{project.description}</p>
                                 </motion.div>
                             )
                         })}
@@ -206,7 +206,7 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
             <div className="fixed bottom-8 right-8 print:hidden z-50">
                 <button
                     onClick={() => window.print()}
-                    className="bg-black text-white p-4 rounded-full shadow-2xl hover:scale-105 transition-transform flex items-center gap-2 font-bold"
+                    className="bg-paper-ink text-paper p-4 rounded-full shadow-2xl hover:scale-105 transition-transform flex items-center gap-2 font-bold"
                 >
                     <Printer size={20} />
                     <span className="hidden md:inline">Print / Save PDF</span>
@@ -215,7 +215,7 @@ export default function ResumeClient({ RESUME_DATA }: { RESUME_DATA: any }) {
 
             {/* Return Home (Screen Only) */}
             <div className="fixed top-8 left-8 print:hidden z-50">
-                <Link href="/" className="bg-white/80 backdrop-blur border text-black px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">
+                <Link href="/" className="bg-paper/80 backdrop-blur border text-paper-ink px-4 py-2 rounded-full text-sm font-medium hover:bg-paper-chip transition-colors">
                     ← Back
                 </Link>
             </div>

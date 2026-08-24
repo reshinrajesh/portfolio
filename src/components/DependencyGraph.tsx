@@ -41,10 +41,10 @@ export default function DependencyGraph({ serviceStatus }: { serviceStatus?: any
     // Helper to get status color
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'operational': return 'text-green-500 border-green-500/50 bg-green-500/10';
-            case 'degraded': return 'text-yellow-500 border-yellow-500/50 bg-yellow-500/10';
-            case 'outage': return 'text-red-500 border-red-500/50 bg-red-500/10';
-            default: return 'text-zinc-500 border-zinc-500/50 bg-zinc-500/10';
+            case 'operational': return 'text-console-ok border-console-ok/50 bg-console-ok/10';
+            case 'degraded': return 'text-console-warn border-console-warn/50 bg-console-warn/10';
+            case 'outage': return 'text-console-down border-console-down/50 bg-console-down/10';
+            default: return 'text-console-dim border-console-dim/50 bg-console-dim/10';
         }
     };
 
@@ -68,14 +68,14 @@ export default function DependencyGraph({ serviceStatus }: { serviceStatus?: any
     });
 
     return (
-        <div className="w-full h-[400px] bg-zinc-900/40 backdrop-blur-md rounded-3xl border border-white/5 relative overflow-hidden">
+        <div className="w-full h-[400px] bg-console-panel/40 backdrop-blur-md rounded-3xl border border-console-fg/5 relative overflow-hidden">
             <div className="absolute inset-0 grid grid-cols-[repeat(20,minmax(0,1fr))] grid-rows-[repeat(20,minmax(0,1fr))] opacity-[0.03] pointer-events-none">
                 {Array.from({ length: 400 }).map((_, i) => (
-                    <div key={i} className="border-r border-b border-white" />
+                    <div key={i} className="border-r border-b border-console-fg" />
                 ))}
             </div>
 
-            <h3 className="absolute top-6 left-6 text-xs font-bold text-zinc-500 uppercase tracking-widest z-10">System Architecture</h3>
+            <h3 className="absolute top-6 left-6 text-xs font-bold text-console-dim uppercase tracking-widest z-10">System Architecture</h3>
 
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
             </svg>
@@ -121,12 +121,12 @@ export default function DependencyGraph({ serviceStatus }: { serviceStatus?: any
 
                         {/* Status Dot */}
                         <div className="absolute -top-1 -right-1 w-3 h-3">
-                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${node.status === 'operational' ? 'bg-green-400' : 'bg-red-400'}`}></span>
-                            <span className={`relative inline-flex rounded-full h-3 w-3 ${node.status === 'operational' ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${node.status === 'operational' ? 'bg-console-ok' : 'bg-console-down'}`}></span>
+                            <span className={`relative inline-flex rounded-full h-3 w-3 ${node.status === 'operational' ? 'bg-console-ok' : 'bg-console-down'}`}></span>
                         </div>
                     </div>
 
-                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider bg-black/50 px-2 py-0.5 rounded-full border border-white/5 backdrop-blur-sm">
+                    <span className="text-[10px] font-bold text-console-muted uppercase tracking-wider bg-console/50 px-2 py-0.5 rounded-full border border-console-fg/5 backdrop-blur-sm">
                         {node.label}
                     </span>
                 </motion.div>

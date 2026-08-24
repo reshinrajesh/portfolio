@@ -26,7 +26,7 @@ export default function TravelLog() {
                             className="mb-12"
                         >
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="p-3 rounded-xl bg-orange-500/10 text-orange-500">
+                                <div className="p-3 rounded-xl bg-cat-travel/10 text-cat-travel">
                                     <Map size={24} />
                                 </div>
                                 <h2 className="text-3xl md:text-4xl font-bold">
@@ -61,19 +61,19 @@ export default function TravelLog() {
                                         visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
                                     }}
                                     whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-                                    className="group relative h-full bg-background border border-border/50 hover:border-orange-500/50 rounded-2xl p-6 transition-colors shadow-sm hover:shadow-orange-500/10"
+                                    className="group relative h-full bg-background border border-border/50 hover:border-cat-travel/50 rounded-2xl p-6 transition-colors shadow-sm hover:shadow-cat-travel/10"
                                 >
                                     <div className="flex justify-between items-start mb-4">
-                                        <div className="p-2 rounded-lg bg-orange-500/10 text-orange-500 group-hover:scale-110 transition-transform">
+                                        <div className="p-2 rounded-lg bg-cat-travel/10 text-cat-travel group-hover:scale-110 transition-transform">
                                             <MapPin size={20} />
                                         </div>
-                                        <span className="text-xs font-mono text-muted-foreground bg-secondary px-2 py-1 rounded flex items-center gap-1 group-hover:text-orange-400 transition-colors">
+                                        <span className="text-xs font-mono text-muted-foreground bg-secondary px-2 py-1 rounded flex items-center gap-1 group-hover:text-cat-travel transition-colors">
                                             <Calendar size={10} />
                                             {trip.date}
                                         </span>
                                     </div>
 
-                                    <h3 className="text-xl font-bold mb-2 group-hover:text-orange-500 transition-colors">
+                                    <h3 className="text-xl font-bold mb-2 group-hover:text-cat-travel transition-colors">
                                         {trip.place}
                                     </h3>
 
@@ -100,7 +100,7 @@ export default function TravelLog() {
                                 whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
                                 className="flex flex-col items-center justify-center p-6 border border-dashed border-border rounded-2xl h-full min-h-[200px] text-muted-foreground bg-secondary/5 hover:bg-secondary/10 transition-all cursor-pointer group"
                             >
-                                <div className="mb-4 p-4 rounded-full bg-secondary group-hover:text-orange-500 group-hover:bg-orange-500/10 transition-colors">
+                                <div className="mb-4 p-4 rounded-full bg-secondary group-hover:text-cat-travel group-hover:bg-cat-travel/10 transition-colors">
                                     <Navigation size={24} className="opacity-50 group-hover:opacity-100" />
                                 </div>
                                 <p className="font-medium group-hover:text-foreground transition-colors">Where to next?</p>
@@ -124,7 +124,7 @@ export default function TravelLog() {
                         <div className="absolute bottom-10 left-10 p-4 bg-background/80 backdrop-blur-md rounded-xl border border-border/50 max-w-xs">
                             <p className="text-sm font-medium"> Currently tracked</p>
                             <div className="flex gap-2 mt-2">
-                                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                                <span className="w-2 h-2 rounded-full bg-cat-travel animate-pulse" />
                                 <span className="text-xs text-muted-foreground">Live location updates enabled</span>
                             </div>
                         </div>

@@ -5,6 +5,8 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// These swatches are deliberately hardcoded: each one previews what a theme
+// looks like, so it must NOT follow the active theme's tokens. Leave them be.
 const themes = [
     { id: "dark", name: "Dark", icon: Moon, color: "bg-neutral-900" },
     { id: "light", name: "Light", icon: Sun, color: "bg-white" },

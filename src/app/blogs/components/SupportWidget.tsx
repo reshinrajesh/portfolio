@@ -16,8 +16,8 @@ export default function SupportWidget() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/10 transition-colors duration-500" />
 
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20 md:shrink-0 transform md:-rotate-3 group-hover:rotate-0 transition-transform duration-300">
-                    <Coffee className="text-white fill-white/20" size={32} />
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-warning to-cat-travel flex items-center justify-center shadow-lg shadow-cat-travel/20 md:shrink-0 transform md:-rotate-3 group-hover:rotate-0 transition-transform duration-300">
+                    <Coffee className="text-primary-foreground fill-primary-foreground/20" size={32} />
                 </div>
 
                 <div className="flex-grow space-y-2">
@@ -35,7 +35,7 @@ export default function SupportWidget() {
                         target="_blank"
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-bold hover:opacity-90 transition-all hover:scale-105 hover:shadow-xl shadow-lg"
                     >
-                        <Heart size={18} className="fill-red-500 text-red-500 animate-pulse" />
+                        <Heart size={18} className="fill-destructive text-destructive animate-pulse" />
                         <span>Buy me a coffee</span>
                     </Link>
                 </div>

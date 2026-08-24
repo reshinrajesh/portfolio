@@ -23,7 +23,7 @@ export default function VibeToggle() {
                 {vibe === "developer" ? (
                     <Terminal size={14} />
                 ) : (
-                    <Plane size={14} className="text-orange-500" />
+                    <Plane size={14} className="text-cat-travel" />
                 )}
             </motion.div>
         </button>

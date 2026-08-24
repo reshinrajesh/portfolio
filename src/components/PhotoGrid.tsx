@@ -85,14 +85,14 @@ export default function PhotoGrid() {
                     />
 
                     {/* Overlay */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100">
+                    <div className="absolute inset-0 bg-scrim/0 group-hover:bg-scrim/40 transition-colors duration-300 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100">
                         <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            <p className="flex items-center gap-2 text-white/90 text-sm font-medium mb-1">
+                            <p className="flex items-center gap-2 text-on-media/90 text-sm font-medium mb-1">
                                 <MapPin size={14} className="text-primary" />
                                 {photo.location}
                             </p>
                             {photo.caption && (
-                                <p className="text-white/70 text-xs italic">"{photo.caption}"</p>
+                                <p className="text-on-media/70 text-xs italic">"{photo.caption}"</p>
                             )}
                         </div>
                     </div>
@@ -102,11 +102,11 @@ export default function PhotoGrid() {
             {/* Lightbox */}
             {selectedPhoto && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-scrim/90 backdrop-blur-sm p-4"
                     onClick={() => setSelectedPhoto(null)}
                 >
                     <button
-                        className="absolute top-4 right-4 p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+                        className="absolute top-4 right-4 p-2 text-on-media/70 hover:text-on-media bg-on-media/10 hover:bg-on-media/20 rounded-full transition-colors"
                         onClick={() => setSelectedPhoto(null)}
                     >
                         <X size={24} />
@@ -125,7 +125,7 @@ export default function PhotoGrid() {
                             className="object-contain"
                         />
                         <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
-                            <span className="inline-block px-4 py-2 bg-black/50 backdrop-blur-md rounded-full text-white text-sm">
+                            <span className="inline-block px-4 py-2 bg-scrim/50 backdrop-blur-md rounded-full text-on-media text-sm">
                                 {selectedPhoto.location}
                             </span>
                         </div>

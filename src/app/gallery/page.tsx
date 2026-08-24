@@ -114,11 +114,11 @@ export default async function GalleryPage({
                                     className="w-full h-auto transition-transform duration-700 group-hover:scale-105"
                                     loading="lazy"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-scrim/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                 <div className="absolute bottom-0 left-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     {/* Optional: Show album name tag on hover if viewing all */}
                                     {!albumId && image.album_id && (
-                                        <span className="text-xs text-white/80 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-md">
+                                        <span className="text-xs text-on-media/80 bg-scrim/30 backdrop-blur-sm px-2 py-1 rounded-md">
                                             {albums.find((a: any) => a.id === image.album_id)?.title}
                                         </span>
                                     )}
