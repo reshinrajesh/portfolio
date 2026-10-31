@@ -11,8 +11,22 @@ export default function FaroInitializer() {
     const { data: session, status } = useSession();
     const lastRoute = useRef<string | null>(null);
 
+    // Wait for the browser to go idle before pulling in the SDK, so telemetry
+    // never competes with hydration or the first images for bandwidth. Nothing
+    // reported in the meantime is lost -- lib/faro buffers it.
     useEffect(() => {
-        initFaro();
+        const start = () => void initFaro();
+
+        if (typeof window.requestIdleCallback === "function") {
+            const handle = window.requestIdleCallback(start, { timeout: 4000 });
+
+            return () => window.cancelIdleCallback(handle);
+        }
+
+        // Safari has no requestIdleCallback; a timeout is close enough.
+        const timer = window.setTimeout(start, 2000);
+
+        return () => window.clearTimeout(timer);
     }, []);
 
     // App Router navigations never reload the page, so views have to be pushed

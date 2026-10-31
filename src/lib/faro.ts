@@ -1,12 +1,9 @@
-import {
-    faro,
-    getWebInstrumentations,
-    initializeFaro,
-    type Faro,
-    type MetaUser,
-    type TransportItem,
-} from "@grafana/faro-web-sdk";
-import { TracingInstrumentation } from "@grafana/faro-web-tracing";
+// Types only: `import type` is erased at compile time, so neither SDK ends up
+// in the bundle. The web SDK plus the tracing instrumentation are ~300kB of
+// JavaScript, and every page imported them statically through
+// FaroInitializer -- telemetry that the visitor had to download before the
+// page could finish booting. initFaro() pulls them in on idle instead.
+import type { Faro, MetaUser, TransportItem } from "@grafana/faro-web-sdk";
 
 const COLLECTOR_URL = process.env.NEXT_PUBLIC_FARO_URL;
 const APP_NAME = process.env.NEXT_PUBLIC_FARO_APP_NAME || "reshin-portfolio";
@@ -59,6 +56,13 @@ const SENSITIVE_QUERY_PARAMS = [
 ];
 
 let initialized = false;
+let faroInstance: Faro | undefined;
+
+// initFaro() is asynchronous now, so a route change or a sign-in can land
+// before the SDK has loaded. Hold the latest of each and replay it on init,
+// rather than dropping the first view of every session.
+let pendingRoute: string | null = null;
+let pendingUser: { id?: string | null; name?: string | null } | null | undefined;
 
 // Every subdomain (admin., blogs., bio., gallery., status., demo.) is rewritten
 // out of this single app by src/proxy.ts, so a browser pathname on its own is
@@ -120,8 +124,8 @@ function beforeSend(item: TransportItem): TransportItem | null {
  * Initializes Faro once per page load. Safe to call repeatedly: React Strict
  * Mode runs effects twice in development and a second init would throw.
  */
-export function initFaro(): Faro | undefined {
-    if (typeof window === "undefined" || initialized || faro.api) {
+export async function initFaro(): Promise<Faro | undefined> {
+    if (typeof window === "undefined" || initialized || faroInstance?.api) {
         return undefined;
     }
 
@@ -135,7 +139,13 @@ export function initFaro(): Faro | undefined {
     initialized = true;
 
     try {
-        return initializeFaro({
+        // Both chunks are fetched in parallel, after the page is interactive.
+        const [{ getWebInstrumentations, initializeFaro }, { TracingInstrumentation }] = await Promise.all([
+            import("@grafana/faro-web-sdk"),
+            import("@grafana/faro-web-tracing"),
+        ]);
+
+        faroInstance = initializeFaro({
             url: COLLECTOR_URL,
             app: {
                 name: APP_NAME,
@@ -162,6 +172,19 @@ export function initFaro(): Faro | undefined {
                 }),
             ],
         });
+
+        // Replay whatever happened while the SDK was loading.
+        if (pendingRoute !== null) {
+            setFaroRoute(pendingRoute);
+            pendingRoute = null;
+        }
+
+        if (pendingUser !== undefined) {
+            setFaroUser(pendingUser);
+            pendingUser = undefined;
+        }
+
+        return faroInstance;
     } catch (error) {
         initialized = false;
         // Observability must never be the thing that breaks the page.
@@ -171,7 +194,7 @@ export function initFaro(): Faro | undefined {
 }
 
 export function isFaroActive(): boolean {
-    return Boolean(faro.api);
+    return Boolean(faroInstance?.api);
 }
 
 /**
@@ -180,12 +203,13 @@ export function isFaroActive(): boolean {
  * section of the site.
  */
 export function setFaroRoute(pathname: string): void {
-    if (!faro.api) {
+    if (!faroInstance?.api) {
+        pendingRoute = pathname;
         return;
     }
 
-    faro.api.setView({ name: `${siteLabel(window.location.hostname)}:${pathname}` });
-    faro.api.setPage({ url: `${window.location.origin}${pathname}` });
+    faroInstance.api.setView({ name: `${siteLabel(window.location.hostname)}:${pathname}` });
+    faroInstance.api.setPage({ url: `${window.location.origin}${pathname}` });
 }
 
 /**
@@ -193,12 +217,13 @@ export function setFaroRoute(pathname: string): void {
  * of telemetry — the id and username are enough to correlate a session.
  */
 export function setFaroUser(user: { id?: string | null; name?: string | null } | null): void {
-    if (!faro.api) {
+    if (!faroInstance?.api) {
+        pendingUser = user;
         return;
     }
 
     if (!user) {
-        faro.api.resetUser();
+        faroInstance.api.resetUser();
         return;
     }
 
@@ -208,5 +233,5 @@ export function setFaroUser(user: { id?: string | null; name?: string | null } |
         roles: "admin",
     };
 
-    faro.api.setUser(meta);
+    faroInstance.api.setUser(meta);
 }
