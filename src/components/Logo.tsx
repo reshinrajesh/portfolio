@@ -36,7 +36,7 @@ export default function Logo({
             aria-hidden="true"
             className={cn(
                 "inline-block w-[0.46em] h-[0.96em] bg-primary align-[-0.08em]",
-                blink && "motion-safe:animate-[blink_1.15s_steps(1,end)_infinite]",
+                blink && "motion-safe:animate-[blink_1.15s_steps(1,end)_3]",
             )}
         />
     );

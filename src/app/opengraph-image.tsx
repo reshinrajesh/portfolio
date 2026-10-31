@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
 
-export const alt = 'Reshin Rajesh — full-stack developer, Kerala, India'
+export const alt = 'Reshin Rajesh — developing and deploying mobile and web applications'
 export const size = {
     width: 1200,
     height: 630,
@@ -94,7 +94,7 @@ export default async function Image() {
                     </div>
 
                     <div style={{ display: 'flex', fontSize: 30, color: '#8D99A9', marginTop: 26, letterSpacing: '0.04em' }}>
-                        Full-stack developer — interfaces and the database layer under them
+                        Developing and Deploying Mobile and Web Applications
                     </div>
                 </div>
 

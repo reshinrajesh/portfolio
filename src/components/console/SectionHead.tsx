@@ -19,11 +19,11 @@ export default function SectionHead({ address, name, meta, className }: SectionH
     return (
         <h2
             className={cn(
-                "flex items-center gap-3 font-mono text-label uppercase text-muted-foreground mb-6 sm:mb-8",
+                "flex items-center gap-3 font-mono text-label uppercase text-muted-foreground mb-5 sm:mb-7",
                 className,
             )}
         >
-            <span className="text-primary">{address}</span>
+            <span className="text-muted-foreground">{address}</span>
             <span className="text-foreground">{name}</span>
             <span className="rule-fill" aria-hidden="true" />
             {meta ? <span className="hidden sm:inline">{meta}</span> : null}

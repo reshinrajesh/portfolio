@@ -24,8 +24,8 @@ export default async function Home() {
       <Readout />
       <main className="flex-1">
         <Hero />
-        <Work projects={projects} />
         <Stack managedSkills={skillNames} />
+        <Work projects={projects} />
         <About />
         <Contact />
       </main>

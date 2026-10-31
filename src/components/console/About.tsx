@@ -10,7 +10,7 @@ const LOG = [
 export default function About() {
     return (
         <section id="about" className="border-t border-line-strong">
-            <div className="mx-auto max-w-[1240px] px-4 py-12 sm:px-6 sm:py-16">
+            <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 sm:py-14">
                 <SectionHead address="/about" name="Background" />
 
                 <div className="grid gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:gap-7">

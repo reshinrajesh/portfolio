@@ -2,10 +2,12 @@ import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const NAV = [
-    { label: "work", href: "#work" },
-    { label: "stack", href: "#stack" },
-    { label: "about", href: "#about" },
-    { label: "contact", href: "#contact" },
+    { label: "work", href: "#work", minor: false },
+    // Hidden at phone width: the section is one screen down from the hero and
+    // the bar cannot hold four links beside the location.
+    { label: "stack", href: "#stack", minor: true },
+    { label: "about", href: "#about", minor: false },
+    { label: "contact", href: "#contact", minor: false },
 ];
 
 /**
@@ -22,10 +24,12 @@ export default function Readout() {
             <div className="mx-auto flex max-w-[1240px] flex-wrap items-center gap-x-5 gap-y-2.5 px-4 py-2.5 sm:px-6">
                 <Logo />
 
-                <span className="hidden font-mono text-meta uppercase text-line-strong sm:inline" aria-hidden="true">
+                {/* The location stays at phone width. Dropping it there left the
+                    bar as a mark and four links with a wide gap in the middle. */}
+                <span className="font-mono text-meta uppercase text-line-strong" aria-hidden="true">
                     /
                 </span>
-                <span className="hidden font-mono text-meta uppercase text-muted-foreground sm:inline">
+                <span className="font-mono text-meta uppercase text-muted-foreground">
                     Kerala, IN
                 </span>
 
@@ -41,7 +45,7 @@ export default function Readout() {
                         <a
                             key={item.href}
                             href={item.href}
-                            className="font-mono text-meta uppercase text-muted-foreground transition-colors hover:text-primary"
+                            className={`font-mono text-meta uppercase text-muted-foreground transition-colors hover:text-primary ${item.minor ? "hidden sm:inline" : ""}`}
                         >
                             {item.label}
                         </a>

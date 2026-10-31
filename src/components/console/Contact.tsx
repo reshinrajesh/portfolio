@@ -11,7 +11,7 @@ export default function Contact() {
 
     return (
         <section id="contact" className="border-t border-line-strong">
-            <div className="mx-auto max-w-[1240px] px-4 py-12 sm:px-6 sm:py-16">
+            <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 sm:py-14">
                 <SectionHead address="/contact" name="Endpoints" />
 
                 <div className="border border-line-strong bg-panel">

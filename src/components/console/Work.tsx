@@ -46,14 +46,14 @@ export default function Work({ projects }: { projects: Project[] }) {
 
     return (
         <section id="work" className="border-t border-line-strong">
-            <div className="mx-auto max-w-[1240px] px-4 py-12 sm:px-6 sm:py-16">
+            <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 sm:py-14">
                 <SectionHead
                     address="/work"
                     name="Selected builds"
                     meta={`${String(projects.length).padStart(2, "0")} records`}
                 />
 
-                <div className="grid gap-4 lg:grid-cols-2">
+                <div className="grid gap-4 md:grid-cols-2">
                     {projects.map((project, index) => (
                         <article
                             key={project.id}
@@ -61,10 +61,12 @@ export default function Work({ projects }: { projects: Project[] }) {
                         >
                             <div className="flex items-center justify-between gap-3 border-b border-line-strong bg-raise px-4 py-2.5 font-mono text-label uppercase text-muted-foreground">
                                 <span className="min-w-0 truncate">
-                                    <span className="text-primary">
+                                    {/* Spacing via margin, not literal spaces: HTML
+                                        collapses runs of whitespace, so {"  "} rendered
+                                        as a single space and the index ran into the slug. */}
+                                    <span className="mr-2 text-muted-foreground">
                                         {String(index + 1).padStart(2, "0")}
                                     </span>
-                                    {"  "}
                                     {project.slug}
                                 </span>
                                 {project.year ? <span className="shrink-0">{project.year}</span> : null}
