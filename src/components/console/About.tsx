@@ -3,7 +3,7 @@ import SectionHead from "./SectionHead";
 const LOG = [
     { t: "Degree", d: "B.Tech, Computer Science", sub: "Srinivas University" },
     { t: "Diploma", d: "IT and Cloud Computing", sub: "NTTF" },
-    { t: "Role", d: "Full-stack web developer intern", sub: "Interfaces + database layer" },
+    { t: "Now", d: "Associate Professional Services Engineer", sub: "Seria Applied Research" },
     { t: "Base", d: "Bengaluru, India", sub: "UTC+05:30" },
 ];
 
@@ -27,13 +27,18 @@ export default function About() {
                             is still how I prefer to work — the part people touch and the part that
                             keeps their data straight are one problem seen from two ends.
                         </p>
-                        {/* The terminal-and-road line belongs to the hero; repeating
-                            it here made the same joke twice on one page. This closes on
-                            the part the hero does not cover instead. */}
+                        {/* Closes by naming both halves of "developing and deploying"
+                            and tying the second one to the job that actually backs it.
+                            The page claimed deployment in the headline and then never
+                            mentioned the infrastructure role that makes it true. */}
                         <p className="max-w-[58ch] leading-relaxed text-muted-foreground">
-                            That habit now reaches past the browser. React Native means the same
-                            end-to-end ownership on a phone, so a product does not stop at the
-                            edge of a tab.
+                            These days it runs further at both ends: React Native, so a product
+                            does not stop at the edge of a tab, and the infrastructure, storage
+                            and cloud work I do at{" "}
+                            <strong className="font-medium text-foreground">
+                                Seria Applied Research
+                            </strong>
+                            , so it stays up once it ships.
                         </p>
                     </div>
 

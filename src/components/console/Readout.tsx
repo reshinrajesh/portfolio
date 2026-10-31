@@ -5,6 +5,7 @@ const NAV = [
     { label: "work", href: "#work", minor: false },
     // Hidden at phone width: the section is one screen down from the hero and
     // the bar cannot hold four links beside the location.
+    { label: "experience", href: "#experience", minor: true },
     { label: "stack", href: "#stack", minor: true },
     { label: "about", href: "#about", minor: false },
     { label: "contact", href: "#contact", minor: false },
