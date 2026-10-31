@@ -53,6 +53,26 @@ export const supabase = supabaseUrl
     ? createClient(supabaseUrl, supabaseKey || "dummy")
     : createStubClient();
 
+/**
+ * Whether a real service-role key is present.
+ *
+ * supabaseAdmin falls back to the anon key when it is not, which used to be
+ * invisible: the client still constructed, still read rows, and before RLS was
+ * enabled its writes succeeded too - so the fallback was quietly doing
+ * privileged work with a key that ships to the browser. With RLS restricting
+ * anon to SELECT, that same fallback turns every admin write into a policy
+ * error that says nothing about the real cause. Hence the warning.
+ */
+export const hasServiceRole = Boolean(supabaseServiceKey);
+
+if (supabaseUrl && !supabaseServiceKey) {
+    console.error(
+        "SUPABASE_SERVICE_ROLE_KEY is not set. supabaseAdmin is falling back to the " +
+        "anon key, which RLS allows to read but not write, so every admin write will " +
+        "fail. Set it in the environment.",
+    );
+}
+
 // Admin client for server-side logic that needs to bypass RLS (NOC, Auth management, etc.)
 export const supabaseAdmin = supabaseUrl 
     ? createClient(supabaseUrl, supabaseServiceKey || supabaseKey || "dummy", {

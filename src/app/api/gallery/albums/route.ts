@@ -1,4 +1,7 @@
-import { supabase } from '@/lib/supabase';
+// Writes run as the service role. The anon key is public - it ships in the
+// client bundle - so once RLS restricts writes, anything mutating a row has
+// to come through this client. Safe here: this module is server-only.
+import { supabaseAdmin as supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
