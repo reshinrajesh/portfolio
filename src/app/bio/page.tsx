@@ -23,8 +23,15 @@ export default async function BioPage() {
                 </div>
 
                 <div className="px-4 py-4">
-                    <p className="font-mono text-meta uppercase text-muted-foreground">
-                        Full-stack developer &middot; Kerala, India
+                    {/* Two lines rather than one: the role statement is 52
+                        characters and the card is 460px at its widest, so joining it
+                        to the location with a separator wrapped it awkwardly on a
+                        phone - which is where a links page is almost always opened. */}
+                    <p className="font-mono text-meta uppercase text-foreground">
+                        Developing and Deploying Mobile and Web Applications
+                    </p>
+                    <p className="mt-1 font-mono text-meta uppercase text-muted-foreground">
+                        Kerala, India
                     </p>
 
                     {/* Authored in the admin editor, so it arrives as HTML. Themed

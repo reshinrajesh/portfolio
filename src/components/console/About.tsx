@@ -26,13 +26,13 @@ export default function About() {
                             is still how I prefer to work — the part people touch and the part that
                             keeps their data straight are one problem seen from two ends.
                         </p>
+                        {/* The terminal-and-road line belongs to the hero; repeating
+                            it here made the same joke twice on one page. This closes on
+                            the part the hero does not cover instead. */}
                         <p className="max-w-[58ch] leading-relaxed text-muted-foreground">
-                            Away from the keyboard it is concerts, sunsets and whichever road leads
-                            to them.{" "}
-                            <strong className="font-medium text-foreground">
-                                Half my life happens in a terminal
-                            </strong>
-                            ; the other half is deliberately nowhere near one.
+                            That habit now reaches past the browser. React Native means the same
+                            end-to-end ownership on a phone, so a product does not stop at the
+                            edge of a tab.
                         </p>
                     </div>
 

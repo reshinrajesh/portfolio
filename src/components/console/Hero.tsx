@@ -33,14 +33,26 @@ export default function Hero() {
                 Developing and Deploying Mobile and Web Applications
             </p>
 
-            <p className="animate-rise delay-2 mt-7 max-w-[56ch] text-lead text-muted-foreground">
-                I build for the web by day and chase concerts and sunsets by night.{" "}
-                <strong className="font-medium text-foreground">
-                    Half my life happens in a terminal
-                </strong>
-                , the other half on the road. Computer Science graduate with a Diploma in
-                Cloud Computing, shipping React and Next.js at the front and Postgres behind it.
-            </p>
+            {/* Deliberately short. The previous version spent two of its three
+                sentences on the degree and the stack, both of which the spec grid
+                below and the /about log state more precisely, and it made the
+                day/night contrast twice. What is left is the part nothing else on
+                the page says: how far a job runs when I take it. */}
+            <div className="animate-rise delay-2 mt-7 max-w-[56ch] space-y-3 text-lead text-muted-foreground">
+                <p>
+                    I take an idea from an empty repository to something people can open on
+                    their phone. The interface, the API behind it and the deploy that keeps
+                    it running are{" "}
+                    <strong className="font-medium text-foreground">
+                        one job to me, not three handoffs
+                    </strong>
+                    .
+                </p>
+                <p>
+                    Half my life happens in a terminal. The other half is at a concert, or
+                    somewhere down the Kerala coast chasing a sunset.
+                </p>
+            </div>
 
             {/* The frame is drawn by two halves: the container owns the top and
                 left edges, each cell owns its right and bottom. That completes the
