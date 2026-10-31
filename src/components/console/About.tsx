@@ -2,7 +2,7 @@ import SectionHead from "./SectionHead";
 
 const LOG = [
     { t: "Degree", d: "B.Tech, Computer Science", sub: "Srinivas University" },
-    { t: "Diploma", d: "Cloud Computing", sub: null },
+    { t: "Diploma", d: "IT and Cloud Computing", sub: "NTTF" },
     { t: "Role", d: "Full-stack web developer intern", sub: "Interfaces + database layer" },
     { t: "Base", d: "Bengaluru, India", sub: "UTC+05:30" },
 ];
@@ -16,9 +16,10 @@ export default function About() {
                 <div className="grid gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:gap-7">
                     <div className="min-w-0 border border-line-strong bg-panel p-5">
                         <p className="mb-3.5 max-w-[58ch] leading-relaxed text-muted-foreground">
-                            I am a Computer Science graduate (B.Tech) from{" "}
+                            I hold a B.Tech in Computer Science from{" "}
                             <strong className="font-medium text-foreground">Srinivas University</strong>,
-                            with a Diploma in Cloud Computing alongside it.
+                            and a Diploma in IT and Cloud Computing from{" "}
+                            <strong className="font-medium text-foreground">NTTF</strong>.
                         </p>
                         <p className="mb-3.5 max-w-[58ch] leading-relaxed text-muted-foreground">
                             I cut my teeth as a full-stack web developer intern, building responsive
