@@ -1,0 +1,205 @@
+{
+  "exported_at": "2026-10-31T12:14:19.844Z",
+  "note": "Archive taken before retiring Supabase. Auth tables deliberately excluded.",
+  "tables": {
+    "projects": [
+      {
+        "id": "2eca26d7-3079-4521-a182-6f92013777ce",
+        "title": "Night Guard - Womens Safety Robot",
+        "description": "A surveillance robot designed for women's safety in public places. Detects obstacles and unknown incidents, sending location and video footage to a nearby police station. Built with Arduino IDE.",
+        "tags": [
+          "Arduino",
+          "IoT",
+          "C++",
+          "Sensors"
+        ],
+        "image": "/robot-project.png",
+        "demolink": "",
+        "repolink": "",
+        "slug": "night-guard-womens-safety-robot",
+        "huly_id": null,
+        "order": 1,
+        "created_at": "2026-04-14T04:21:46.31892+00:00",
+        "updated_at": "2026-04-14T04:21:46.31892+00:00"
+      },
+      {
+        "id": "10d5c6d3-b466-4491-91ab-1fad8a3eb23b",
+        "title": "Exam Conducting Application",
+        "description": "A comprehensive web application for conducting exams. Features user management for trainees/instructors and database creation. Built with Django and PostgreSQL.",
+        "tags": [
+          "Django",
+          "PostgreSQL",
+          "Python",
+          "HTML/CSS"
+        ],
+        "image": "/exam-project.png",
+        "demolink": "",
+        "repolink": "",
+        "slug": "exam-conducting-application",
+        "huly_id": null,
+        "order": 2,
+        "created_at": "2026-04-14T04:21:46.31892+00:00",
+        "updated_at": "2026-04-14T04:21:46.31892+00:00"
+      }
+    ],
+    "posts": [
+      {
+        "id": "a6e52002-e2b2-4a24-aa5f-6ab44adcbc2a",
+        "title": "2025 Had Expectations. 2026 Has Clarity.",
+        "content": "<p>I wanted 2025 to be the best year of my life.<br>I entered it with plans, expectations, and confidence that everything would fall into place.</p><p>It didn’t.</p><p>Instead, it taught me patience, silence, and how to sit with myself when things didn’t go as planned. And on New Year’s Eve, at <strong>Sunburn Arena with Argy</strong>, something shifted—not loudly, not dramatically, but clearly.</p><p>This wasn’t a celebration.<br>It was a reset.</p><h2>Walking Into Sunburn Arena</h2><p>I walked into Sunburn Arena carrying more than excitement.<br>The year had been heavy in ways I didn’t always talk about—missed moments, quiet disappointments, and lessons that arrived without asking.</p><p>The crowd was there. The lights were ready.<br>But mentally, I was somewhere else.</p><p>And that’s when I realized something:<br>Sometimes, you don’t go to a concert to escape.<br>You go to <strong>feel</strong>.</p><img class=\"rounded-lg max-w-full my-4 border border-border\" src=\"https://sjxvqsuhtcjuinkoskyf.supabase.co/storage/v1/object/public/blog-images/1767683442485-20251231_230421.jpg\"><h2>Argy’s Sound: Controlled, Deep, Intentional</h2><p>Argy didn’t bring chaos to the stage.<br>He brought control.</p><p>His sound was layered—melodic, deep, patient. Every transition felt intentional. Every drop felt earned. There was no rush to impress, no need to overpower the crowd.</p><p>It felt mature.<br>Grounded.</p><p>As the set progressed, my thoughts slowed down. The noise inside my head softened. Music took over where words had failed all year.</p><p>That’s when I knew—this night was doing more than entertaining me.</p><h2>Why This Night Mattered</h2><p>This night wasn’t about forgetting 2025.<br>It was about accepting it.</p><p>Argy at Sunburn Arena NYE reminded me that growth doesn’t always come with big wins or loud celebrations. Sometimes, it comes quietly—through music, stillness, and self-awareness.</p><p>I didn’t leave the arena feeling “new.”<br>I left feeling <strong>lighter</strong>.</p><img class=\"rounded-lg max-w-full my-4 border border-border\" src=\"https://sjxvqsuhtcjuinkoskyf.supabase.co/storage/v1/object/public/blog-images/1767683944756-20251231_230513.jpg\"><h2>Entering 2026 Differently</h2><p>I entered 2025 with expectations.<br>I enter 2026 with clarity.</p><p>No pressure to prove anything.<br>No rush to explain my journey.</p><p>Just intention.</p><p>Consistency.<br>And peace with where I am.</p><p>Some nights don’t change your life loudly.<br>They change it honestly.</p><p>And this was one of them.</p><img class=\"rounded-lg max-w-full my-4 border border-border\" src=\"https://sjxvqsuhtcjuinkoskyf.supabase.co/storage/v1/object/public/blog-images/1767684023672-IMG_4254.jpg\"><p>2025 prepared me.<br>2026 is execution.</p>",
+        "status": "Published",
+        "created_at": "2026-01-06T07:21:53.77798+00:00",
+        "updated_at": "2026-01-06T07:22:45.284+00:00",
+        "tags": [],
+        "seo_title": "",
+        "seo_description": "",
+        "view_count": 54,
+        "huly_id": null
+      }
+    ],
+    "skills": [],
+    "resume_work": [
+      {
+        "id": "fdb69976-9e2d-4f9e-8847-3c373283fc9b",
+        "company": "Seria Applied Research Pvt. Ltd.",
+        "link": "",
+        "badges": [],
+        "title": "Associate Professional Services Engineer",
+        "start_date": "May 2024",
+        "end_date": "Present",
+        "description": "Specializing in IT infrastructure management, storage administration, and cloud solutions. Providing professional support to help businesses scale efficiently with secure tech solutions.",
+        "huly_id": null,
+        "order": 1,
+        "created_at": "2026-04-14T04:21:46.391923+00:00",
+        "updated_at": "2026-04-14T04:21:46.391923+00:00"
+      },
+      {
+        "id": "0e2f6c1d-5598-44a3-9539-1e678ed9b176",
+        "company": "The Print",
+        "link": "",
+        "badges": [],
+        "title": "Web Developer and Social Media Manager",
+        "start_date": "June 2024",
+        "end_date": "December 2024",
+        "description": "Creating websites and managing social media platforms for various clients.",
+        "huly_id": null,
+        "order": 2,
+        "created_at": "2026-04-14T04:21:46.391923+00:00",
+        "updated_at": "2026-04-14T04:21:46.391923+00:00"
+      },
+      {
+        "id": "2472e9c4-2cce-48a7-b49d-ea5d5dc1ee78",
+        "company": "Vitvara Technologies",
+        "link": "",
+        "badges": [
+          "Intern"
+        ],
+        "title": "Full Stack Web Developer Intern",
+        "start_date": "Jul 2023",
+        "end_date": "Aug 2023",
+        "description": "Implemented responsive design principles to create a seamless user experience across various devices. Contributed to the development of database structures and integration with web applications.",
+        "huly_id": null,
+        "order": 3,
+        "created_at": "2026-04-14T04:21:46.391923+00:00",
+        "updated_at": "2026-04-14T04:21:46.391923+00:00"
+      }
+    ],
+    "resume_education": [
+      {
+        "id": "7871572a-e80b-47fe-9544-58a12834ed44",
+        "school": "Srinivas University",
+        "degree": "Bachelor of Technology in Computer Science",
+        "start_date": "2021",
+        "end_date": "2024",
+        "huly_id": null,
+        "order": 1,
+        "created_at": "2026-04-14T04:21:46.441055+00:00",
+        "updated_at": "2026-04-14T04:21:46.441055+00:00"
+      },
+      {
+        "id": "78a09f2f-3557-4f6d-8333-ea9d2b25eedb",
+        "school": "Nettur Technical Training Foundation",
+        "degree": "Diploma in IT and Cloud Computing",
+        "start_date": "2018",
+        "end_date": "2021",
+        "huly_id": null,
+        "order": 2,
+        "created_at": "2026-04-14T04:21:46.441055+00:00",
+        "updated_at": "2026-04-14T04:21:46.441055+00:00"
+      }
+    ],
+    "site_content": [
+      {
+        "key": "about",
+        "value": "Full Stack Developer dedicated to building high-quality, user-centric web applications. Passionate about modern UI/UX, performance optimization, and secure systems.",
+        "created_at": "2026-04-14T04:21:46.490992+00:00",
+        "updated_at": "2026-04-14T04:21:46.490992+00:00"
+      },
+      {
+        "key": "summary",
+        "value": "Computer Science graduate with expertise in the Next.js ecosystem. Proven track record in building performant web apps, from interactive 3D portfolios to secure admin dashboards. specific interests in Creative Development and System Architecture.",
+        "created_at": "2026-04-14T04:21:46.490992+00:00",
+        "updated_at": "2026-04-14T04:21:46.490992+00:00"
+      }
+    ],
+    "albums": [
+      {
+        "id": "3f7696c5-9fa8-4984-adaf-c88aa28e3f84",
+        "title": "Argy",
+        "description": null,
+        "cover_image_id": null,
+        "created_at": "2026-01-06T11:51:52.433657+00:00"
+      }
+    ],
+    "gallery_images": [],
+    "status_incidents": [
+      {
+        "id": "5a3ecb5a-5c3a-419b-a6d5-4b12c0c254ff",
+        "title": "AI API Issue",
+        "description": "Scheduled for investigating the issue.",
+        "status": "Completed",
+        "date": "2026-01-12T22:00:00+00:00",
+        "created_at": "2026-01-12T17:01:56.15022+00:00",
+        "updates": [
+          {
+            "id": "f0e0b58b-8496-4bba-b5ea-35d51f5f9e2a",
+            "date": "2026-01-13T09:40",
+            "status": "Completed",
+            "message": ""
+          }
+        ],
+        "huly_issue_id": null,
+        "huly_id": null
+      },
+      {
+        "id": "c5b20655-0983-4917-948a-e4acae48858e",
+        "title": "Scheduled System Maintenance",
+        "description": "Performed routine server dependency updates, auditing, and maintenance on underlying infrastructure.",
+        "status": "Completed",
+        "date": "2026-02-25T17:35:51.384+00:00",
+        "created_at": "2026-02-25T17:35:51.10164+00:00",
+        "updates": [
+          {
+            "id": "f2a05026-27a1-4d86-977b-37ad4433703f",
+            "date": "2026-02-25T17:35:51.385Z",
+            "status": "Completed",
+            "message": "All maintenance tasks were completed successfully, and systems are fully operational."
+          }
+        ],
+        "huly_issue_id": null,
+        "huly_id": null
+      },
+      {
+        "id": "1cc68d0f-ce5c-4384-9251-83d9f684a82e",
+        "title": "Sync issues to Huly",
+        "description": "Syncronization issues to Huly.",
+        "status": "Investigating",
+        "date": "2026-04-08T14:37:00+00:00",
+        "created_at": "2026-04-08T14:38:23.45223+00:00",
+        "updates": [],
+        "huly_issue_id": null,
+        "huly_id": null
+      }
+    ]
+  }
+}

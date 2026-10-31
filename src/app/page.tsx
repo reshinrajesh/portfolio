@@ -6,31 +6,22 @@ import Stack from "@/components/console/Stack";
 import About from "@/components/console/About";
 import Contact from "@/components/console/Contact";
 import Footer from "@/components/console/Footer";
-import { getProjects } from "@/lib/projects";
-import { getWork } from "@/lib/resume";
-import { getSkills } from "@/app/admin/skills/actions";
+import { projects } from "@/content/projects";
+import { roles } from "@/content/experience";
 
-// Projects and skills are both editable from the admin, so the page refreshes
-// rather than freezing at build time.
-export const revalidate = 60;
-
-export default async function Home() {
-  const [projects, roles, managedSkills] = await Promise.all([
-    getProjects(),
-    getWork(),
-    getSkills(),
-  ]);
-
-  const skillNames = ((managedSkills ?? []) as { name?: string }[])
-    .map((skill) => skill.name)
-    .filter((name): name is string => Boolean(name));
-
+/**
+ * Fully static. The content used to come from Supabase at request time, which
+ * bought an editor nobody was using at the cost of a database, two API keys and
+ * a request on every render. It is a typed array in src/content now, so this
+ * page is prerendered once at build and never revalidates.
+ */
+export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Readout />
       <main className="flex-1">
         <Hero />
-        <Stack managedSkills={skillNames} />
+        <Stack />
         <Work projects={projects} />
         <Experience roles={roles} />
         <About />

@@ -30,7 +30,7 @@ export const PROPERTIES: Record<PropertyId, Property> = {
  * rather than letting them 404: the subdomains stay pointed at this app, and a
  * visitor with an old bookmark should land somewhere real.
  */
-export const RETIRED_HOSTS = ["blogs.", "gallery.", "status.", "demo."] as const;
+export const RETIRED_HOSTS = ["blogs.", "gallery.", "status.", "demo.", "admin."] as const;
 
 /** Absolute URL for a path on one of the properties. */
 export function propertyUrl(id: PropertyId, path = "/"): string {

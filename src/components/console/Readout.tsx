@@ -1,5 +1,6 @@
 import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
+import { profile } from "@/content/profile";
 
 const NAV = [
     { label: "work", href: "#work", minor: false },
@@ -31,14 +32,14 @@ export default function Readout() {
                     /
                 </span>
                 <span className="font-mono text-meta uppercase text-muted-foreground">
-                    Bengaluru, IN
+                    {profile.locationShort}
                 </span>
 
                 <span className="hidden font-mono text-meta uppercase text-line-strong md:inline" aria-hidden="true">
                     /
                 </span>
                 <span className="hidden font-mono text-meta uppercase text-muted-foreground md:inline">
-                    UTC+05:30
+                    {profile.timezone}
                 </span>
 
                 <nav className="ml-auto flex items-center gap-4 sm:gap-5">

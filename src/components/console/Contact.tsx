@@ -3,7 +3,9 @@ import { propertyUrl } from "@/lib/navigation";
 import SectionHead from "./SectionHead";
 import CopyEmail from "./CopyEmail";
 
-const EMAIL = "connect@reshinrajesh.in";
+import { profile } from "@/content/profile";
+
+const EMAIL = profile.email;
 
 export default function Contact() {
     // The email gets its own row with a copy control, so it is excluded here.

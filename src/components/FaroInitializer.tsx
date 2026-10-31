@@ -1,14 +1,12 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-import { initFaro, setFaroRoute, setFaroUser } from "@/lib/faro";
+import { initFaro, setFaroRoute } from "@/lib/faro";
 
 export default function FaroInitializer() {
     const pathname = usePathname();
-    const { data: session, status } = useSession();
     const lastRoute = useRef<string | null>(null);
 
     // Wait for the browser to go idle before pulling in the SDK, so telemetry
@@ -40,13 +38,7 @@ export default function FaroInitializer() {
         lastRoute.current = pathname;
     }, [pathname]);
 
-    useEffect(() => {
-        if (status === "loading") {
-            return;
-        }
-
-        setFaroUser(session?.user ?? null);
-    }, [session, status]);
-
+    // There is no signed-in user to identify any more: the admin area and its
+    // auth stack are gone, so every visitor is anonymous to telemetry.
     return null;
 }

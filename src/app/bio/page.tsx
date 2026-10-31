@@ -1,15 +1,14 @@
-import { getBio } from "@/app/actions";
 import { MoveLeft } from "lucide-react";
 import { socials } from "@/lib/socials";
 import { propertyUrl } from "@/lib/navigation";
+import { bioIntro, profile } from "@/content/profile";
 import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 
-export const dynamic = "force-dynamic";
-
-export default async function BioPage() {
-    const bioContent = await getBio();
-
+// Static: the intro used to be a site_content row that was never filled in,
+// so the page rendered its fallback on every request while still paying for a
+// database round trip.
+export default function BioPage() {
     return (
         <div className="w-full max-w-[460px]">
             <div className="mb-5 flex items-center justify-between">
@@ -19,7 +18,7 @@ export default async function BioPage() {
 
             <div className="border border-line-strong bg-panel">
                 <div className="border-b border-line-strong bg-raise px-4 py-2.5 font-mono text-label uppercase text-muted-foreground">
-                    <span className="text-primary">/links</span> &nbsp; Reshin Rajesh
+                    <span className="text-primary">/links</span> &nbsp; {profile.name}
                 </div>
 
                 <div className="px-4 py-4">
@@ -28,21 +27,13 @@ export default async function BioPage() {
                         to the location with a separator wrapped it awkwardly on a
                         phone - which is where a links page is almost always opened. */}
                     <p className="font-mono text-meta uppercase text-foreground">
-                        Developing and Deploying Mobile and Web Applications
+                        {profile.role}
                     </p>
                     <p className="mt-1 font-mono text-meta uppercase text-muted-foreground">
-                        Bengaluru, India
+                        {profile.location}
                     </p>
 
-                    {/* Authored in the admin editor, so it arrives as HTML. Themed
-                        through .prose-console rather than prose-invert, which assumes
-                        a dark background and breaks in the light theme. */}
-                    <div
-                        className="prose prose-sm prose-console mt-3 max-w-none text-sm"
-                        dangerouslySetInnerHTML={{
-                            __html: bioContent || "<p>Everything, in one place.</p>",
-                        }}
-                    />
+                    <p className="mt-3 text-sm text-muted-foreground">{bioIntro}</p>
                 </div>
 
                 <div className="border-t border-line">

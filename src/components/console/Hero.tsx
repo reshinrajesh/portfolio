@@ -1,8 +1,10 @@
+import { profile } from "@/content/profile";
+
 const SPECS = [
-    { k: "Role", v: "Full-stack developer" },
-    { k: "Based", v: "Bengaluru, India" },
-    { k: "Primary stack", v: "React Native · Next.js · Node · Postgres" },
-    { k: "Contact", v: "connect@reshinrajesh.in" },
+    { k: "Role", v: profile.title },
+    { k: "Based", v: profile.location },
+    { k: "Primary stack", v: profile.primaryStack },
+    { k: "Contact", v: profile.email },
 ];
 
 /**
@@ -30,7 +32,7 @@ export default function Hero() {
             </h1>
 
             <p className="animate-rise delay-1 mt-4 font-mono text-meta uppercase text-muted-foreground">
-                Developing and Deploying Mobile and Web Applications
+                {profile.role}
             </p>
 
             {/* Deliberately short. The previous version spent two of its three

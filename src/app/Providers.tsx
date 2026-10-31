@@ -1,7 +1,6 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { SessionProvider } from "next-auth/react";
 import FaroInitializer from "@/components/FaroInitializer";
 
 // Themes the site used to offer. A visitor who picked one still has it in
@@ -29,19 +28,15 @@ if (typeof window !== "undefined") {
 
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
-        // The session is only ever read by the admin area, so there is nothing
-        // to re-poll for when the window regains focus.
-        <SessionProvider refetchOnWindowFocus={false}>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-                themes={["light", "dark"]}
-            >
-                <FaroInitializer />
-                {children}
-            </ThemeProvider>
-        </SessionProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+            themes={["light", "dark"]}
+        >
+            <FaroInitializer />
+            {children}
+        </ThemeProvider>
     );
 }

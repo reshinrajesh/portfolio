@@ -1,4 +1,5 @@
 import Logo from "@/components/Logo";
+import { profile } from "@/content/profile";
 
 export default function Footer({ buildSha }: { buildSha?: string }) {
     return (
@@ -7,7 +8,7 @@ export default function Footer({ buildSha }: { buildSha?: string }) {
                 <div className="flex items-center gap-4">
                     <Logo asLink={false} className="text-base" />
                     <span className="font-mono text-meta uppercase text-muted-foreground">
-                        Bengaluru, India
+                        {profile.location}
                     </span>
                 </div>
 

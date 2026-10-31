@@ -21,11 +21,8 @@ function normalise(value: string): string {
     return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-export default function Stack({ managedSkills = [] }: { managedSkills?: string[] }) {
-    const known = new Set(GROUPS.flatMap((group) => group.items).map(normalise));
-    const extra = managedSkills.filter((skill) => !known.has(normalise(skill)));
-
-    const groups = extra.length > 0 ? [...GROUPS, { title: "Also", items: extra }] : GROUPS;
+export default function Stack() {
+    const groups = GROUPS;
 
     return (
         <section id="stack" className="border-t border-line-strong">

@@ -1,4 +1,4 @@
-import type { Project } from "@/lib/projects";
+import type { Project } from "@/content/projects";
 import SectionHead from "./SectionHead";
 
 /**
@@ -56,7 +56,7 @@ export default function Work({ projects }: { projects: Project[] }) {
                 <div className="grid gap-4 md:grid-cols-2">
                     {projects.map((project, index) => (
                         <article
-                            key={project.id}
+                            key={project.slug}
                             className="flex min-w-0 flex-col border border-line-strong bg-panel"
                         >
                             <div className="flex items-center justify-between gap-3 border-b border-line-strong bg-raise px-4 py-2.5 font-mono text-label uppercase text-muted-foreground">

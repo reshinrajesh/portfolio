@@ -1,4 +1,4 @@
-import { isCurrent, tenure, type WorkRole } from "@/lib/resume";
+import { isCurrent, tenure, type Role } from "@/content/experience";
 import SectionHead from "./SectionHead";
 
 /**
@@ -13,7 +13,7 @@ import SectionHead from "./SectionHead";
  * editorial, so "which job is this person in now" has to be stated, not
  * inferred from position.
  */
-export default function Experience({ roles }: { roles: WorkRole[] }) {
+export default function Experience({ roles }: { roles: Role[] }) {
     if (roles.length === 0) {
         return null;
     }
@@ -31,11 +31,11 @@ export default function Experience({ roles }: { roles: WorkRole[] }) {
                     {roles.map((role) => {
                         const current = isCurrent(role);
                         const span = tenure(role);
-                        const href = (role.link ?? "").trim();
+                        const href = role.link ?? "";
 
                         return (
                             <article
-                                key={role.id}
+                                key={`${role.company}-${role.title}`}
                                 className="grid gap-x-8 gap-y-2 border-b border-line px-4 py-4 last:border-b-0 md:grid-cols-[180px_minmax(0,1fr)]"
                             >
                                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 md:block">

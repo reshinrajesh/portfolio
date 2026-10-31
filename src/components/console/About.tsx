@@ -1,10 +1,17 @@
+import { education, profile } from "@/content/profile";
+import { isCurrent, roles } from "@/content/experience";
 import SectionHead from "./SectionHead";
 
+const current = roles.find(isCurrent) ?? roles[0];
+
 const LOG = [
-    { t: "Degree", d: "B.Tech, Computer Science", sub: "Srinivas University" },
-    { t: "Diploma", d: "IT and Cloud Computing", sub: "NTTF" },
-    { t: "Now", d: "Associate Professional Services Engineer", sub: "Seria Applied Research" },
-    { t: "Base", d: "Bengaluru, India", sub: "UTC+05:30" },
+    ...education.map((item) => ({
+        t: item.kind,
+        d: item.award,
+        sub: item.short ?? item.institution,
+    })),
+    { t: "Now", d: current.title, sub: current.company },
+    { t: "Base", d: profile.location, sub: profile.timezone },
 ];
 
 export default function About() {
