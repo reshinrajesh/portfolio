@@ -64,7 +64,7 @@ let faroInstance: Faro | undefined;
 let pendingRoute: string | null = null;
 let pendingUser: { id?: string | null; name?: string | null } | null | undefined;
 
-// Every subdomain (admin., blogs., bio., gallery., status., demo.) is rewritten
+// Every retired subdomain (admin., blogs., bio., gallery., status., demo.) was rewritten
 // out of this single app by src/proxy.ts, so a browser pathname on its own is
 // ambiguous - "/" is six different pages. The host is what disambiguates it.
 const SITE_DOMAIN = "reshinrajesh.in";

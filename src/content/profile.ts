@@ -46,6 +46,3 @@ export const education: Qualification[] = [
         end: "2021",
     },
 ];
-
-/** The links page intro. Was a site_content row nothing ever filled in. */
-export const bioIntro = "Everything, in one place.";

@@ -36,14 +36,8 @@ export default function middleware(request: NextRequest) {
     }
 
     // Paths the retired properties used to own on the main domain.
-    if (/^\/(gallery|status|blogs|resume|projects|matrix|admin)(\/|$)/.test(url.pathname)) {
+    if (/^\/(gallery|status|blogs|resume|projects|matrix|admin|bio)(\/|$)/.test(url.pathname)) {
         return NextResponse.redirect(propertyUrl('www'), 308);
-    }
-
-    // The links page is served from bio.reshinrajesh.in at the root.
-    if (hostname.startsWith('bio.')) {
-        url.pathname = `/bio${url.pathname}`;
-        return NextResponse.rewrite(url);
     }
 
     return NextResponse.next();

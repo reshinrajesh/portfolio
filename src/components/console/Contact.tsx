@@ -1,5 +1,4 @@
 import { socials } from "@/lib/socials";
-import { propertyUrl } from "@/lib/navigation";
 import SectionHead from "./SectionHead";
 import CopyEmail from "./CopyEmail";
 
@@ -50,21 +49,6 @@ export default function Contact() {
                             </span>
                         </a>
                     ))}
-
-                    <a
-                        href={propertyUrl("bio")}
-                        className="group flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 font-mono text-xs transition-colors hover:bg-raise"
-                    >
-                        <span className="w-[84px] shrink-0 text-label uppercase text-muted-foreground">
-                            All links
-                        </span>
-                        <span className="min-w-0 flex-1 break-words transition-colors group-hover:text-primary">
-                            bio.reshinrajesh.in
-                        </span>
-                        <span className="shrink-0 text-meta text-muted-foreground" aria-hidden="true">
-                            &rarr;
-                        </span>
-                    </a>
                 </div>
 
                 <p className="mt-8 max-w-[30ch] font-mono text-title text-balance">
