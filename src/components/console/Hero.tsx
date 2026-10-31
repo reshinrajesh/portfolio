@@ -1,6 +1,6 @@
 const SPECS = [
     { k: "Role", v: "Full-stack developer" },
-    { k: "Based", v: "Kerala, India" },
+    { k: "Based", v: "Bengaluru, India" },
     { k: "Primary stack", v: "React Native · Next.js · Node · Postgres" },
     { k: "Contact", v: "connect@reshinrajesh.in" },
 ];
@@ -50,7 +50,7 @@ export default function Hero() {
                 </p>
                 <p>
                     Half my life happens in a terminal. The other half is at a concert, or
-                    somewhere down the Kerala coast chasing a sunset.
+                    on a road out of the city chasing a sunset.
                 </p>
             </div>
 

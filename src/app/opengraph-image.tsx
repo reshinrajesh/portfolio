@@ -102,7 +102,7 @@ export default async function Image() {
                     <div style={{ display: 'flex', height: 1, background: '#2B3542', marginBottom: 26 }} />
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 24, color: '#8D99A9', letterSpacing: '0.08em' }}>
                         <span>RESHINRAJESH.IN</span>
-                        <span>KERALA, INDIA &nbsp;·&nbsp; UTC+05:30</span>
+                        <span>BENGALURU, INDIA &nbsp;·&nbsp; UTC+05:30</span>
                     </div>
                 </div>
             </div>

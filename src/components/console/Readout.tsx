@@ -30,7 +30,7 @@ export default function Readout() {
                     /
                 </span>
                 <span className="font-mono text-meta uppercase text-muted-foreground">
-                    Kerala, IN
+                    Bengaluru, IN
                 </span>
 
                 <span className="hidden font-mono text-meta uppercase text-line-strong md:inline" aria-hidden="true">

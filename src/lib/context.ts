@@ -37,7 +37,7 @@ ${summary}
 
 Bio:
 - Name: Reshin Rajesh
-- Location: Kerala, India
+- Location: Bengaluru, India
 - About: ${about}
 
 WORK EXPERIENCE:

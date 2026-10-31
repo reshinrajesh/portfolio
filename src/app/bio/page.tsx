@@ -31,7 +31,7 @@ export default async function BioPage() {
                         Developing and Deploying Mobile and Web Applications
                     </p>
                     <p className="mt-1 font-mono text-meta uppercase text-muted-foreground">
-                        Kerala, India
+                        Bengaluru, India
                     </p>
 
                     {/* Authored in the admin editor, so it arrives as HTML. Themed

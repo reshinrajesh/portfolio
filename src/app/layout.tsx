@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: "%s — Reshin Rajesh",
   },
   description:
-    "Reshin Rajesh develops and deploys mobile and web applications. Full-stack developer based in Kerala, India.",
+    "Reshin Rajesh develops and deploys mobile and web applications. Full-stack developer based in Bengaluru, India.",
   metadataBase: new URL("https://reshinrajesh.in/"),
   openGraph: {
     type: "website",

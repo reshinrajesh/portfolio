@@ -4,7 +4,7 @@ const LOG = [
     { t: "Degree", d: "B.Tech, Computer Science", sub: "Srinivas University" },
     { t: "Diploma", d: "Cloud Computing", sub: null },
     { t: "Role", d: "Full-stack web developer intern", sub: "Interfaces + database layer" },
-    { t: "Base", d: "Kerala, India", sub: "UTC+05:30" },
+    { t: "Base", d: "Bengaluru, India", sub: "UTC+05:30" },
 ];
 
 export default function About() {

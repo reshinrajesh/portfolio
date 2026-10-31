@@ -7,7 +7,7 @@ export default function Footer({ buildSha }: { buildSha?: string }) {
                 <div className="flex items-center gap-4">
                     <Logo asLink={false} className="text-base" />
                     <span className="font-mono text-meta uppercase text-muted-foreground">
-                        Kerala, India
+                        Bengaluru, India
                     </span>
                 </div>
 
