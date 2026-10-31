@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Reshin Rajesh">
+  <!--
+    The Prompt mark, icon form: a block cursor on the console ground.
+
+    Pure geometry on purpose. A favicon drawn from type needs the typeface to
+    be present, which a standalone SVG cannot guarantee, so the mark that has
+    to work at 16px is two rectangles and nothing else.
+
+    The tile is filled rather than transparent so the icon stays findable in a
+    row of tabs in either browser theme.
+  -->
+  <rect width="64" height="64" fill="#0A0C0F"/>
+  <rect x="21" y="12" width="22" height="40" fill="#EDB64A"/>
+</svg>

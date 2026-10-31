@@ -1,42 +1,33 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import dynamic from 'next/dynamic';
+import Readout from "@/components/console/Readout";
+import Hero from "@/components/console/Hero";
+import Work from "@/components/console/Work";
+import Experience from "@/components/console/Experience";
+import Stack from "@/components/console/Stack";
+import About from "@/components/console/About";
+import Contact from "@/components/console/Contact";
+import Footer from "@/components/console/Footer";
+import { projects } from "@/content/projects";
+import { roles } from "@/content/experience";
 
-// Heavy components - Lazy load
-const About = dynamic(() => import("@/components/About"), {
-  loading: () => <div className="min-h-[50vh] flex items-center justify-center"><div className="w-full max-w-4xl h-96 bg-secondary/5 rounded-3xl animate-pulse" /></div>
-});
-
-const TravelLog = dynamic(() => import("@/components/TravelLog"), {
-  loading: () => <div className="min-h-[50vh] flex items-center justify-center"><div className="w-full max-w-6xl h-96 bg-secondary/5 rounded-3xl animate-pulse" /></div>
-});
-
-const Projects = dynamic(() => import("@/components/Projects"), {
-  loading: () => <div className="min-h-[50vh] flex items-center justify-center"><div className="w-full max-w-6xl h-96 bg-secondary/5 rounded-3xl animate-pulse" /></div>
-});
-
-const Contact = dynamic(() => import("@/components/Contact"), {
-  loading: () => <div className="min-h-[30vh]" />
-});
-
-
-
-import Footer from "@/components/Footer";
-
+/**
+ * Fully static. The content used to come from Supabase at request time, which
+ * bought an editor nobody was using at the cost of a database, two API keys and
+ * a request on every render. It is a typed array in src/content now, so this
+ * page is prerendered once at build and never revalidates.
+ */
 export default function Home() {
   return (
-    <main className="bg-background min-h-screen text-foreground flex flex-col">
-      <Navbar />
-      <Hero />
-      <About />
-      <TravelLog />
-
-      <Projects />
-      <Contact />
-
-
-
-      <Footer />
-    </main>
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <Readout />
+      <main className="flex-1">
+        <Hero />
+        <Stack />
+        <Work projects={projects} />
+        <Experience roles={roles} />
+        <About />
+        <Contact />
+      </main>
+      <Footer buildSha={process.env.NEXT_PUBLIC_BUILD_SHA} />
+    </div>
   );
 }
