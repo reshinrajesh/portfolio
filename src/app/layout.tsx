@@ -5,6 +5,7 @@ import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Providers } from "./Providers";
+import { propertyUrl } from "@/lib/navigation";
 
 /* Two cuts of one family. The mono carries the mark, every label and all
    metadata; the sans carries prose. Loading both as variables lets the type
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   },
   description:
     "Reshin Rajesh develops and deploys mobile and web applications. Full-stack developer based in Bengaluru, India.",
-  metadataBase: new URL("https://reshinrajesh.in/"),
+  metadataBase: new URL(propertyUrl()),
   openGraph: {
     type: "website",
     siteName: "Reshin Rajesh",

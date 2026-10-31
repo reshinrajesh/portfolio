@@ -1,11 +1,12 @@
 import { Github, Linkedin, Mail, Phone, MapPin, Instagram, Facebook, Twitter, Ghost } from "lucide-react";
+import { CONTACT_EMAIL } from "./site";
 
 export const socials = [
     {
         name: "Email",
-        link: "mailto:connect@reshinrajesh.in",
+        link: `mailto:${CONTACT_EMAIL}`,
         icon: Mail,
-        display: "connect@reshinrajesh.in",
+        display: CONTACT_EMAIL,
     },
 
     {

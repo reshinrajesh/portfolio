@@ -3,13 +3,15 @@
  *
  * This module used to exist because five hosts shared one Next app and shared
  * chrome rendered on all of them, so a relative <Link href="/privacy"> resolved
- * against whichever subdomain was rendering it and 404'd. With only
- * reshinrajesh.in left, that hazard is gone, but the helpers stay: the social
- * card, the sitemap and the proxy all need absolute URLs, and RETIRED_HOSTS is
- * what keeps the dead subdomains from 404ing.
+ * against whichever subdomain was rendering it and 404'd. With only one host
+ * left, that hazard is gone, but the helpers stay: the social card, the sitemap
+ * and the proxy all need absolute URLs, and RETIRED_HOSTS is what keeps the
+ * dead subdomains from 404ing.
+ *
+ * The domain itself lives in ./site, which is the only file that spells it out.
  */
 
-export const SITE_DOMAIN = "reshinrajesh.in";
+import { SITE_DOMAIN } from "./site";
 
 export type PropertyId = "www";
 
@@ -27,6 +29,9 @@ export const PROPERTIES: Record<PropertyId, Property> = {
  * Hosts the site used to serve and no longer does. The proxy sends these home
  * rather than letting them 404: the subdomains stay pointed at this app, and a
  * visitor with an old bookmark should land somewhere real.
+ *
+ * These belong to the current domain. A move to a new one does not carry them
+ * over -- the replacement never served them, so it should never create them.
  */
 export const RETIRED_HOSTS = [
     "blogs.",
