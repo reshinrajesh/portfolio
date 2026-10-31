@@ -1,9 +1,10 @@
 import Readout from "@/components/console/Readout";
 import Footer from "@/components/console/Footer";
+import { SITE_DOMAIN } from "@/lib/site";
 
 export const metadata = {
     title: "Privacy Policy",
-    description: "Privacy policy for reshinrajesh.in",
+    description: `Privacy policy for ${SITE_DOMAIN}`,
 };
 
 export default function PrivacyPolicy() {

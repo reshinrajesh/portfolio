@@ -4,6 +4,7 @@
 // FaroInitializer -- telemetry that the visitor had to download before the
 // page could finish booting. initFaro() pulls them in on idle instead.
 import type { Faro, MetaUser, TransportItem } from "@grafana/faro-web-sdk";
+import { SITE_DOMAIN, siteOriginPattern } from "./site";
 
 const COLLECTOR_URL = process.env.NEXT_PUBLIC_FARO_URL;
 const APP_NAME = process.env.NEXT_PUBLIC_FARO_APP_NAME || "reshin-portfolio";
@@ -40,7 +41,7 @@ const IGNORED_ERRORS: Array<string | RegExp> = [
 // whose CORS policy does not allow the header turns every such request into a
 // failed preflight.
 const TRACE_PROPAGATION_URLS: Array<string | RegExp> = [
-    /^https:\/\/([a-z0-9-]+\.)*reshinrajesh\.in/,
+    siteOriginPattern(),
     /^https:\/\/([a-z0-9-]+\.)*vercel\.app/,
 ];
 
@@ -67,7 +68,6 @@ let pendingUser: { id?: string | null; name?: string | null } | null | undefined
 // Every retired subdomain (admin., blogs., bio., gallery., status., demo.) was rewritten
 // out of this single app by src/proxy.ts, so a browser pathname on its own is
 // ambiguous - "/" is six different pages. The host is what disambiguates it.
-const SITE_DOMAIN = "reshinrajesh.in";
 
 function siteLabel(hostname: string): string {
     if (hostname === "localhost" || hostname.startsWith("127.")) {

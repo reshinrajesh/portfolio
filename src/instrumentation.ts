@@ -1,6 +1,7 @@
 import { SpanStatusCode, trace } from "@opentelemetry/api";
 import { registerOTel } from "@vercel/otel";
 import type { Instrumentation } from "next";
+import { SITE_DOMAIN } from "@/lib/site";
 
 const SERVICE_NAME = process.env.OTEL_SERVICE_NAME || "reshin-portfolio-backend";
 
@@ -20,7 +21,7 @@ export function register() {
     registerOTel({
         serviceName: SERVICE_NAME,
         attributes: {
-            "service.namespace": "reshinrajesh.in",
+            "service.namespace": SITE_DOMAIN,
             "service.version": process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || "dev",
             "deployment.environment.name": process.env.VERCEL_ENV || process.env.NODE_ENV || "development",
         },

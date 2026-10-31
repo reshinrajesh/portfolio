@@ -8,6 +8,8 @@
  * description, which is how the site ended up claiming one location in six
  * places and a different one in a seventh.
  */
+import { CONTACT_EMAIL } from "@/lib/site";
+
 export const profile = {
     name: "Reshin Rajesh",
     role: "Developing and Deploying Mobile and Web Applications",
@@ -15,7 +17,7 @@ export const profile = {
     location: "Bengaluru, India",
     locationShort: "Bengaluru, IN",
     timezone: "UTC+05:30",
-    email: "connect@reshinrajesh.in",
+    email: CONTACT_EMAIL,
     primaryStack: "React Native · Next.js · Node · Postgres",
 } as const;
 
