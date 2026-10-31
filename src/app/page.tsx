@@ -1,42 +1,35 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import dynamic from 'next/dynamic';
+import Readout from "@/components/console/Readout";
+import Hero from "@/components/console/Hero";
+import Work from "@/components/console/Work";
+import Stack from "@/components/console/Stack";
+import About from "@/components/console/About";
+import Contact from "@/components/console/Contact";
+import Footer from "@/components/console/Footer";
+import { getProjects } from "@/lib/projects";
+import { getSkills } from "@/app/admin/skills/actions";
 
-// Heavy components - Lazy load
-const About = dynamic(() => import("@/components/About"), {
-  loading: () => <div className="min-h-[50vh] flex items-center justify-center"><div className="w-full max-w-4xl h-96 bg-secondary/5 rounded-3xl animate-pulse" /></div>
-});
+// Projects and skills are both editable from the admin, so the page refreshes
+// rather than freezing at build time.
+export const revalidate = 60;
 
-const TravelLog = dynamic(() => import("@/components/TravelLog"), {
-  loading: () => <div className="min-h-[50vh] flex items-center justify-center"><div className="w-full max-w-6xl h-96 bg-secondary/5 rounded-3xl animate-pulse" /></div>
-});
+export default async function Home() {
+  const [projects, managedSkills] = await Promise.all([getProjects(), getSkills()]);
 
-const Projects = dynamic(() => import("@/components/Projects"), {
-  loading: () => <div className="min-h-[50vh] flex items-center justify-center"><div className="w-full max-w-6xl h-96 bg-secondary/5 rounded-3xl animate-pulse" /></div>
-});
+  const skillNames = ((managedSkills ?? []) as { name?: string }[])
+    .map((skill) => skill.name)
+    .filter((name): name is string => Boolean(name));
 
-const Contact = dynamic(() => import("@/components/Contact"), {
-  loading: () => <div className="min-h-[30vh]" />
-});
-
-
-
-import Footer from "@/components/Footer";
-
-export default function Home() {
   return (
-    <main className="bg-background min-h-screen text-foreground flex flex-col">
-      <Navbar />
-      <Hero />
-      <About />
-      <TravelLog />
-
-      <Projects />
-      <Contact />
-
-
-
-      <Footer />
-    </main>
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <Readout />
+      <main className="flex-1">
+        <Hero />
+        <Work projects={projects} />
+        <Stack managedSkills={skillNames} />
+        <About />
+        <Contact />
+      </main>
+      <Footer buildSha={process.env.NEXT_PUBLIC_BUILD_SHA} />
+    </div>
   );
 }

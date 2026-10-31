@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { RETIRED_HOSTS, propertyUrl } from '@/lib/navigation';
 
 export default async function middleware(request: NextRequest) {
     const url = request.nextUrl;
@@ -14,15 +15,24 @@ export default async function middleware(request: NextRequest) {
     // --- GLOBAL MAINTENANCE OVERRIDE ---
     // Set to false to disable site-wide maintenance mode
     const MAINTENANCE_MODE = false;
-    if (MAINTENANCE_MODE && !hostname.startsWith('status.') && url.pathname !== '/maintenance') {
+    // The status host used to be exempt so it could still report an outage.
+    // That property is retired, so maintenance now applies everywhere.
+    if (MAINTENANCE_MODE && url.pathname !== '/maintenance') {
         url.pathname = '/maintenance';
         return NextResponse.rewrite(url);
     }
     // -----------------------------------
 
-    // Redirect /gallery on main domain to gallery subdomain
-    if (url.pathname.startsWith('/gallery') && !hostname.startsWith('gallery.')) {
-        return NextResponse.redirect(new URL('https://gallery.reshinrajesh.in'));
+    // Hosts the site no longer serves. The DNS still points here, so send the
+    // visitor to the live site instead of rendering a 404 on a dead property.
+    if (RETIRED_HOSTS.some((prefix) => hostname.startsWith(prefix))) {
+        return NextResponse.redirect(propertyUrl('www'), 308);
+    }
+
+    // Paths the retired properties used to own on the main domain.
+    if (/^\/(gallery|status|blogs|resume|projects|matrix)(\/|$)/.test(url.pathname)
+        && !hostname.startsWith('admin.')) {
+        return NextResponse.redirect(propertyUrl('www'), 308);
     }
 
     // Redirect /admin on main domain to admin subdomain
@@ -38,10 +48,6 @@ export default async function middleware(request: NextRequest) {
         }
     }
 
-    // Redirect /status on main domain to status subdomain
-    if (url.pathname.startsWith('/status') && !hostname.startsWith('status.') && !hostname.startsWith('admin.')) {
-        return NextResponse.redirect(new URL('https://status.reshinrajesh.in'));
-    }
 
     // 1. Handle Admin Subdomain
     if (hostname.startsWith('admin.')) {
@@ -84,35 +90,15 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.rewrite(url);
     }
 
-    // 2. Handle Blogs Subdomain
-    if (hostname.startsWith('blogs.')) {
-        url.pathname = `/blogs${url.pathname}`;
-        return NextResponse.rewrite(url);
-    }
 
-    // 3. Handle Bio Subdomain
+    // 2. Handle Bio Subdomain
     if (hostname.startsWith('bio.')) {
         url.pathname = `/bio${url.pathname}`;
         return NextResponse.rewrite(url);
     }
 
-    // 4. Handle Gallery Subdomain
-    if (hostname.startsWith('gallery.')) {
-        url.pathname = `/gallery${url.pathname}`;
-        return NextResponse.rewrite(url);
-    }
 
-    // 5. Handle Demo Subdomain
-    if (hostname.startsWith('demo.')) {
-        url.pathname = `/demo${url.pathname}`;
-        return NextResponse.rewrite(url);
-    }
 
-    // 6. Handle Status Subdomain
-    if (hostname.startsWith('status.')) {
-        url.pathname = `/status${url.pathname}`;
-        return NextResponse.rewrite(url);
-    }
 
     return NextResponse.next();
 }

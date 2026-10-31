@@ -1,16 +1,8 @@
-"use client";
-
-import { motion } from "framer-motion";
-
+// Route-transition fade. Deliberately CSS, not framer-motion: as a motion
+// component this wrapper was server-rendered with `opacity:0` inline, so every
+// page stayed invisible until the JS bundle had downloaded and hydrated. The
+// keyframes in globals.css start at first paint instead, and honour
+// prefers-reduced-motion there.
 export default function Template({ children }: { children: React.ReactNode }) {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ ease: "easeInOut", duration: 0.5 }}
-        >
-            {children}
-        </motion.div>
-    );
+    return <div className="animate-fade-in">{children}</div>;
 }

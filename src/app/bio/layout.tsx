@@ -1,6 +1,6 @@
 export const metadata = {
-    title: "Links | Res.",
-    description: "Connect with me on social media and check out my work.",
+    title: "Links",
+    description: "Every way to reach Reshin Rajesh, in one place.",
 };
 
 export default function BioLayout({
@@ -9,7 +9,7 @@ export default function BioLayout({
     children: React.ReactNode;
 }) {
     return (
-        <main className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10 text-foreground">
             {children}
         </main>
     );
